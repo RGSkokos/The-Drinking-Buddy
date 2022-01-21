@@ -6,4 +6,4 @@
 * Abhinav Batra | 40086809
 # Objective
 # Description
-# Languages & Techniques
+# Languages & Hardware
