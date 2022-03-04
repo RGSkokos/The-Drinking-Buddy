@@ -1,9 +1,6 @@
 package com.example.drinkingbuddy;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,188 +10,140 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.UUID;
-//import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-
 import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
-
     public final static String MODULE_MAC = "EC:94:CB:4E:1E:36";
-    public final static int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
-    BluetoothAdapter bta;
-    BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice;
-    ConnectedThread btt = null;
-    Button switchLight, switchRelay;
+    BluetoothAdapter bluetoothAdapter;
+    BluetoothSocket bluetoothSocket;
+    BluetoothDevice bluetoothDevice;
+    ConnectedThread newThread = null;
+    TextView homeTextView;
+    Button newBreath;
     TextView response;
-    boolean lightflag = false;
-    boolean relayFlag = true;
-    public Handler mHandler;
+    public Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
+        setTitle("Drinking Buddy");
+        initializeComponents();
+        setupButtonListeners();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!bluetoothAdapter.isEnabled()) {
+            turnOnPhoneBluetooth();
+        }
 
-        Log.i("[BLUETOOTH]", "Creating listeners");
+        else {
+            initializeBluetoothProcess();
+        }
+    }
+
+    // Turn on the Bluetooth Module of the Android Device
+    protected void turnOnPhoneBluetooth() {
+        Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            startActivityForResult(enableBTIntent, 1);
+        }
+    }
+
+    // Link Variables to Components in .XML file
+    protected void initializeComponents() {
+        homeTextView = (TextView) findViewById(R.id.homeTextView);
+        newBreath = (Button) findViewById(R.id.newBreath);
         response = (TextView) findViewById(R.id.results);
-        switchRelay = (Button) findViewById(R.id.stopSample);
-        switchLight = (Button) findViewById(R.id.startSample);
-        switchLight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("[BLUETOOTH]", "Attempting to send data");
-                if (mmSocket.isConnected() && btt != null) { //if we have connection to the bluetoothmodule
-                    if (!lightflag) {
-                        String sendtxt = "1";
-                        btt.write(sendtxt.getBytes());
-                        lightflag = true;
-                    } else {
-                        String sendtxt = "1";
-                        btt.write(sendtxt.getBytes());
-                        lightflag = false;
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-        switchRelay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("[BLUETOOTH]", "Attempting to send data");
-                if (mmSocket.isConnected() && btt != null) { //if we have connection to the bluetoothmodule
-                    if (relayFlag) {
-                        String sendtxt = "0";
-                        btt.write(sendtxt.getBytes());
-                        relayFlag = false;
-                    } else {
-                        String sendtxt = "0";
-                        btt.write(sendtxt.getBytes());
-                        relayFlag = true;
-                    }
+    }
 
-                    //disable the button and wait for 4 seconds to enable it again
-                    switchRelay.setEnabled(false);
+    // Setup Button Listeners
+    protected void setupButtonListeners() {
+        newBreath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!bluetoothAdapter.isEnabled()) {
+                    turnOnPhoneBluetooth();
+                }
+
+                else {
+                    String sendMessage = "1";
+                    newThread.write(sendMessage.getBytes());
+                    newBreath.setEnabled(false);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 Thread.sleep(4000);
-                            } catch (InterruptedException e) {
-                                return;
+                            } catch (Exception e) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Something Went Wrong!", Toast.LENGTH_LONG);
+                                toast.show();
                             }
 
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    switchRelay.setEnabled(true);
+                                    newBreath.setEnabled(true);
+                                    String sendMessage = "0";
+                                    newThread.write(sendMessage.getBytes());
                                 }
                             });
-
                         }
                     }).start();
-                } else {
-                    Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-        bta = BluetoothAdapter.getDefaultAdapter();
-
-        //if bluetooth is not enabled then create Intent for user to turn it on
-        if (!bta.isEnabled()) {
-            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                //return;
-            }
-            startActivityForResult(enableBTIntent, REQUEST_ENABLE_BT);
-        } else {
-            initiateBluetoothProcess();
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == REQUEST_ENABLE_BT) {
-            initiateBluetoothProcess();
+        if (resultCode == -1 && requestCode == 1) {
+            initializeBluetoothProcess();
         }
     }
 
-    public void initiateBluetoothProcess() {
-
-        if (bta.isEnabled()) {
-
-            //attempt to connect to bluetooth module
-            BluetoothSocket tmp = null;
-            mmDevice = bta.getRemoteDevice(MODULE_MAC);
-
-            //create socket
-            try {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    //return;
+    public void initializeBluetoothProcess() {
+        if (bluetoothAdapter.isEnabled()) {
+            bluetoothDevice = bluetoothAdapter.getRemoteDevice(MODULE_MAC);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                try {
+                    bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(MY_UUID);
+                    bluetoothSocket.connect();
                 }
-                tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
-                mmSocket = tmp;
-                mmSocket.connect();
-                Log.i("[BLUETOOTH]","Connected to: "+mmDevice.getName());
-            }catch(IOException e){
-                try{mmSocket.close();}catch(IOException c){return;}
+
+                catch (Exception e) {
+                    try {
+                        bluetoothSocket.close();
+                    }
+
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+
+                    e.printStackTrace();
+                }
             }
 
-            Log.i("[BLUETOOTH]", "Creating handler");
-            mHandler = new Handler(Looper.getMainLooper()){
-
+            handler = new Handler(Looper.getMainLooper()){
                 @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    if(msg.what == ConnectedThread.RESPONSE_MESSAGE){
-                        String txt = (String)msg.obj;
-                        if(response.getText().toString().length() >= 30){
-                            response.setText("");
-                            response.append(txt);
-                        }else{
-                            response.append("\n" + txt);
-                        }
+                public void handleMessage(Message receivedMessage) {
+                    super.handleMessage(receivedMessage);
+                    if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
+                        String message = (String)receivedMessage.obj;
+                        response.setText("Your Blood Alcohol Level is: " + message);
                     }
                 }
             };
 
-            Log.i("[BLUETOOTH]", "Creating and running Thread");
-            btt = new ConnectedThread(mmSocket,mHandler);
-            btt.start();
-
-
+            newThread = new ConnectedThread(bluetoothSocket,handler);
+            newThread.start();
         }
     }
-
 }
