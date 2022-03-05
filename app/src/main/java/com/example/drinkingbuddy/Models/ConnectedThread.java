@@ -1,4 +1,4 @@
-package com.example.drinkingbuddy;
+package com.example.drinkingbuddy.Models;
 
 import android.bluetooth.BluetoothSocket;
 import android.os.Message;

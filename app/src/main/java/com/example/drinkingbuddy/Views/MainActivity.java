@@ -1,4 +1,4 @@
-package com.example.drinkingbuddy;
+package com.example.drinkingbuddy.Views;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
@@ -18,6 +18,10 @@ import android.widget.Toast;
 import java.util.UUID;
 import android.os.Handler;
 
+import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Models.ConnectedThread;
+import com.example.drinkingbuddy.R;
+
 public class MainActivity extends AppCompatActivity {
     public final static String MODULE_MAC = "EC:94:CB:4E:1E:36";
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -30,10 +34,12 @@ public class MainActivity extends AppCompatActivity {
     Button newBreath;
     TextView response;
     public Handler handler;
+    DBHelper myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myDB = new DBHelper(this);
         setContentView(R.layout.activity_main);
         setTitle("Drinking Buddy");
         initializeComponents();
@@ -137,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     super.handleMessage(receivedMessage);
                     if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
                         String message = (String)receivedMessage.obj;
+                        myDB.insertNewResult(message);
                         response.setText("Your Blood Alcohol Level is: " + message);
                     }
                 }
