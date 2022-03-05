@@ -23,7 +23,7 @@ import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.R;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String MODULE_MAC = "EC:94:CB:4E:1E:36";
+    public final static String MODULE_MAC = "78:E3:6D:0A:87:92";    // put your own mac address found with bluetooth serial app
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     BluetoothAdapter bluetoothAdapter;
