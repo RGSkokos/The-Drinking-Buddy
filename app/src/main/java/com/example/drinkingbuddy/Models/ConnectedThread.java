@@ -1,88 +1,64 @@
 package com.example.drinkingbuddy.Models;
-
 import android.bluetooth.BluetoothSocket;
 import android.os.Message;
 import android.util.Log;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import android.os.Handler;
 
+// This class has been inspired by an Arduino tutorial of a light switch
+// Link of Tutorial: https://create.arduino.cc/projecthub/azoreanduino/simple-bluetooth-lamp-controller-using-android-and-arduino-aa2253
 public class ConnectedThread extends Thread{
-    private final BluetoothSocket mmSocket;
-    private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
+    private BluetoothSocket bluetoothSocket;
+    private InputStream inputStream;
+    private OutputStream outputStream;
     public static final int RESPONSE_MESSAGE = 10;
-    Handler uih;
+    Handler handler;
 
-    public ConnectedThread(BluetoothSocket socket, Handler uih){
-        mmSocket = socket;
-        InputStream tmpIn = null;
-        OutputStream tmpOut = null;
-        this.uih = uih;
-        Log.i("[THREAD-CT]","Creating thread");
+    // Connect Thread to Bluetooth Device
+    public ConnectedThread(BluetoothSocket socket, Handler newHandler) {
+        bluetoothSocket = socket;
+        handler = newHandler;
         try{
-            tmpIn = socket.getInputStream();
-            tmpOut = socket.getOutputStream();
-
-        } catch(IOException e) {
-            Log.e("[THREAD-CT]","Error:"+ e.getMessage());
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+            outputStream.flush();
         }
 
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
-
-        try {
-            mmOutStream.flush();
-        } catch (IOException e) {
-            return;
+        catch(Exception e) {
+            Log.d("Problem","Something is Wrong");
         }
-        Log.i("[THREAD-CT]","IO's obtained");
-
     }
 
+    // Run Thread, waiting for Incoming Messages
     public void run(){
-        //byte[] buffer = new byte[1024];
-        //int bytes;
-        BufferedReader br = new BufferedReader(new InputStreamReader(mmInStream));
-        Log.i("[THREAD-CT]","Starting thread");
-        while(true){
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        while(true) {
             try{
-                // bytes = mmInStream.read(buffer);
-                String resp = br.readLine();
-                //Transfer these data to the UI thread
-                Message msg = new Message();
-                msg.what = RESPONSE_MESSAGE;
-                msg.obj = resp;
-                uih.sendMessage(msg);
-            }catch(IOException e){
+                String response = bufferedReader.readLine();
+                Message newMessage = new Message();
+                newMessage.what = RESPONSE_MESSAGE;
+                newMessage.obj = response;
+                handler.sendMessage(newMessage);
+            }
+
+            catch(Exception e) {
+                Log.d("Problem","Something is Wrong");
                 break;
             }
         }
-        Log.i("[THREAD-CT]","While loop ended");
     }
 
+    // Sending a Message Whenever on is Available
     public void write(byte[] bytes){
         try{
-            Log.i("[THREAD-CT]", "Writting bytes");
-            mmOutStream.write(bytes);
-
+            outputStream.write(bytes);
         }
 
-        catch(IOException e) {
-
-        }
-    }
-
-    public void cancel(){
-        try {
-            mmSocket.close();
-        }
-        catch(IOException e) {
-
+        catch(Exception e) {
+            Log.d("Problem","Something is Wrong");
         }
     }
 }

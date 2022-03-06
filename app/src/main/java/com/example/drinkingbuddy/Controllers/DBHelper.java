@@ -69,14 +69,33 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public List<String> getAllResults() {
+        List<String> results = new ArrayList<>();
+        SQLiteDatabase userDatabase = this.getReadableDatabase();
+        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME, null, null, null, null, null, null);
+        if(userTableCursor != null) {
+            if(userTableCursor.moveToFirst()) {
+                do {
+                    String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
+                    results.add(bloodAlcohol);
+
+                } while(userTableCursor.moveToNext());
+            }
+        }
+
+        return results;
+    }
+
+    /*
     //function to receive list of all previous results
-    public List<String> RetreiveResults()
+    public List<String> RetrieveResults()
     {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
 
+        List<String> HistoryOfResults = new ArrayList<>();
         try{
-            List<String> HistoryOfResults = new ArrayList<>();
+
             cursor = db.query(Config.TABLE_NAME, null, null, null, null, null, null);
 
             if(cursor != null)
@@ -101,6 +120,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.close();
             }
         }
-        return Collections.emptyList();
-    }
+
+        return HistoryOfResults;
+    }*/
 }
