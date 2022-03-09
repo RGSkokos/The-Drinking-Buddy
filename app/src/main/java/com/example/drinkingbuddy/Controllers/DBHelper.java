@@ -1,25 +1,28 @@
 package com.example.drinkingbuddy.Controllers;
 
-import android.annotation.SuppressLint;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.drinkingbuddy.Models.Breathalyzer;
+
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "DBHelper";
 
-    private Context context;
+    private final Context context;
 
     public DBHelper(Context context)
     {
@@ -32,13 +35,21 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         String CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
-                + " (" + Config.Result + " TEXT NOT NULL)";
+                + " (" + Config.Result + " TEXT NOT NULL,"
+                +  Config.TimeStamp + " TEXT NOT NULL)";
 
         sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
 
         Log.d(TAG, "db created");
 
     }
+
+    public String TimeStamp()
+    {
+        String timestamp = new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
+        return timestamp;
+    }
+
 
     //not currently needed but can be implemented in the future
     @Override
@@ -51,8 +62,9 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-
+        String currentStamp = TimeStamp();
         contentValues.put(Config.Result, result);
+        contentValues.put(Config.TimeStamp, currentStamp);
 
         try{
             db.insertOrThrow(Config.TABLE_NAME, null, contentValues);
@@ -69,21 +81,22 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<String> getAllResults() {
-        List<String> results = new ArrayList<>();
+    public List<Breathalyzer> getAllResults() {
+        List<Breathalyzer> breathalyzer_values = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
         Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME, null, null, null, null, null, null);
         if(userTableCursor != null) {
             if(userTableCursor.moveToFirst()) {
                 do {
                     String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
-                    results.add(bloodAlcohol);
+                    String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TimeStamp));
+                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp)));
 
                 } while(userTableCursor.moveToNext());
             }
         }
 
-        return results;
+        return breathalyzer_values;
     }
 
     /*

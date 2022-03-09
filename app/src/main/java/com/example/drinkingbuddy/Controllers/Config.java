@@ -7,4 +7,5 @@ public class Config {
     public static final String TABLE_NAME = "Results_table";
 
     public static final String Result = "Result_Of_Measurement";
+    public static String TimeStamp = "TimeStamp";
 }

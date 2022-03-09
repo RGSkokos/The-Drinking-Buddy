@@ -24,11 +24,12 @@ import java.util.UUID;
 import android.os.Handler;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.R;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
+    public final static String MODULE_MAC = "EC:94:CB:4C:72:02";    // put your own mac address found with bluetooth serial app
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
     BluetoothAdapter bluetoothAdapter;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     ListView resultsList;
     public Handler handler;
     DBHelper myDB;
-    List<String> results;
+    List<Breathalyzer> breathalyzer_values;
     DecimalFormat decimalFormat = new DecimalFormat("0.0000");
 
     @Override
@@ -190,12 +191,13 @@ public class MainActivity extends AppCompatActivity {
 
     // Display the Database
     public void displayResults() {
-        results = myDB.getAllResults();
+        breathalyzer_values = myDB.getAllResults();
         ArrayList<String> sampledResults = new ArrayList<>();
-        for(int i = results.size()-1; i >= 0; i--) {
-            double temp = Double.parseDouble(results.get(i));
+        for(int i = breathalyzer_values.size()-1; i >= 0; i--) {
+            double temp = Double.parseDouble(breathalyzer_values.get(i).getResult());
+            String timeStamp = breathalyzer_values.get(i).getTimeStamp();
             temp = (((temp-1500)/5000));
-            sampledResults.add(String.valueOf(decimalFormat.format(temp)));
+            sampledResults.add(String.valueOf(decimalFormat.format(temp) + "%, Time:" + timeStamp));
         }
 
         ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sampledResults);
