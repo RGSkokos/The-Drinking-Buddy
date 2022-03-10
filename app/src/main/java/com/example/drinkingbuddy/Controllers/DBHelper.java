@@ -46,8 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String TimeStamp()
     {
-        String timestamp = new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
-        return timestamp;
+        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
     }
 
 
@@ -95,7 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while(userTableCursor.moveToNext());
             }
         }
-
+        userTableCursor.close();
         return breathalyzer_values;
     }
 
