@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//      TODO: redirect to LoginActivity
+//        if (user not logged in)
+//            goToLogin();
+
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_main);
         setTitle("Drinking Buddy");
@@ -57,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         newBreath.setEnabled(false);
         displayResults();
+
+        if (savedInstanceState == null) {
+            Log.d("MainActivity", "Test Redirect running");
+            goToLogin();
+        }
     }
 
     @Override
@@ -202,5 +213,10 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sampledResults);
         resultsList.setAdapter(arrayAdapter);
+    }
+
+    protected void goToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
