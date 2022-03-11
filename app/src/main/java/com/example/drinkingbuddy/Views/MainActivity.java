@@ -51,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//      TODO: redirect to LoginActivity
-//        if (user not logged in)
-//            goToLogin();
 
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_main);
@@ -63,10 +60,28 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         newBreath.setEnabled(false);
         displayResults();
+    }
 
-        if (savedInstanceState == null) {
-            Log.d("MainActivity", "Test Redirect running");
-            goToLogin();
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //Reference: https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
+        //this is how the value is retrieved from the previous activity
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) //if there is an existing value passed with the intent
+        {
+            //check if log in was successful
+            boolean val = extras.getBoolean("LoggedIn");
+            if(val == false)
+            {
+                goToLogin(); //if unsuccesful, go back to login
+            }
+        }
+        else
+        {
+            goToLogin(); //if no extras, login was never reached and should be reverted back to
         }
     }
 

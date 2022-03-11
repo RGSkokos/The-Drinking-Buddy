@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Models.Breathalyzer;
+import com.example.drinkingbuddy.Models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,13 @@ public class DBHelper extends SQLiteOpenHelper {
                 + " (" + Config.Result + " TEXT NOT NULL,"
                 +  Config.TimeStamp + " TEXT NOT NULL)";
 
+        String CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
+                + " (" + Config.USERNAME + " TEXT NOT NULL,"
+                + Config.PASSWORD + " TEXT NOT NULL,"
+                + Config.DEVICE_NAME + " TEXT NOT NULL,"
+                + Config.DEVICE_CODE + " TEXT NOT NULL)";
+
+        sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
         sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
 
         Log.d(TAG, "db created");
@@ -46,8 +54,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String TimeStamp()
     {
-        String timestamp = new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
-        return timestamp;
+        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
+
     }
 
 
@@ -55,6 +63,31 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    //Method to add new Profile
+    public void insertNewProfile(Profile profile)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Config.USERNAME, profile.getUsername());
+        contentValues.put(Config.PASSWORD, profile.getPassword());
+        contentValues.put(Config.DEVICE_NAME, profile.getDeviceName());
+        contentValues.put(Config.DEVICE_CODE, profile.getDeviceCode());
+
+        try {
+            db.insertOrThrow(Config.TABLE_NAME_PROFILE, null, contentValues);
+            Log.d(TAG, "User Profile Added");
+        }catch (SQLException e)
+        {
+            Log.d(TAG, "EXCEPTION" + e);
+            Toast.makeText(context, "Operation Failed!: " + e, Toast.LENGTH_LONG).show();
+
+        }
+        finally {
+            db.close();
+
+        }
     }
 
     //Method to insert a new entry for result from breathalyzer
@@ -73,7 +106,6 @@ public class DBHelper extends SQLiteOpenHelper {
         {
             Log.d(TAG, "EXCEPTION: " + e);
             Toast.makeText(context, "Operation Failed!: " + e, Toast.LENGTH_LONG).show();
-
         }
         finally {
             db.close();
@@ -81,9 +113,52 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+
+    //Check if a username and password pair exists
+    public boolean CheckProfile(String user, String pass)
+    {
+        SQLiteDatabase profileDatabase = this.getReadableDatabase();
+        Cursor Cursor = null;
+
+        try{
+
+            Cursor = profileDatabase.query(Config.TABLE_NAME_PROFILE, null, null, null, null, null, null);
+
+            if(Cursor != null)
+            {
+                if(Cursor.moveToFirst())
+                {
+                    do{
+                        String Username = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.USERNAME));
+                        String Password = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.PASSWORD));
+                        Log.d(TAG, "User " + Username + "Password " + Password);
+                        if(user.equals(Username) && pass.equals(Password)) //if the user and password in database matches passed parameters
+                        {
+                            return true;
+                        }
+                    } while(Cursor.moveToNext());
+                }
+            }
+        }catch (SQLException e)
+        {
+            Log.d(TAG, "EXCEPTION: " + e);
+            Toast.makeText(context, "Operation Failed", Toast.LENGTH_LONG).show();
+        }
+        finally {
+            if(Cursor != null)
+            {
+                Cursor.close();
+                profileDatabase.close();
+            }
+        }
+
+        return false; //if username and password not found
+    }
+
     public List<Breathalyzer> getAllResults() {
         List<Breathalyzer> breathalyzer_values = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
+
         Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME, null, null, null, null, null, null);
         if(userTableCursor != null) {
             if(userTableCursor.moveToFirst()) {
@@ -95,8 +170,66 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while(userTableCursor.moveToNext());
             }
         }
-
+        userTableCursor.close();
         return breathalyzer_values;
+    }
+
+    //check if specific variable exists
+    //first parameter is actual value while second specifies if it is a username, password, etc.
+    public boolean CheckIfValExists(String Val, String TypeofValue) {
+        SQLiteDatabase profileDatabase = this.getReadableDatabase();
+        Cursor Cursor = null;
+
+        try{
+
+            Cursor = profileDatabase.query(Config.TABLE_NAME_PROFILE, null, null, null, null, null, null);
+
+            if(Cursor != null)
+            {
+                if(Cursor.moveToFirst())
+                {
+
+                    String valueFound = "";
+                    do{
+                        //based on type of value being looked at, grab the variable for the current profile
+                        if(TypeofValue == "username")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.USERNAME));
+                        }
+                        else if(TypeofValue == "password")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.PASSWORD));
+                        }
+                        else if(TypeofValue == "device_name")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_NAME));
+                        }else if(TypeofValue == "device_code")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_CODE));
+                        }
+
+
+                        if(Val.equals(valueFound)) //if this is equivalent to what is being searched for
+                        {
+                            return true;
+                        }
+                    } while(Cursor.moveToNext());
+                }
+            }
+        }catch (SQLException e)
+        {
+            Log.d(TAG, "EXCEPTION: " + e);
+            Toast.makeText(context, "Operation Failed", Toast.LENGTH_LONG).show();
+        }
+        finally {
+            if(Cursor != null)
+            {
+                Cursor.close();
+                profileDatabase.close();
+            }
+        }
+
+        return false;
     }
 
     /*

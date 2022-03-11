@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -22,12 +24,12 @@ public class RegistrationActivity extends AppCompatActivity {
     private String password;
     private String deviceName;
     private String deviceCode;
-
+    private DBHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
+        db = new DBHelper(this);
         initializeComponents();
         setupButtonListeners();
     }
@@ -41,24 +43,34 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     protected void setupButtonListeners() {
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: put data obtained in database
-                username = usernameRegisterEditText.getText().toString();
-                password = passwordRegisterEditText.getText().toString();
-                deviceName = deviceNameEditText.getText().toString();
-                deviceCode = deviceCodeEditText.getText().toString();
+        registerButton.setOnClickListener(view -> {
 
+            username = usernameRegisterEditText.getText().toString();
+            password = passwordRegisterEditText.getText().toString();
+            deviceName = deviceNameEditText.getText().toString();
+            deviceCode = deviceCodeEditText.getText().toString();
+
+
+            if(db.CheckIfValExists(username, "username") || db.CheckIfValExists(deviceCode, "device_code")) //check if either the user or device code already exist
+            {
+                Toast.makeText(getApplicationContext(), "User name or device code already exists", Toast.LENGTH_LONG).show();
+            }
+            else{ //check if inputs are correct and, if so, finish registration
                 if (username.isEmpty() || password.isEmpty() || deviceName.isEmpty() || deviceCode.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Empty input", Toast.LENGTH_LONG).show();
                 } else if (Character.isDigit(username.charAt(0)) || username.charAt(0) == '-' || username.charAt(username.length()-1) == '-') {
                     Toast.makeText(getApplicationContext(), "Invalid username", Toast.LENGTH_LONG).show();
-                } else {
+                } else { //If everything is okay
                     Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
+                    Profile NewProfile = new Profile(username, password, deviceName, deviceCode);
+                    db.insertNewProfile(NewProfile);
                     redirectToMain();
                 }
             }
+
+
+
+
         });
     }
 
