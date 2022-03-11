@@ -45,7 +45,7 @@ public class ConnectedThread extends Thread{
             }
 
             catch(Exception e) {
-                Log.d("Problem","Something is Wrong");
+                Log.d("Problem","Something is Wrong in RUN");
                 break;
             }
         }
@@ -58,7 +58,7 @@ public class ConnectedThread extends Thread{
         }
 
         catch(Exception e) {
-            Log.d("Problem","Something is Wrong");
+            Log.d("Problem","Something is Wrong in WRITE");
         }
     }
 }
