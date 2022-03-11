@@ -1,5 +1,6 @@
 package com.example.drinkingbuddy.Controllers;
 
+//config file to define string values in database helper
 public class Config {
 
     public static final String DATABASE_NAME = "Breathalyzer_Result";

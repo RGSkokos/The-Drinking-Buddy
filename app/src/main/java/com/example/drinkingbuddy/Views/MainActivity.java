@@ -29,6 +29,7 @@ import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.R;
 
 public class MainActivity extends AppCompatActivity {
+
     public final static String MODULE_MAC = "EC:94:CB:4C:72:02";    // put your own mac address found with bluetooth serial app
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     TextView homeTextView;
     Button connectButton;
     Button newBreath;
+    Button Trends;
     TextView response;
     ListView resultsList;
     public Handler handler;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         homeTextView = (TextView) findViewById(R.id.homeTextView);
         connectButton = (Button) findViewById(R.id.connectButton);
         newBreath = (Button) findViewById(R.id.newBreath);
+        Trends = (Button) findViewById(R.id.Trends);
         response = (TextView) findViewById(R.id.response);
         resultsList = (ListView) findViewById(R.id.resultsList);
     }
@@ -99,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sendMessage();
+            }
+        });
+
+        Trends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToTrendsActivity();
             }
         });
     }
@@ -203,4 +213,12 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sampledResults);
         resultsList.setAdapter(arrayAdapter);
     }
+
+    public void goToTrendsActivity()
+    {
+        Intent intent = new Intent(this, GraphActivity.class);
+        startActivity(intent);
+    }
+
+
 }

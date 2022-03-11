@@ -44,6 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    //REFERENCE: https://stackoverflow.com/questions/23068676/how-to-get-current-timestamp-in-string-format-in-java-yyyy-mm-dd-hh-mm-ss
     public String TimeStamp()
     {
         String timestamp = new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());

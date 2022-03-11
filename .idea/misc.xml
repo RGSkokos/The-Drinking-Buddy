@@ -3,7 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/abhin/ide-7.1-workspace/COEN_320_Project/ELEC-COEN-390/app/src/main/res/layout/activity_graph.xml" value="0.2" />
         <entry key="..\:/Users/abhin/ide-7.1-workspace/COEN_320_Project/ELEC-COEN-390/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/abhin/ide-7.1-workspace/COEN_320_Project/ELEC-COEN-390/app/src/main/res/layout/activity_trend.xml" value="0.2" />
+        <entry key="..\:/Users/abhin/ide-7.1-workspace/COEN_320_Project/ELEC-COEN-390/app/src/main/res/layout/fragment_overall_consumption.xml" value="0.1" />
+        <entry key="..\:/Users/abhin/ide-7.1-workspace/COEN_320_Project/ELEC-COEN-390/app/src/main/res/layout/fragment_type_of_drinks.xml" value="0.26666666666666666" />
+        <entry key="..\:/Users/abhin/ide-7.1-workspace/COEN_320_Project/ELEC-COEN-390/app/src/main/res/layout/fragment_weekly_habits.xml" value="0.18489583333333334" />
         <entry key="..\:/Users/simeo/AndroidStudioProjects/ELEC-COEN-390/app/src/main/res/layout/activity_main.xml" value="0.14479166666666668" />
       </map>
     </option>

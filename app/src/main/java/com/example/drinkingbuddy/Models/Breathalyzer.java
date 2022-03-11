@@ -6,11 +6,13 @@ public class Breathalyzer {
     String Result;
     String TimeStamp;
 
+    //constructor
     public Breathalyzer(String result, String timeStamp) {
         Result = result;
         TimeStamp = timeStamp;
     }
 
+    //getters and setters
     public String getResult() {
         return Result;
     }
