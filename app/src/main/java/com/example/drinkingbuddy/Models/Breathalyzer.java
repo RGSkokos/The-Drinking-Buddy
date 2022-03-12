@@ -5,6 +5,7 @@ public class Breathalyzer {
     //instance variables
     String Result;
     String TimeStamp;
+    String DayOfWeek;
 
     //constructor
     public Breathalyzer(String result, String timeStamp) {
@@ -12,7 +13,22 @@ public class Breathalyzer {
         TimeStamp = timeStamp;
     }
 
+    public Breathalyzer(String result, String timeStamp, String dayOfWeek) {
+        Result = result;
+        TimeStamp = timeStamp;
+        DayOfWeek = dayOfWeek;
+    }
+
     //getters and setters
+
+    public String getDayOfWeek() {
+        return DayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        DayOfWeek = dayOfWeek;
+    }
+
     public String getResult() {
         return Result;
     }

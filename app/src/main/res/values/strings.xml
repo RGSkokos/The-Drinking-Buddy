@@ -5,5 +5,6 @@
     <string name="type_of_drink">Type of Drink</string>
     <string name="drinking_activity">Drinking Activity</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type_of_drink_fragment">Hello blank fragment</string>
+    <string name="todo">TODO</string>
 </resources>

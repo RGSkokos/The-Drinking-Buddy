@@ -36,9 +36,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
                 + " (" + Config.Result + " TEXT NOT NULL,"
-                +  Config.TimeStamp + " TEXT NOT NULL)";
+                +  Config.TimeStamp + " TEXT NOT NULL,"
+                + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
+
+        String CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
+                + " (" + Config.TYPE_OF_DRINK + " TEXT NOT NULL)";
 
         sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
+        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_OF_DRINK);
 
         Log.d(TAG, "db created");
 
@@ -49,6 +54,13 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         String timestamp = new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
         return timestamp;
+    }
+
+    public String DayOfWeek()
+    {
+        String dayOfWeek = new SimpleDateFormat("EEEE").format(new Date());
+        Log.d(TAG, dayOfWeek);
+        return dayOfWeek;
     }
 
 
@@ -64,8 +76,10 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         String currentStamp = TimeStamp();
+        String dayOfWeek = DayOfWeek();
         contentValues.put(Config.Result, result);
         contentValues.put(Config.TimeStamp, currentStamp);
+        contentValues.put(Config.DAY_OF_WEEK, dayOfWeek);
 
         try{
             db.insertOrThrow(Config.TABLE_NAME, null, contentValues);
@@ -91,13 +105,54 @@ public class DBHelper extends SQLiteOpenHelper {
                 do {
                     String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
                     String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TimeStamp));
-                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp)));
+                    String dayOfWeek = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.DAY_OF_WEEK));
+                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp), dayOfWeek));
 
                 } while(userTableCursor.moveToNext());
             }
         }
 
         return breathalyzer_values;
+    }
+
+    public ArrayList ReturnDrinkTypes(){
+        ArrayList drink_types = new ArrayList<>();
+        SQLiteDatabase userDatabase = this.getReadableDatabase();
+        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_DRINK_TYPE, null, null, null, null, null, null);
+        if(userTableCursor != null) {
+            if(userTableCursor.moveToFirst()) {
+                do {
+                    String drink_type = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TYPE_OF_DRINK));
+                    drink_types.add(drink_type);
+
+                } while(userTableCursor.moveToNext());
+            }
+        }
+
+        return drink_types;
+    }
+
+    public void SaveDrinkType(String type_of_drink) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(Config.TYPE_OF_DRINK, type_of_drink);
+
+        try {
+            db.insertOrThrow(Config.TABLE_NAME_DRINK_TYPE, null, contentValues);
+            Log.d(TAG, type_of_drink);
+
+
+        } catch (SQLException e)
+        {
+            Log.d(TAG, "EXCEPTION: " + e);
+            Toast.makeText(context, "Operation Failed!: " + e, Toast.LENGTH_LONG).show();
+
+        }
+        finally {
+            db.close();
+
+        }
     }
 
     /*

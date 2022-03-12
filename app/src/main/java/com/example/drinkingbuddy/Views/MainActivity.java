@@ -41,8 +41,11 @@ public class MainActivity extends AppCompatActivity {
     Button connectButton;
     Button newBreath;
     Button Trends;
+    Button specifyDrink;
     TextView response;
     ListView resultsList;
+    String type_of_drink;
+    String message;
     public Handler handler;
     DBHelper myDB;
     List<Breathalyzer> breathalyzer_values;
@@ -59,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         newBreath.setEnabled(false);
         displayResults();
+
+
     }
 
     @Override
@@ -79,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         Trends = (Button) findViewById(R.id.Trends);
         response = (TextView) findViewById(R.id.response);
         resultsList = (ListView) findViewById(R.id.resultsList);
+        specifyDrink = (Button) findViewById(R.id.SetDrinkType);
     }
 
     // Setup Button Listeners
@@ -102,6 +108,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sendMessage();
+                myDB.SaveDrinkType(type_of_drink);
+            }
+        });
+
+        specifyDrink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TypeOfDrinkFragment dialog = new TypeOfDrinkFragment();
+                dialog.show(getSupportFragmentManager(), "TypeOfDrink");
             }
         });
 
@@ -185,11 +200,11 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message receivedMessage) {
                 super.handleMessage(receivedMessage);
                 if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
-                    String message = (String) receivedMessage.obj;
-                    myDB.insertNewResult(message);
+                    message = (String) receivedMessage.obj;
                     double temp = Double.parseDouble(message);
                     temp = (((temp-1500)/5000));
                     response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp)));
+                    myDB.insertNewResult(message);
                     displayResults();
                 }
             }
@@ -221,4 +236,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void setTypeOfDrink(String type) {
+        type_of_drink = type;
+    }
 }
