@@ -43,7 +43,6 @@ public class HomePage extends AppCompatActivity {
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
-     //   ((BluetoothHelper)this.getApplicationContext()).BT.connectToBreathalyzer();
     }
 
     @Override

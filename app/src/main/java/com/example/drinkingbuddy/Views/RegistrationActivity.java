@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -51,7 +50,7 @@ public class RegistrationActivity extends AppCompatActivity {
             deviceCode = deviceCodeEditText.getText().toString();
 
 
-            if(db.CheckIfValExists(username, "username") || db.CheckIfValExists(deviceCode, "device_code")) //check if either the user or device code already exist
+            if(db.checkIfValExists(username, "username") || db.checkIfValExists(deviceCode, "device_code")) //check if either the user or device code already exist
             {
                 Toast.makeText(getApplicationContext(), "User name or device code already exists", Toast.LENGTH_LONG).show();
             }
@@ -64,7 +63,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Username too short", Toast.LENGTH_LONG).show();
                 } else if (password.length() < 5) {
                     Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_LONG).show();
-                } else { //If everything is okay
+                } else if (deviceCode.length() != 17 || deviceCode.charAt(2) != ':' || deviceCode.charAt(5) != ':' || deviceCode.charAt(8) != ':' || deviceCode.charAt(11) != ':' || deviceCode.charAt(14) != ':') {
+                    Toast.makeText(getApplicationContext(), "Invalid device code", Toast.LENGTH_LONG).show();
+                }
+                else { //If everything is okay
                     Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
                     Profile NewProfile = new Profile(username, password, deviceName, deviceCode);
                     db.insertNewProfile(NewProfile);

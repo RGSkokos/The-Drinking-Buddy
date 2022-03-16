@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
@@ -47,10 +46,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String usernameEntered = usernameLoginTextEdit.getText().toString();
                 String passwordEntered = passwordLoginTextEdit.getText().toString();
-                if (usernameEntered.isEmpty()) {
+                if (usernameEntered.isEmpty() || passwordEntered.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Missing input", Toast.LENGTH_LONG).show();
                 }
-                int id = db.CheckProfile(usernameEntered, passwordEntered);
+                int id = db.checkProfile(usernameEntered, passwordEntered);
                 if (id != 0) //check if profile with given user and password exists
                 {
                     Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();

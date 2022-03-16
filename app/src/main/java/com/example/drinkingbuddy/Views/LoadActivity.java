@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -23,12 +24,13 @@ import java.util.UUID;
 import android.os.Handler;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.R;
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public final static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -42,7 +44,7 @@ public class LoadActivity extends AppCompatActivity {
     protected TextView done;
     protected Toolbar toolbar;
     public Handler handler;
-    protected DBHelper myDB;
+    private DBHelper myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,9 @@ public class LoadActivity extends AppCompatActivity {
         setContentView(R.layout.activity_load);
         setTitle("Drinking Buddy");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(LoadActivity.this);
+        MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
+        Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
         loadingTimer();
 
@@ -123,6 +128,7 @@ public class LoadActivity extends AppCompatActivity {
             @Override
             public void run() {
                 new CountDownTimer(5000, 1000) {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onTick(long millisUntilFinished) {
                         countDown.setText(""+millisUntilFinished / 1000);
