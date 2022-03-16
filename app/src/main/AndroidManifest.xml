@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.drinkingbuddy">
+
     <uses-feature android:name="android.hardware.bluetooth" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -9,32 +10,48 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED"
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_PRIVILEGED"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/drinking_buddy_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/drinking_buddy_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DrinkingBuddy"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:name=".Controllers.BluetoothHelper"
         android:parentActivityName= "HomePage"
         >
+        <activity
+            android:name=".Views.RegistrationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Views.LoginActivity"
+            android:exported="false"
+            android:parentActivityName=".Views.HomePage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Views.HomePage" />
+        </activity>
+        <activity
+            android:exported="true"
+            android:name=".Views.LoadActivity"
+            android:parentActivityName=".Views.HomePage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Views.HomePage" />
+        </activity>
         <activity
             android:name=".Views.HomePage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:exported="true"
-            android:name=".Views.Load_Activity"
-            android:parentActivityName =".Views.HomePage"/>
     </application>
 </manifest>
