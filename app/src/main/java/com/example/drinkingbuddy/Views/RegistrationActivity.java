@@ -75,7 +75,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     protected void redirectToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
     }
 }

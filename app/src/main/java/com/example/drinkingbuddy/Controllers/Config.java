@@ -13,5 +13,4 @@ public class Config {
     public static final String PASSWORD = "profile_password";
     public static final String DEVICE_NAME = "profile_device";
     public static final String DEVICE_CODE = "profile_code";
-
 }

@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     protected void redirectToMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomePage.class);
         //the following line was found at this reference: https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
         //its a method to pass a value with the intent
         intent.putExtra("LoggedIn", true);
