@@ -31,19 +31,27 @@
             android:exported="false" />
         <activity
             android:name=".Views.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Views.HomePage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Views.HomePage" />
+        </activity>
+        <activity
+            android:exported="true"
+            android:name=".Views.LoadActivity"
+            android:parentActivityName=".Views.HomePage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Views.HomePage" />
+        </activity>
         <activity
             android:name=".Views.HomePage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:exported="true"
-            android:name=".Views.LoadActivity"
-            android:parentActivityName =".Views.HomePage"/>
     </application>
 </manifest>

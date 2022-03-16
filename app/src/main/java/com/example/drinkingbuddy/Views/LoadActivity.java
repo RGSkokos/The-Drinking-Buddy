@@ -1,5 +1,7 @@
 package com.example.drinkingbuddy.Views;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import java.util.UUID;
 
 import android.os.Handler;
+
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.R;
@@ -31,14 +34,15 @@ public class LoadActivity extends AppCompatActivity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public GifImageView gifImageView;
 
-    BluetoothAdapter bluetoothAdapter;
-    BluetoothSocket bluetoothSocket;
-    BluetoothDevice bluetoothDevice;
-    ConnectedThread newThread = null;
-    TextView CountDown;
-    TextView done;
+    protected BluetoothAdapter bluetoothAdapter;
+    protected BluetoothSocket bluetoothSocket;
+    protected BluetoothDevice bluetoothDevice;
+    protected ConnectedThread newThread = null;
+    protected TextView countDown;
+    protected TextView done;
+    protected Toolbar toolbar;
     public Handler handler;
-    DBHelper myDB;
+    protected DBHelper myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +53,23 @@ public class LoadActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         initializeComponents();
         loadingTimer();
+
+        // Set up the toolbar
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
         gifImageView = (GifImageView) findViewById(R.id.loading_gif);
         done = (TextView) findViewById(R.id.done);
-        CountDown = (TextView) findViewById(R.id.ReadingCount);
-        CountDown.setVisibility(View.INVISIBLE);
+        countDown = (TextView) findViewById(R.id.ReadingCount);
+        toolbar = findViewById(R.id.toolbarLoad);
+        countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
     }
 
@@ -75,8 +88,8 @@ public class LoadActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 gifImageView.setVisibility(View.INVISIBLE);        //gif should no longer be displayed
-                CountDown.setText("READY");
-                CountDown.setVisibility(View.VISIBLE);
+                countDown.setText("READY");
+                countDown.setVisibility(View.VISIBLE);
                 done.setEnabled(false);
                 done.setVisibility(View.INVISIBLE);
             }
@@ -112,12 +125,12 @@ public class LoadActivity extends AppCompatActivity {
                 new CountDownTimer(5000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        CountDown.setText(""+millisUntilFinished / 1000);
+                        countDown.setText(""+millisUntilFinished / 1000);
                     }
                     @Override
                     public void onFinish() {
                         gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
-                        CountDown.setVisibility(View.INVISIBLE);
+                        countDown.setVisibility(View.INVISIBLE);
                         done.setVisibility(View.VISIBLE);
                     }
                 }.start();

@@ -60,6 +60,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Empty input", Toast.LENGTH_LONG).show();
                 } else if (Character.isDigit(username.charAt(0)) || username.charAt(0) == '-' || username.charAt(username.length()-1) == '-') {
                     Toast.makeText(getApplicationContext(), "Invalid username", Toast.LENGTH_LONG).show();
+                } else if (username.length() < 3) {
+                    Toast.makeText(getApplicationContext(), "Username too short", Toast.LENGTH_LONG).show();
+                } else if (password.length() < 5) {
+                    Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_LONG).show();
                 } else { //If everything is okay
                     Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
                     Profile NewProfile = new Profile(username, password, deviceName, deviceCode);
@@ -67,10 +71,6 @@ public class RegistrationActivity extends AppCompatActivity {
                     redirectToMain();
                 }
             }
-
-
-
-
         });
     }
 

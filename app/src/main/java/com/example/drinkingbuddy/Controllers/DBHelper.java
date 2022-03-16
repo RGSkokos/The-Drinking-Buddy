@@ -1,6 +1,7 @@
 package com.example.drinkingbuddy.Controllers;
 
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -40,24 +41,23 @@ public class DBHelper extends SQLiteOpenHelper {
                 +  Config.TimeStamp + " TEXT NOT NULL)";
 
         String CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
-                + " (" + Config.USERNAME + " TEXT NOT NULL,"
+                + " (" + Config.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Config.USERNAME + " TEXT NOT NULL,"
                 + Config.PASSWORD + " TEXT NOT NULL,"
                 + Config.DEVICE_NAME + " TEXT NOT NULL,"
                 + Config.DEVICE_CODE + " TEXT NOT NULL)";
 
-        sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
-        sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
-
         Log.d(TAG, "db created");
 
+        sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
+        sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
     }
 
+    @SuppressLint("SimpleDateFormat")
     public String TimeStamp()
     {
         return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
-
     }
-
 
     //not currently needed but can be implemented in the future
     @Override
@@ -86,7 +86,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         finally {
             db.close();
-
         }
     }
 
@@ -109,13 +108,12 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         finally {
             db.close();
-
         }
     }
 
 
     //Check if a username and password pair exists
-    public boolean CheckProfile(String user, String pass)
+    public int CheckProfile(String user, String pass)
     {
         SQLiteDatabase profileDatabase = this.getReadableDatabase();
         Cursor Cursor = null;
@@ -134,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         Log.d(TAG, "User " + Username + "Password " + Password);
                         if(user.equals(Username) && pass.equals(Password)) //if the user and password in database matches passed parameters
                         {
-                            return true;
+                            return Cursor.getInt(Cursor.getColumnIndexOrThrow(Config.ID));
                         }
                     } while(Cursor.moveToNext());
                 }
@@ -152,7 +150,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
 
-        return false; //if username and password not found
+        return 0; //if username and password not found
     }
 
     public List<Breathalyzer> getAllResults() {
@@ -188,7 +186,6 @@ public class DBHelper extends SQLiteOpenHelper {
             {
                 if(Cursor.moveToFirst())
                 {
-
                     String valueFound = "";
                     do{
                         //based on type of value being looked at, grab the variable for the current profile
@@ -207,7 +204,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         {
                             valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_CODE));
                         }
-
 
                         if(Val.equals(valueFound)) //if this is equivalent to what is being searched for
                         {

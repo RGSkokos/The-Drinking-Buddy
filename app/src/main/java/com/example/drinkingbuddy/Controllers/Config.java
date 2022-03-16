@@ -9,6 +9,7 @@ public class Config {
     public static final String TimeStamp = "TimeStamp";
 
     public static final String TABLE_NAME_PROFILE = "profile_table";
+    public static final String ID = "profile_id";
     public static final String USERNAME = "profile_user";
     public static final String PASSWORD = "profile_password";
     public static final String DEVICE_NAME = "profile_device";
