@@ -119,7 +119,6 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor Cursor = null;
 
         try{
-
             Cursor = profileDatabase.query(Config.TABLE_NAME_PROFILE, null, null, null, null, null, null);
 
             if(Cursor != null)
@@ -151,6 +150,35 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return 0; //if username and password not found
+    }
+
+    @SuppressLint("Range")
+    public Profile getProfileById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    String username = cursor.getString(cursor.getColumnIndex(Config.USERNAME));
+                    String deviceName = cursor.getString(cursor.getColumnIndex(Config.DEVICE_NAME));
+                    String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
+
+                    return new Profile(username, deviceName, deviceCode);
+                }
+            }
+        } catch (SQLiteException e){
+            Log.d(TAG, "EXCEPTION: " + e);
+            Toast.makeText(context, "Operation Failed: " + e, Toast.LENGTH_LONG).show();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return null;
     }
 
     @SuppressLint("Range")

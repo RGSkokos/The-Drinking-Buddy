@@ -51,7 +51,6 @@ public class LoadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_load);
-        setTitle("Drinking Buddy");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(LoadActivity.this);
         MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
