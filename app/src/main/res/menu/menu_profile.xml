@@ -4,8 +4,10 @@
 
     <item
         android:id="@+id/editProfileMenuItem"
+        android:icon="@drawable/ic_profile_outline_icon"
         android:title="Edit Profile" />
     <item
         android:id="@+id/logoutProfileMenuItem"
+        android:icon="@drawable/ic_logout_icon"
         android:title="Logout" />
 </menu>

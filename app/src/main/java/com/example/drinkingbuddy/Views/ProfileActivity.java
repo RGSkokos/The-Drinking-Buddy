@@ -2,6 +2,7 @@ package com.example.drinkingbuddy.Views;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
@@ -80,42 +81,56 @@ public class ProfileActivity extends AppCompatActivity {
         saveButton.setOnClickListener(saveOnClick);
     }
 
-    // ********* COMPLETE SAVE ON CLICK LISTENER ********
-    // issue: when to know not to save bc item incomplete? and when to switch to display mode
-
     private final View.OnClickListener saveOnClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (username.getText().length() != 0) {
-                if (username.getText().length() < 3) {
-                    Toast.makeText(getApplicationContext(), "Username too short!", Toast.LENGTH_LONG).show();
-                } else {
-                    // TODO: update username for user with id = sharedPreferencesHelper.getLoginId() in DB
-                }
+            String usernameEntered = (username.getText().length() != 0) ? username.getText().toString() : "";
+            String passwordEntered = (password.getText().length() != 0) ? password.getText().toString() : "";
+            String deviceNameEntered = (deviceName.getText().length() != 0) ? deviceName.getText().toString() : "";
+            String deviceCodeEntered = (deviceCode.getText().length() != 0) ? deviceCode.getText().toString() : "";
+
+            boolean error = false;
+
+            if (usernameEntered.length() != 0 && usernameEntered.length() < 3) {
+                Toast.makeText(getApplicationContext(), "Username too short", Toast.LENGTH_LONG).show();
+                error = true;
             }
-            if (password.getText().length() != 0) {
-                if (password.getText().length() < 5) {
-                    Toast.makeText(getApplicationContext(), "Password too short!", Toast.LENGTH_LONG).show();
-                } else if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+            if (passwordEntered.length() != 0) {
+                if (passwordEntered.length() < 5) {
+                    Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_LONG).show();
+                    error = true;
+                } else if (confirmPassword.getText().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "Please confirm password", Toast.LENGTH_LONG).show();
+                    error = true;
+                } else if (!passwordEntered.equals(confirmPassword.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_LONG).show();
-                } else {
-                    // TODO: update password
+                    error = true;
                 }
             }
-            if (deviceName.getText().length() != 0) {
-                // TODO: update device name
+            if (deviceCodeEntered.length() != 0) {
+                if (deviceCodeEntered.length() != 17 || deviceCodeEntered.charAt(2) != ':' || deviceCodeEntered.charAt(5) != ':' || deviceCodeEntered.charAt(8) != ':' || deviceCodeEntered.charAt(11) != ':' || deviceCodeEntered.charAt(14) != ':') {
+                    Toast.makeText(getApplicationContext(), "Invalid device code", Toast.LENGTH_LONG).show();
+                    error = true;
+                }
             }
-            if (deviceCode.getText().length() != 0) {
-                // TODO: update device code
+
+            if (!error) {
+                // TODO: Add non-empty values entered in DB
+                profile = database.getProfileById(sharedPreferencesHelper.getLoginId()); //update profile
+                setDisplayMode();
             }
-            profile = database.getProfileById(sharedPreferencesHelper.getLoginId());
         }
     };
 
     // Sets up the menu option bar to show profile and logout options
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_profile, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
         this.menu = menu;
         return true;
     }
@@ -126,11 +141,10 @@ public class ProfileActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.editProfileMenuItem) {
             if (flag) { // currently on display mode
                 setEditMode(); // go to Edit Mode
-                menuItemTitleChange(flag); // change to "Display Profile" menu option
             } else {
                 setDisplayMode();
-                menuItemTitleChange(flag);
             }
+            menuItemTitleChange(flag); // Toggle menu item title
             flag = !flag;
             return true;
         } else if (item.getItemId() == R.id.logoutProfileMenuItem) {
@@ -138,11 +152,6 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    protected void goToHome() {
-        Intent intent = new Intent(this, HomePage.class);
-        startActivity(intent);
     }
 
     protected void goToLogin() {
