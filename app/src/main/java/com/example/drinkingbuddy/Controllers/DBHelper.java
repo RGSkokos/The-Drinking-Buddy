@@ -33,13 +33,15 @@ public class DBHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
+//region Activity Life Cycle
     //simply creates database to hold breathalyzer entries
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         String CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
                 + " (" + Config.Result + " TEXT NOT NULL,"
-                +  Config.TimeStamp + " TEXT NOT NULL)";
+                +  Config.TimeStamp + " TEXT NOT NULL,"
+                + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
 
         String CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
                 + " (" + Config.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -48,24 +50,38 @@ public class DBHelper extends SQLiteOpenHelper {
                 + Config.DEVICE_NAME + " TEXT NOT NULL,"
                 + Config.DEVICE_CODE + " TEXT NOT NULL)";
 
+        String CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
+                + " (" + Config.TYPE_OF_DRINK + " TEXT NOT NULL)";
+
         Log.d(TAG, "db created");
 
         sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
         sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
+        sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_OF_DRINK);
     }
 
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+    }
+//endregion
+
+//region Helper Methods
     @SuppressLint("SimpleDateFormat")
     public String TimeStamp()
     {
         return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
     }
 
-    //not currently needed but can be implemented in the future
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public String DayOfWeek()
+    {
+        String dayOfWeek = new SimpleDateFormat("EEEE").format(new Date());
+        Log.d(TAG, dayOfWeek);
+        return dayOfWeek;
     }
+//endregion
 
+//region Insert Methods
     //Method to add new Profile
     public void insertNewProfile(Profile profile)
     {
@@ -96,8 +112,10 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         String currentStamp = TimeStamp();
+        String dayOfWeek = DayOfWeek();
         contentValues.put(Config.Result, result);
         contentValues.put(Config.TimeStamp, currentStamp);
+        contentValues.put(Config.DAY_OF_WEEK, dayOfWeek);
 
         try{
             db.insertOrThrow(Config.TABLE_NAME, null, contentValues);
@@ -112,6 +130,31 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void SaveDrinkType(String type_of_drink) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(Config.TYPE_OF_DRINK, type_of_drink);
+
+        try {
+            db.insertOrThrow(Config.TABLE_NAME_DRINK_TYPE, null, contentValues);
+            Log.d(TAG, type_of_drink);
+
+
+        } catch (SQLException e)
+        {
+            Log.d(TAG, "EXCEPTION: " + e);
+            Toast.makeText(context, "Operation Failed!: " + e, Toast.LENGTH_LONG).show();
+
+        }
+        finally {
+            db.close();
+
+        }
+    }
+//endregion
+
+//region validation methods
     //Check if a username and password pair exists
     public int checkProfile(String user, String pass)
     {
@@ -151,51 +194,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
         return 0; //if username and password not found
-    }
-
-    @SuppressLint("Range")
-    public String getDeviceCode(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = null;
-
-        try {
-            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
-
-                    return deviceCode;
-                }
-            }
-        } catch (SQLiteException e){
-            Log.d(TAG, "EXCEPTION: " + e);
-            Toast.makeText(context, "Operation Failed: " + e, Toast.LENGTH_LONG).show();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return null;
-    }
-
-    public List<Breathalyzer> getAllResults() {
-        List<Breathalyzer> breathalyzer_values = new ArrayList<>();
-        SQLiteDatabase userDatabase = this.getReadableDatabase();
-
-        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME, null, null, null, null, null, null);
-        if(userTableCursor != null) {
-            if(userTableCursor.moveToFirst()) {
-                do {
-                    String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
-                    String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TimeStamp));
-                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp)));
-
-                } while(userTableCursor.moveToNext());
-            }
-        }
-        userTableCursor.close();
-        return breathalyzer_values;
     }
 
     //check if specific variable exists
@@ -253,42 +251,70 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return false;
     }
+//endregion
 
-    /*
-    //function to receive list of all previous results
-    public List<String> RetrieveResults()
-    {
+//region Retrieval Methods
+    @SuppressLint("Range")
+    public String getDeviceCode(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
 
-        List<String> HistoryOfResults = new ArrayList<>();
-        try{
+        try {
+            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
 
-            cursor = db.query(Config.TABLE_NAME, null, null, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
 
-            if(cursor != null)
-            {
-                if(cursor.moveToFirst())
-                {
-                    do{
-                        @SuppressLint("Range") String resultRetrieved = cursor.getString(cursor.getColumnIndex(Config.Result));
-                    } while(cursor.moveToNext());
+                    return deviceCode;
                 }
-                return HistoryOfResults;
             }
-        }catch (SQLException e)
-        {
+        } catch (SQLiteException e){
             Log.d(TAG, "EXCEPTION: " + e);
-            Toast.makeText(context, "Operation Failed", Toast.LENGTH_LONG).show();
-        }
-        finally {
-            if(cursor != null)
-            {
+            Toast.makeText(context, "Operation Failed: " + e, Toast.LENGTH_LONG).show();
+        } finally {
+            if (cursor != null) {
                 cursor.close();
-                db.close();
+            }
+        }
+        return null;
+    }
+
+    public List<Breathalyzer> getAllResults() {
+        List<Breathalyzer> breathalyzer_values = new ArrayList<>();
+        SQLiteDatabase userDatabase = this.getReadableDatabase();
+
+        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME, null, null, null, null, null, null);
+        if(userTableCursor != null) {
+            if(userTableCursor.moveToFirst()) {
+                do {
+                    String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
+                    String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TimeStamp));
+                    String dayOfWeek = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.DAY_OF_WEEK));
+                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp), dayOfWeek));
+
+                } while(userTableCursor.moveToNext());
+            }
+        }
+        userTableCursor.close();
+        return breathalyzer_values;
+    }
+
+    public ArrayList ReturnDrinkTypes(){
+        ArrayList drink_types = new ArrayList<>();
+        SQLiteDatabase userDatabase = this.getReadableDatabase();
+        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_DRINK_TYPE, null, null, null, null, null, null);
+        if(userTableCursor != null) {
+            if(userTableCursor.moveToFirst()) {
+                do {
+                    String drink_type = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TYPE_OF_DRINK));
+                    drink_types.add(drink_type);
+
+                } while(userTableCursor.moveToNext());
             }
         }
 
-        return HistoryOfResults;
-    }*/
+        return drink_types;
+    }
+//endregion
 }
