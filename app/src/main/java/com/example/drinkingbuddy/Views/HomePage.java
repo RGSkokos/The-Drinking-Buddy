@@ -56,7 +56,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        displayResults(); //will display nothing if never entered data or most recent value of breathelizer
+        displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
 
         // Checks if a user is logged in by getting profile ID
         if (sharedPreferencesHelper.getLoginId() == 0) {

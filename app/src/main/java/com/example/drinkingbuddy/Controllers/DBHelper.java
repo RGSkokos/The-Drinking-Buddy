@@ -26,6 +26,9 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
     private final Context context;
+    String CREATE_TABLE_RESULTS;
+    String CREATE_TABLE_PROFILE;
+    String CREATE_TABLE_TYPE_OF_DRINK;
 
     public DBHelper(Context context)
     {
@@ -38,19 +41,19 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        String CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
+        CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
                 + " (" + Config.Result + " TEXT NOT NULL,"
                 +  Config.TimeStamp + " TEXT NOT NULL,"
                 + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
 
-        String CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
+        CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
                 + " (" + Config.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Config.USERNAME + " TEXT NOT NULL,"
                 + Config.PASSWORD + " TEXT NOT NULL,"
                 + Config.DEVICE_NAME + " TEXT NOT NULL,"
                 + Config.DEVICE_CODE + " TEXT NOT NULL)";
 
-        String CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
+        CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
                 + " (" + Config.TYPE_OF_DRINK + " TEXT NOT NULL)";
 
         Log.d(TAG, "db created");
@@ -58,6 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
         sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
         sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_OF_DRINK);
+
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -69,7 +73,10 @@ public class DBHelper extends SQLiteOpenHelper {
     //not currently needed but can be implemented in the future
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_PROFILE);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_RESULTS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_TYPE_OF_DRINK);
+        onCreate(sqLiteDatabase);
     }
 
     public String DayOfWeek()
@@ -229,9 +236,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
-                    String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
 
-                    return deviceCode;
+                    return cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
                 }
             }
         } catch (SQLiteException e){
@@ -260,6 +266,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while(userTableCursor.moveToNext());
             }
         }
+        assert userTableCursor != null;
         userTableCursor.close();
         return breathalyzer_values;
     }
