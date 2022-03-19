@@ -3,21 +3,17 @@ package com.example.drinkingbuddy.Views;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
-import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import pl.droidsonroids.gif.GifImageView;
+import com.example.drinkingbuddy.R;
 
 
 public class TypeOfDrinkFragment extends DialogFragment {
@@ -75,50 +71,33 @@ public class TypeOfDrinkFragment extends DialogFragment {
      //Choice string is also updated with the selected button
      //drink choice is set once submit button is clicked
 
-        CancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
+        CancelButton.setOnClickListener(view -> dismiss());
+
+        Submit.setOnClickListener(view -> {
+            //set variable for drink type in home page
+            ((HomePage) requireActivity()).setTypeOfDrink(Choice);
+            dismiss();
         });
 
-        Submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //set variable for drink type in home page
-                ((HomePage) getActivity()).setTypeOfDrink(Choice);
-                dismiss();
-            }
+        Liquor.setOnClickListener(view -> {
+            Liquor.setBackgroundColor(Color.RED);
+            Wine.setBackgroundColor(Color.WHITE);
+            Beer.setBackgroundColor(Color.WHITE);
+            Choice = "liquor";
         });
 
-        Liquor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Liquor.setBackgroundColor(Color.RED);
-                Wine.setBackgroundColor(Color.WHITE);
-                Beer.setBackgroundColor(Color.WHITE);
-                Choice = "liquor";
-            }
+        Wine.setOnClickListener(view -> {
+            Liquor.setBackgroundColor(Color.WHITE);
+            Wine.setBackgroundColor(Color.RED);
+            Beer.setBackgroundColor(Color.WHITE);
+            Choice = "wine";
         });
 
-        Wine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Liquor.setBackgroundColor(Color.WHITE);
-                Wine.setBackgroundColor(Color.RED);
-                Beer.setBackgroundColor(Color.WHITE);
-                Choice = "wine";
-            }
-        });
-
-        Beer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Liquor.setBackgroundColor(Color.WHITE);
-                Wine.setBackgroundColor(Color.WHITE);
-                Beer.setBackgroundColor(Color.RED);
-                Choice = "beer";
-            }
+        Beer.setOnClickListener(view -> {
+            Liquor.setBackgroundColor(Color.WHITE);
+            Wine.setBackgroundColor(Color.WHITE);
+            Beer.setBackgroundColor(Color.RED);
+            Choice = "beer";
         });
     }
 //endregion

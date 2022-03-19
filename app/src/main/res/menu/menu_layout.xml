@@ -5,7 +5,4 @@
     <item
         android:id="@+id/trendsMenuItem"
         android:title="Trends" />
-    <item
-        android:id="@+id/DrinkMenuItem"
-        android:title="Specify Drink Type" />
 </menu>

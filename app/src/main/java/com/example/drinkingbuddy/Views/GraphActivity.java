@@ -1,10 +1,14 @@
 package com.example.drinkingbuddy.Views;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuInflater;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
@@ -44,6 +48,7 @@ public class GraphActivity extends AppCompatActivity {
     String SpanOfData;
     BarChart chart;
     PieChart pieChart;
+
 
 //region Activity Life Cycle
    //onCreate only used to initialize components
@@ -139,7 +144,7 @@ public class GraphActivity extends AppCompatActivity {
         String title = "# of samples";
 
         //input data
-        double[] dayOfWeekCounter = new double[7];
+        double[] dayOfWeekCounter = {0, 0, 0, 0, 0, 0, 0};
         for(int i = 0; i < breathalyzer_values.size(); i++){
             String day = breathalyzer_values.get(i).getDayOfWeek();
             if(day.equals("Monday"))
@@ -196,6 +201,17 @@ public class GraphActivity extends AppCompatActivity {
         chart = (BarChart) findViewById(R.id.chart);
         MyChart = (LineChart) findViewById(R.id.reportingChart);
         pieChart = findViewById(R.id.pieChart_view);
+
+        // my_child_toolbar is defined in the layout file
+        Toolbar myChildToolbar =
+                (Toolbar) findViewById(R.id.GraphToolbar);
+        setSupportActionBar(myChildToolbar);
+
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        ab.setDisplayHomeAsUpEnabled(true);
     }
 //endregion
 
@@ -219,25 +235,24 @@ public class GraphActivity extends AppCompatActivity {
 
         //iterate through results from breathalyzer to set datapoint values
         //set start and end time for easy reference of how far the data spans
-        for (int i = 0; i < breathalyzer_values.size(); i++) {
-            if(i == (breathalyzer_values.size()-1))
-            {
-                EndTime = breathalyzer_values.get(i).getTimeStamp();
-            }
-            if(i == 0)
-            {
-                startTime = breathalyzer_values.get(i).getTimeStamp();
+        if(breathalyzer_values.size() > 0) {
+            for (int i = 0; i < breathalyzer_values.size(); i++) {
+                if (i == (breathalyzer_values.size() - 1)) {
+                    EndTime = breathalyzer_values.get(i).getTimeStamp();
+                }
+                if (i == 0) {
+                    startTime = breathalyzer_values.get(i).getTimeStamp();
+                }
+
+                double temp = Double.parseDouble(breathalyzer_values.get(i).getResult());
+                temp = (((temp - 1200) / 5000)); //second value in numerator needs to be based on calibration
+                temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+
+                vals.add(new Entry((i + 1), (float) temp));
             }
 
-            double temp = Double.parseDouble(breathalyzer_values.get(i).getResult());
-            temp = (((temp - 1200) / 5000)); //second value in numerator needs to be based on calibration
-            temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
-
-            vals.add(new Entry((i + 1), (float) temp));
+            SpanOfData = "from " + startTime + " to " + EndTime;
         }
-
-        SpanOfData = "from " + startTime + " to " + EndTime;
-
     }
 
     protected void displayLineGraph()

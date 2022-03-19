@@ -1,7 +1,9 @@
 package com.example.drinkingbuddy.Views;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -19,10 +22,10 @@ import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.sql.Timestamp;
+
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomePage extends AppCompatActivity {
@@ -30,8 +33,10 @@ public class HomePage extends AppCompatActivity {
     //instance variables
     protected BluetoothAdapter bluetoothAdapter;
     protected Button newBreath;
+    protected FloatingActionButton SpecifyDrinkButton;
     protected TextView response;
     protected TextView TimeStampTextview;
+    protected TextView CurrentDrinkTextView;
     protected Toolbar toolbar;
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
@@ -53,6 +58,13 @@ public class HomePage extends AppCompatActivity {
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
+
+        SpecifyDrinkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OpenFragment();
+            }
+        });
     }
 
     @Override
@@ -79,14 +91,19 @@ public class HomePage extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.trendsMenuItem:
-                goToTrends();
-                return true;
-            case R.id.DrinkMenuItem:
-                OpenFragment();
+                if(breathalyzer_values.size() > 0)
+                {
+                    goToTrends();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Must have at least 1 measurement to see trend", Toast.LENGTH_LONG).show();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -103,9 +120,12 @@ public class HomePage extends AppCompatActivity {
     protected void initializeComponents() {
         newBreath = (Button) findViewById(R.id.newBreath);
         response = (TextView) findViewById(R.id.response);
+        CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
         TimeStampTextview = findViewById(R.id.TimeStampTextView);
+        SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
+
         type_of_drink = "Unknown";
     }
 
@@ -117,17 +137,25 @@ public class HomePage extends AppCompatActivity {
 
 
     // Display the Database
+    @SuppressLint("SetTextI18n")
     public void displayResults () {
         breathalyzer_values = myDB.getAllResults();
+        String drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size()-1);
+        double temp = 0;
+        String timeStamp = "";
+        if(breathalyzer_values.size() > 0)
+        {
+            temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
+            timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
+            temp = (((temp - 1100) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+        }
 
-        double temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
-        String timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
-        temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
-        temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
 
-        response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp) + "%"));
+        response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
         TimeStampTextview.setText("Measurement Taken: " + timeStamp);
+        CurrentDrinkTextView.setText("Last Drink: " + drink);
 
     }
 
@@ -141,6 +169,7 @@ public class HomePage extends AppCompatActivity {
     };
 
     public void setTypeOfDrink(String type) {
+        CurrentDrinkTextView.setText("Current Drink: " + type);
         type_of_drink = type;
     }
 //endregion

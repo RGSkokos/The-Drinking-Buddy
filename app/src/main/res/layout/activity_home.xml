@@ -58,5 +58,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newBreath" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/SpecifyDrink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="330dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="28dp"
+        android:clickable="true"
+        app:backgroundTint="#E0E1E8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:maxImageSize="90dp"
+        app:srcCompat="@drawable/beer_bottle_foreground"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/CurrentDrinktextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="101dp"
+        android:layout_marginEnd="156dp"
+        android:text="Current Drink: "
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHome" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

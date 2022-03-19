@@ -20,6 +20,8 @@ import com.example.drinkingbuddy.Models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -70,12 +72,16 @@ public class DBHelper extends SQLiteOpenHelper {
     @SuppressLint("SimpleDateFormat")
     public String TimeStamp()
     {
-        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
+
+        //date formatting with timezone may not be necessary
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm MM/dd/yyyy", Locale.CANADA);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        return dateFormat.format(new Date());
     }
 
     public String DayOfWeek()
     {
-        String dayOfWeek = new SimpleDateFormat("EEEE").format(new Date());
+        @SuppressLint("SimpleDateFormat") String dayOfWeek = new SimpleDateFormat("EEEE").format(new Date());
         Log.d(TAG, dayOfWeek);
         return dayOfWeek;
     }
@@ -213,20 +219,19 @@ public class DBHelper extends SQLiteOpenHelper {
                     String valueFound = "";
                     do{
                         //based on type of value being looked at, grab the variable for the current profile
-                        if(TypeofValue == "username")
-                        {
-                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.USERNAME));
-                        }
-                        else if(TypeofValue == "password")
-                        {
-                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.PASSWORD));
-                        }
-                        else if(TypeofValue == "device_name")
-                        {
-                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_NAME));
-                        }else if(TypeofValue == "device_code")
-                        {
-                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_CODE));
+                        switch (TypeofValue) {
+                            case "username":
+                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.USERNAME));
+                                break;
+                            case "password":
+                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.PASSWORD));
+                                break;
+                            case "device_name":
+                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_NAME));
+                                break;
+                            case "device_code":
+                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_CODE));
+                                break;
                         }
 
                         if(Val.equals(valueFound)) //if this is equivalent to what is being searched for
@@ -257,25 +262,17 @@ public class DBHelper extends SQLiteOpenHelper {
     @SuppressLint("Range")
     public String getDeviceCode(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = null;
 
-        try {
-            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
+        try (Cursor cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null)) {
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
-                    String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
-
-                    return deviceCode;
+                    return cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
                 }
             }
-        } catch (SQLiteException e){
+        } catch (SQLiteException e) {
             Log.d(TAG, "EXCEPTION: " + e);
             Toast.makeText(context, "Operation Failed: " + e, Toast.LENGTH_LONG).show();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
         }
         return null;
     }
@@ -296,14 +293,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 } while(userTableCursor.moveToNext());
             }
         }
+        assert userTableCursor != null;
         userTableCursor.close();
         return breathalyzer_values;
     }
 
-    public ArrayList ReturnDrinkTypes(){
-        ArrayList drink_types = new ArrayList<>();
+    public ArrayList<String> ReturnDrinkTypes(){
+        ArrayList<String> drink_types = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
-        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_DRINK_TYPE, null, null, null, null, null, null);
+        @SuppressLint("Recycle") Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_DRINK_TYPE, null, null, null, null, null, null);
         if(userTableCursor != null) {
             if(userTableCursor.moveToFirst()) {
                 do {
