@@ -118,6 +118,8 @@ public class ProfileActivity extends AppCompatActivity {
                 // TODO: Add non-empty values entered in DB
                 profile = database.getProfileById(sharedPreferencesHelper.getLoginId()); //update profile
                 setDisplayMode();
+                menuItemTitleChange(false);
+                flag = !flag;
             }
         }
     };
