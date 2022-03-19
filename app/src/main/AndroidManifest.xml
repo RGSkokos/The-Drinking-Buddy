@@ -32,7 +32,12 @@
         <activity
             android:name=".Views.GraphActivity"
             android:exported="false"
-            android:parentActivityName=".Views.HomePage"/>
+            android:parentActivityName=".Views.HomePage">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Views.HomePage" />
+        </activity>
+
         <activity
             android:name=".Views.LoginActivity"
             android:exported="false"
@@ -41,6 +46,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Views.HomePage" />
         </activity>
+
         <activity
             android:exported="true"
             android:name=".Views.LoadActivity"
