@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
@@ -106,6 +105,15 @@ public class HomePage extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
+            case R.id.trendsMenuItem:
+                if(myDB.getAllResults().size() > 0)
+                {
+                    goToTrends();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+                }
             case R.id.profileMenuItem:
                 goToProfile();
                 return true;
@@ -118,6 +126,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     // Display the Database
+    @SuppressLint("SetTextI18n")
     public void displayResults () {
         breathalyzer_values = myDB.getAllResults();
         String drink = "";
@@ -152,6 +161,7 @@ public class HomePage extends AppCompatActivity {
     };
 
 
+    @SuppressLint("SetTextI18n")
     public void setTypeOfDrink(String type) {
         CurrentDrinkTextView.setText("Current Drink: " + type);
         type_of_drink = type;
