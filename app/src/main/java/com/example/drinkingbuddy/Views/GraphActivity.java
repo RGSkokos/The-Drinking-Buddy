@@ -1,6 +1,5 @@
 package com.example.drinkingbuddy.Views;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MenuInflater;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
@@ -16,6 +14,7 @@ import com.example.drinkingbuddy.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -26,13 +25,13 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
@@ -42,12 +41,16 @@ import java.util.Map;
 public class GraphActivity extends AppCompatActivity {
 
     //Global Variables
-    LineChart MyChart;
-    List<Breathalyzer> breathalyzer_values;
-    ArrayList<Entry> vals = new ArrayList<>(); //holds points in line graph
-    String SpanOfData;
-    BarChart chart;
+    LineChart lineChart;
+    BarChart barChart;
     PieChart pieChart;
+    List<Breathalyzer> breathalyzer_values;
+    ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
+    ArrayList<BarEntry> barGraphValues = new ArrayList<>();
+    List<PieEntry> pieGraphValues = new ArrayList<>();
+    Map<String, Integer> DrinkType = new HashMap<>();
+    String SpanOfData;
+
 
 
 //region Activity Life Cycle
@@ -63,37 +66,40 @@ public class GraphActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        insertLineGraphValues();
-        displayLineGraph();
-        showPieChart();
-        showBarChart();
+        insertLineChartValues();
+        displayLineChart();
+        insertPieChartValues();
+        displayPieChart();
+        insertBarChartValues();
+        displayBarChart();
 
     }
+
 //endregion
 
 //region Pie Chart
-    private Map insertPieGraphValues()
+    private void insertPieChartValues()
     {
-        Map<String, Integer> DrinkType = new HashMap<>();
         DBHelper db = new DBHelper(this);
-        ArrayList Drink_Types = db.ReturnDrinkTypes();
+        ArrayList<String> Drink_Types = db.ReturnDrinkTypes();
 
         int[] drinks = {0, 0 , 0, 0};
 
         for (int i = 0; i < Drink_Types.size(); i++) {
-            if(Drink_Types.get(i).equals("liquor"))
-            {
-                drinks[0]++;
-            } else if(Drink_Types.get(i).equals("wine"))
-            {
-                drinks[1]++;
-            }else if(Drink_Types.get(i).equals("beer"))
-            {
-                drinks[2]++;
-            }
-            else
-            {
-                drinks[3]++; //if other type of value (unknown)
+            switch (Drink_Types.get(i)) {
+                case "liquor":
+                    drinks[0]++;
+                    break;
+                case "wine":
+                    drinks[1]++;
+                    break;
+                case "beer":
+                    drinks[2]++;
+                    break;
+                default:
+                    drinks[3]++; //if other type of value (unknown)
+
+                    break;
             }
         }
 
@@ -101,16 +107,9 @@ public class GraphActivity extends AppCompatActivity {
         DrinkType.put("Beer",drinks[2]);
         DrinkType.put("Wine",drinks[1]);
         DrinkType.put("Unknown", drinks[3]);
-        return DrinkType;
     }
 
-    private void showPieChart(){
-
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
-
-
-        //initializing data
-        Map<String, Integer> DrinkType = insertPieGraphValues();
+    private void displayPieChart(){
 
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
@@ -119,18 +118,22 @@ public class GraphActivity extends AppCompatActivity {
         colors.add(Color.GREEN);
         colors.add(Color.CYAN);
 
+
+
         //input data and fit data into pie chart entry
         for(String type: DrinkType.keySet()){
-            pieEntries.add(new PieEntry(DrinkType.get(type).floatValue(), type));
+            pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
         }
 
         //collecting the entries with label name
-        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+        PieDataSet pieDataSet = new PieDataSet(pieGraphValues, "");
         //providing color list for coloring different entries
         pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
+
         //grouping the data set from entry to chart
         PieData pieData = new PieData(pieDataSet);
+
         pieChart.getDescription().setEnabled(false);
         pieChart.setData(pieData);
         pieChart.invalidate();
@@ -138,37 +141,36 @@ public class GraphActivity extends AppCompatActivity {
 //endregion
 
 //region Bar Chart
-    private void showBarChart(){
-        ArrayList<Double> valueList = new ArrayList<Double>();
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        String title = "# of samples";
+    private void insertBarChartValues() {
+        barGraphValues = new ArrayList<>();
+        ArrayList<Double> valueList = new ArrayList<>();
 
         //input data
         double[] dayOfWeekCounter = {0, 0, 0, 0, 0, 0, 0};
         for(int i = 0; i < breathalyzer_values.size(); i++){
             String day = breathalyzer_values.get(i).getDayOfWeek();
-            if(day.equals("Monday"))
-            {
-                dayOfWeekCounter[0]++;
-            }else if(day.equals("Tuesday"))
-            {
-                dayOfWeekCounter[1]++;
-            }
-            else if(day.equals("Wednesday"))
-            {
-                dayOfWeekCounter[2]++;
-            }else if(day.equals("Thursday"))
-            {
-                dayOfWeekCounter[3]++;
-            }else if(day.equals("Friday"))
-            {
-                dayOfWeekCounter[4]++;
-            }else if(day.equals("Saturday"))
-            {
-                dayOfWeekCounter[5]++;
-            }else if(day.equals("Sunday"))
-            {
-                dayOfWeekCounter[6]++;
+            switch (day) {
+                case "Monday":
+                    dayOfWeekCounter[0]++;
+                    break;
+                case "Tuesday":
+                    dayOfWeekCounter[1]++;
+                    break;
+                case "Wednesday":
+                    dayOfWeekCounter[2]++;
+                    break;
+                case "Thursday":
+                    dayOfWeekCounter[3]++;
+                    break;
+                case "Friday":
+                    dayOfWeekCounter[4]++;
+                    break;
+                case "Saturday":
+                    dayOfWeekCounter[5]++;
+                    break;
+                case "Sunday":
+                    dayOfWeekCounter[6]++;
+                    break;
             }
         }
 
@@ -181,55 +183,45 @@ public class GraphActivity extends AppCompatActivity {
         //fit the data into a bar
         for (int i = 1; i < valueList.size(); i++) {
             BarEntry barEntry = new BarEntry(i, valueList.get(i).floatValue());
-            entries.add(barEntry);
+            barGraphValues.add(barEntry);
         }
+    }
 
-        BarDataSet barDataSet = new BarDataSet(entries, title);
+    private void displayBarChart(){
+        BarDataSet barDataSet = new BarDataSet(barGraphValues, "# of samples");
         String[] xAxisLabels = new String[]{"", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"};
-        chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
         BarData data = new BarData(barDataSet);
-        chart.setData(data);
-        chart.animateY(2000);
-        chart.animateX(2000);
-        chart.getDescription().setEnabled(false);
-        chart.invalidate();
+        barChart.setData(data);
+        barChart.animateY(2000);
+        barChart.animateX(2000);
+        barChart.getDescription().setEnabled(false);
+        barChart.invalidate();
     }
 //endregion
 
 //region Helper Methods
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        chart = (BarChart) findViewById(R.id.chart);
-        MyChart = (LineChart) findViewById(R.id.reportingChart);
-        pieChart = findViewById(R.id.pieChart_view);
-
-        // my_child_toolbar is defined in the layout file
-        Toolbar myChildToolbar =
-                (Toolbar) findViewById(R.id.GraphToolbar);
-        setSupportActionBar(myChildToolbar);
-
-        // Get a support ActionBar corresponding to this toolbar
+        barChart = findViewById(R.id.BarChart);
+        lineChart = findViewById(R.id.LineChart);
+        pieChart = findViewById(R.id.PieChart);
+        Toolbar toolbar = findViewById(R.id.GraphToolbar);
+        setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-
         // Enable the Up button
+        assert ab != null;
         ab.setDisplayHomeAsUpEnabled(true);
     }
 //endregion
 
 //region Line Graph
     //Set up Line Graph
-    protected void insertLineGraphValues()
+    protected void insertLineChartValues()
     {
-        //Library methods make values easier to read
-        MyChart.setTouchEnabled(true);
-        MyChart.setPinchZoom(true);
-
         //Open database and grab all values
         DBHelper db = new DBHelper(this);
         breathalyzer_values = db.getAllResults();
-
-
-
 
         String startTime = ""; //first value time and date
         String EndTime = ""; //last value time and date
@@ -245,45 +237,38 @@ public class GraphActivity extends AppCompatActivity {
                     startTime = breathalyzer_values.get(i).getTimeStamp();
                 }
 
-                double temp = Double.parseDouble(breathalyzer_values.get(i).getResult());
-                temp = (((temp - 1200) / 5000)); //second value in numerator needs to be based on calibration
+                float temp = Float.parseFloat(breathalyzer_values.get(i).getResult());
+                temp = (((temp) / 5000)); //second value in numerator needs to be based on calibration
                 temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
-                vals.add(new Entry((i + 1), (float) temp));
+                lineGraphValues.add(new Entry((i + 1), temp));
             }
 
             SpanOfData = "from " + startTime + " to " + EndTime;
         }
     }
 
-    protected void displayLineGraph()
+    protected void displayLineChart()
     {
-        //Displaying values in dataset
-        LineDataSet set;
-        if (MyChart.getData() != null && MyChart.getData().getDataSetCount() > 0)
-        {
+        //Library methods make values easier to read
+        lineChart.setTouchEnabled(true);
+        lineChart.setPinchZoom(true);
+        lineChart.animateY(1000);
+        lineChart.animateX(1000);
+        lineChart.getDescription().setEnabled(false); //REFERENCE:https://stackoverflow.com/questions/27566916/how-to-remove-description-from-chart-in-mpandroidchart
 
-            set = (LineDataSet) MyChart.getData().getDataSetByIndex(0);
-            set.setValues(vals);
-            MyChart.getData().notifyDataChanged();
-            MyChart.notifyDataSetChanged();
-        }
-        else {
-            set = new LineDataSet(vals, SpanOfData);
-            set.setColor(Color.RED);
-            set.setCircleColor(Color.BLACK);
-            set.setLineWidth(2f);
-            set.setDrawFilled(true);
+        //Define dataset with entries
+        LineDataSet overallConsumption = new LineDataSet(lineGraphValues, "Overall Consumption");
+        overallConsumption.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set);
-            LineData data = new LineData(dataSets);
-            MyChart.setData(data);
-            MyChart.animateY(1000);
-            MyChart.animateX(1000);
-            MyChart.getDescription().setEnabled(false);
-            //REFERENCE:https://stackoverflow.com/questions/27566916/how-to-remove-description-from-chart-in-mpandroidchart
-        }
+        //Styling for overallConsumption
+        overallConsumption.setColor(Color.RED);
+
+        //Add to LineData object
+        LineData lineData = new LineData(overallConsumption);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
+
     }
 //endregion
 

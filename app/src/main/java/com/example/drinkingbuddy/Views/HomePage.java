@@ -104,8 +104,8 @@ public class HomePage extends AppCompatActivity {
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        newBreath = (Button) findViewById(R.id.newBreath);
-        response = (TextView) findViewById(R.id.response);
+        newBreath = findViewById(R.id.newBreath);
+        response =  findViewById(R.id.response);
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
@@ -136,7 +136,7 @@ public class HomePage extends AppCompatActivity {
         {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
             timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
-            temp = (((temp - 1100) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (((temp) / 5000)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
 
