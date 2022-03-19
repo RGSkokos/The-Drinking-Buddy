@@ -17,20 +17,25 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
+        android:name=".Controllers.BluetoothHelper"
         android:allowBackup="true"
         android:icon="@mipmap/drinking_buddy_icon"
         android:label="@string/app_name"
+        android:parentActivityName="HomePage"
         android:roundIcon="@mipmap/drinking_buddy_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:name=".Controllers.BluetoothHelper"
-        android:parentActivityName= "HomePage"
-        >
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".Views.RegistrationActivity"
+            android:label="Register"
             android:exported="false" />
         <activity
             android:name=".Views.LoginActivity"
+            android:label="Login"
+            android:exported="false" />
+        <activity
+            android:name=".Views.ProfileActivity"
+            android:label="Profile"
             android:exported="false"
             android:parentActivityName=".Views.HomePage">
             <meta-data
@@ -38,8 +43,9 @@
                 android:value=".Views.HomePage" />
         </activity>
         <activity
-            android:exported="true"
             android:name=".Views.LoadActivity"
+            android:exported="true"
+            android:label="@string/app_name"
             android:parentActivityName=".Views.HomePage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -47,11 +53,14 @@
         </activity>
         <activity
             android:name=".Views.HomePage"
+            android:label="@string/app_name"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
