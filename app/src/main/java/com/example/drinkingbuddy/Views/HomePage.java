@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -34,6 +35,9 @@ public class HomePage extends AppCompatActivity {
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
     private SharedPreferencesHelper sharedPreferencesHelper;
     protected int profileId;
+    protected ImageButton lineChartButton;
+    protected ImageButton pieChartButton;
+    protected ImageButton barChartButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,13 @@ public class HomePage extends AppCompatActivity {
         response = findViewById(R.id.response);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
+
+        lineChartButton = findViewById(R.id.lineChartButton);
+        lineChartButton.setOnClickListener(onClickLineButton);
+        pieChartButton = findViewById(R.id.pieChartButton);
+        pieChartButton.setOnClickListener(onClickPieButton);
+        barChartButton = findViewById(R.id.barChartButton);
+        barChartButton.setOnClickListener(onClickBarButton);
     }
 
     // Sets up the menu option bar to show profile and logout options
@@ -119,6 +130,39 @@ public class HomePage extends AppCompatActivity {
             openLoading();
         }
     };
+
+    private final View.OnClickListener onClickLineButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
+    private final View.OnClickListener onClickPieButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
+    private final View.OnClickListener onClickBarButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    };
+
+    protected void goToLineActivity(){
+        // TODO add intent
+    }
+
+    protected void goToPieActivity(){
+        // TODO add intent
+    }
+
+    protected void goToBarActivity(){
+        // TODO add intent
+    }
 
     protected void openLoading(){        //open settings class on click
         Intent i = new Intent(this, LoadActivity.class);

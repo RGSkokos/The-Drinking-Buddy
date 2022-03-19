@@ -41,4 +41,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/lineChartButton"
+        android:layout_width="132dp"
+        android:layout_height="124dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="522dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/line_chart" />
+
+    <ImageButton
+        android:id="@+id/pieChartButton"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="521dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pie_chart" />
+
+    <ImageButton
+        android:id="@+id/barChartButton"
+        android:layout_width="128dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="521dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bar_chart" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
