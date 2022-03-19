@@ -140,9 +140,12 @@ public class HomePage extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public void displayResults () {
         breathalyzer_values = myDB.getAllResults();
-        String drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size()-1);
+        String drink = "";
         double temp = 0;
         String timeStamp = "";
+        if(myDB.ReturnDrinkTypes().size() > 0) {
+            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1);
+        }
         if(breathalyzer_values.size() > 0)
         {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
