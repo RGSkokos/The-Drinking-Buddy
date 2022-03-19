@@ -131,7 +131,7 @@ public class GraphActivity extends AppCompatActivity {
         pieDataSet.setValueTextColor(Color.WHITE);
         //grouping the data set from entry to chart
         PieData pieData = new PieData(pieDataSet);
-
+        pieChart.getDescription().setEnabled(false);
         pieChart.setData(pieData);
         pieChart.invalidate();
     }
@@ -191,6 +191,7 @@ public class GraphActivity extends AppCompatActivity {
         chart.setData(data);
         chart.animateY(2000);
         chart.animateX(2000);
+        chart.getDescription().setEnabled(false);
         chart.invalidate();
     }
 //endregion
@@ -280,6 +281,8 @@ public class GraphActivity extends AppCompatActivity {
             MyChart.setData(data);
             MyChart.animateY(1000);
             MyChart.animateX(1000);
+            MyChart.getDescription().setEnabled(false);
+            //REFERENCE:https://stackoverflow.com/questions/27566916/how-to-remove-description-from-chart-in-mpandroidchart
         }
     }
 //endregion

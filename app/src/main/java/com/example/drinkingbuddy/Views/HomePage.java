@@ -3,9 +3,7 @@ package com.example.drinkingbuddy.Views;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.graphics.Path;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -23,7 +20,6 @@ import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -59,12 +55,7 @@ public class HomePage extends AppCompatActivity {
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
-        SpecifyDrinkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OpenFragment();
-            }
-        });
+        SpecifyDrinkButton.setOnClickListener(view -> OpenFragment());
     }
 
     @Override
@@ -94,20 +85,15 @@ public class HomePage extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.trendsMenuItem:
-                if(breathalyzer_values.size() > 0)
-                {
-                    goToTrends();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Must have at least 1 measurement to see trend", Toast.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.trendsMenuItem) {
+            if (breathalyzer_values.size() > 0) {
+                goToTrends();
+            } else {
+                Toast.makeText(getApplicationContext(), "Must have at least 1 measurement to see trend", Toast.LENGTH_LONG).show();
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 //endregion
 
@@ -171,6 +157,7 @@ public class HomePage extends AppCompatActivity {
         }
     };
 
+    @SuppressLint("SetTextI18n")
     public void setTypeOfDrink(String type) {
         CurrentDrinkTextView.setText("Current Drink: " + type);
         type_of_drink = type;
