@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,6 @@ import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -41,18 +41,14 @@ public class HomePage extends AppCompatActivity {
     protected int profileId;
     private String type_of_drink;
 
-//region Activity Life Cycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_home);
-        setTitle("Drinking Buddy Home");
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         initializeComponents();
         sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
-
-        // Set up the toolbar
         setSupportActionBar(toolbar);
 
         SpecifyDrinkButton.setOnClickListener(view -> OpenFragment());
@@ -61,7 +57,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
+        displayResults(); //will display nothing if never entered data or most recent value of breathelizer
 
         // Checks if a user is logged in by getting profile ID
         if (sharedPreferencesHelper.getLoginId() == 0) {
@@ -70,48 +66,20 @@ public class HomePage extends AppCompatActivity {
             profileId = sharedPreferencesHelper.getLoginId();
         }
     }
-//endregion
 
-//region Menu Methods
-
-    //REFERENCE:https://guides.codepath.com/android/using-the-app-toolbar#:~:text=Toolbar%20was%20introduced%20in%20Android,to%20API%2021%20and%20above.
+    // Don't allow back button to lead to login page (or anywhere)
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_layout, menu);
-        return true;
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.trendsMenuItem) {
-            if (breathalyzer_values.size() > 0) {
-                goToTrends();
-            } else {
-                Toast.makeText(getApplicationContext(), "Must have at least 1 measurement to see trend", Toast.LENGTH_LONG).show();
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-//endregion
-
-//region Helper Methods
-
-    @Override
-    public void onBackPressed() { } // Don't allow back button to lead to login page
+    public void onBackPressed() { }
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
         newBreath = findViewById(R.id.newBreath);
-        response =  findViewById(R.id.response);
+        response = findViewById(R.id.response);
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
         TimeStampTextview = findViewById(R.id.TimeStampTextView);
         SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
-
         type_of_drink = "Unknown";
     }
 
@@ -122,8 +90,34 @@ public class HomePage extends AppCompatActivity {
     }
 
 
+    // Sets up the menu option bar to show profile and logout options
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        return true;
+    }
+
+    // Goes to edit mode if menu option selected
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.profileMenuItem:
+                goToProfile();
+                return true;
+            case R.id.logoutMenuItem:
+                logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     // Display the Database
-    @SuppressLint("SetTextI18n")
     public void displayResults () {
         breathalyzer_values = myDB.getAllResults();
         String drink = "";
@@ -157,14 +151,12 @@ public class HomePage extends AppCompatActivity {
         }
     };
 
-    @SuppressLint("SetTextI18n")
+
     public void setTypeOfDrink(String type) {
         CurrentDrinkTextView.setText("Current Drink: " + type);
         type_of_drink = type;
     }
-//endregion
 
-//region Intent Methods
     protected void openLoading(){        //open settings class on click
         Intent i = new Intent(this, LoadActivity.class);
         startActivity(i);
@@ -175,10 +167,19 @@ public class HomePage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    protected void goToProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    protected void logout() {
+        sharedPreferencesHelper.saveLoginId(0);
+        goToLogin();
+    }
+
     private void goToTrends() {
         Intent intent = new Intent(this, GraphActivity.class);
         startActivity(intent);
     }
-    //endregion
 }
 

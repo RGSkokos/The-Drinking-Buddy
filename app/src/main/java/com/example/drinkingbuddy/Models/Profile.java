@@ -15,6 +15,12 @@ public class Profile {
         this.deviceCode = deviceCode;
     }
 
+    public Profile(String username, String deviceName, String deviceCode) {
+        this.username = username;
+        this.deviceName = deviceName;
+        this.deviceCode = deviceCode;
+    }
+
     public String getUsername() {
         return username;
     }

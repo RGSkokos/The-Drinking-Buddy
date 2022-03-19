@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Drinking Buddy</string>
+    <string name="change_username">Change username (min. 3 characters)</string>
+    <string name="change_password">Change password (min. 5 characters)</string>
+    <string name="change_device_name">Change device name</string>
+    <string name="change_device_code">Change device code (e.g EC:94:CB:4E:1E:36)</string>
+    <string name="username_display_description">Username</string>
+    <string name="device_name_display_description">Device Name</string>
+    <string name="device_code_display_description">Device Code</string>
     <string name="drink_consumption">Drink Consumption</string>
     <string name="weekly_habits">Weekly Habits</string>
     <string name="type_of_drink">Type of Drink</string>
