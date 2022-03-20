@@ -239,7 +239,7 @@ public class GraphActivity extends AppCompatActivity {
                 }
 
                 float temp = Float.parseFloat(breathalyzer_values.get(i).getResult());
-                temp = (((temp) / 5000)); //second value in numerator needs to be based on calibration
+                temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
                 temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
                 lineGraphValues.add(new Entry((i + 1), temp));

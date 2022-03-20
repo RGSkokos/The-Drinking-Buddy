@@ -143,7 +143,7 @@ public class HomePage extends AppCompatActivity {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
             timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
 
-            temp = (((temp - 1300) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
 
