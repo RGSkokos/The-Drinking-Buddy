@@ -114,7 +114,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
             if (!error) {
-                // TODO: Add non-empty values entered in DB
                 //find and edit old user values
                 profile = database.getProfileById(sharedPreferencesHelper.getLoginId()); //update profile
 
