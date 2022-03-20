@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -151,13 +152,21 @@ public class HomePage extends AppCompatActivity {
         response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
         TimeStampTextview.setText("Measurement Taken: " + timeStamp);
         CurrentDrinkTextView.setText("Last Drink: " + drink);
-
+        Log.d("Changing", "Changing Display " + drink);
     }
 
     private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             openLoading();
+            if(type_of_drink != null)
+            {
+                myDB.SaveDrinkType(type_of_drink);
+            }
+            else
+            {
+                myDB.SaveDrinkType("Unknown");
+            }
 
         }
     };

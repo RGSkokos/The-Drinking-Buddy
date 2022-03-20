@@ -200,8 +200,6 @@ public class LoadActivity extends AppCompatActivity {
                 if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
                     String message = (String) receivedMessage.obj;
                     myDB.insertNewResult(message);
-                    myDB.SaveDrinkType(type_of_drink);
-                    type_of_drink = "Unknown";
                     //double temp = Double.parseDouble(message);
                     //temp = (((temp-1500)/5000));
                     //response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp)));
