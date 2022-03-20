@@ -4,12 +4,29 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
+import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
+//REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
+// This code is heavily adapted from the reference above which makes use of MPAndroidChart library
+// The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
+// Only the line graph was implemented thus far, the library files can be found within models
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PieChart extends AppCompatActivity {
 
@@ -17,6 +34,12 @@ public class PieChart extends AppCompatActivity {
     protected Menu menu;
     private DBHelper database;
     private SharedPreferencesHelper sharedPreferencesHelper;
+    com.github.mikephil.charting.charts.PieChart pieChart;
+    List<Breathalyzer> breathalyzer_values;
+    ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
+    ArrayList<BarEntry> barGraphValues = new ArrayList<>();
+    Map<String, Integer> DrinkType = new HashMap<>();
+    String SpanOfData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +50,19 @@ public class PieChart extends AppCompatActivity {
 
         database = new DBHelper(this);
         sharedPreferencesHelper = new SharedPreferencesHelper(PieChart.this);
+        breathalyzer_values = database.getAllResults();
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        insertPieChartValues();
+        displayPieChart();
+    }
+
+    protected void initializeComponents(){
+        toolbar = findViewById(R.id.PieChartToolbar);
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
@@ -35,9 +71,71 @@ public class PieChart extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        pieChart = findViewById(R.id.PieChart);
     }
 
-    protected void initializeComponents(){
-        toolbar = findViewById(R.id.PieChartToolbar);
+    //region Pie Chart
+    private void insertPieChartValues()
+    {
+        DBHelper db = new DBHelper(this);
+        ArrayList<String> Drink_Types = db.ReturnDrinkTypes();
+
+        int[] drinks = {0, 0 , 0, 0};
+
+        for (String drink :
+                Drink_Types) {
+            switch (drink) {
+                case "liquor":
+                    drinks[0]++;
+                    break;
+                case "wine":
+                    drinks[1]++;
+                    break;
+                case "beer":
+                    drinks[2]++;
+                    break;
+                default:
+                    drinks[3]++; //if other type of value (unknown)
+                    break;
+            }
+        }
+
+        DrinkType.put("Liquor",drinks[0]);
+        DrinkType.put("Beer",drinks[2]);
+        DrinkType.put("Wine",drinks[1]);
+        DrinkType.put("Unknown", drinks[3]);
     }
+
+    private void displayPieChart(){
+
+        List<PieEntry> pieGraphValues = new ArrayList<>();
+        //initializing colors for the entries
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.RED);
+        colors.add(Color.BLUE);
+        colors.add(Color.GREEN);
+        colors.add(Color.CYAN);
+
+
+
+        //input data and fit data into pie chart entry
+        for(String type: DrinkType.keySet()){
+            pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
+        }
+
+
+        PieDataSet pieDataSet = new PieDataSet(pieGraphValues, "");
+
+        pieDataSet.setColors(colors);
+        pieDataSet.setValueTextColor(Color.WHITE);
+
+
+        PieData pieData = new PieData(pieDataSet);
+
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+    }
+//endregion
 }

@@ -32,12 +32,14 @@ public class DBHelper extends SQLiteOpenHelper {
     String CREATE_TABLE_TYPE_OF_DRINK;
     String CREATE_TABLE_PROFILE;
     String CREATE_TABLE_RESULTS;
+    SQLiteDatabase db;
 
 
     public DBHelper(Context context)
     {
         super(context, Config.DATABASE_NAME, null, Config.DATABASE_VERSION );
         this.context = context;
+        db = getWritableDatabase();
     }
 
     //simply creates database to hold breathalyzer entries
