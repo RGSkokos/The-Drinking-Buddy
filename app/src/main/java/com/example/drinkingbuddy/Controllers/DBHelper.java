@@ -38,7 +38,6 @@ public class DBHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
-
     //simply creates database to hold breathalyzer entries
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -66,12 +65,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    @SuppressLint("SimpleDateFormat")
-    public String TimeStamp()
-    {
-        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
-    }
-
     //not currently needed but can be implemented in the future
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
@@ -86,6 +79,12 @@ public class DBHelper extends SQLiteOpenHelper {
         @SuppressLint("SimpleDateFormat") String dayOfWeek = new SimpleDateFormat("EEEE").format(new Date());
         Log.d(TAG, dayOfWeek);
         return dayOfWeek;
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public String TimeStamp()
+    {
+        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
     }
 
     //Method to add new Profile
@@ -110,6 +109,20 @@ public class DBHelper extends SQLiteOpenHelper {
         finally {
             db.close();
         }
+    }
+
+    //Method to update a profile
+    //REFERENCE: https://www.youtube.com/watch?v=pFktQj69SbU
+    public  boolean update(Profile profile, int id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Config.USERNAME, profile.getUsername());
+        contentValues.put(Config.PASSWORD, profile.getPassword());
+        contentValues.put(Config.DEVICE_NAME, profile.getDeviceName());
+        contentValues.put(Config.DEVICE_CODE, profile.getDeviceCode());
+        db.update(Config.TABLE_NAME_PROFILE, contentValues, Config.ID + "=?", new String[] {String.valueOf(id)});
+        return true;
     }
 
     //Method to insert a new entry for result from breathalyzer
@@ -210,10 +223,11 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     String username = cursor.getString(cursor.getColumnIndex(Config.USERNAME));
+                    String password = cursor.getString(cursor.getColumnIndex(Config.PASSWORD));
                     String deviceName = cursor.getString(cursor.getColumnIndex(Config.DEVICE_NAME));
                     String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
 
-                    return new Profile(username, deviceName, deviceCode);
+                    return new Profile(username, password, deviceName, deviceCode);
                 }
             }
         } catch (SQLiteException e){
@@ -291,19 +305,20 @@ public class DBHelper extends SQLiteOpenHelper {
                     String valueFound = "";
                     do{
                         //based on type of value being looked at, grab the variable for the current profile
-                        switch (TypeofValue) {
-                            case "username":
-                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.USERNAME));
-                                break;
-                            case "password":
-                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.PASSWORD));
-                                break;
-                            case "device_name":
-                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_NAME));
-                                break;
-                            case "device_code":
-                                valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_CODE));
-                                break;
+                        if(TypeofValue == "username")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.USERNAME));
+                        }
+                        else if(TypeofValue == "password")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.PASSWORD));
+                        }
+                        else if(TypeofValue == "device_name")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_NAME));
+                        }else if(TypeofValue == "device_code")
+                        {
+                            valueFound = Cursor.getString(Cursor.getColumnIndexOrThrow(Config.DEVICE_CODE));
                         }
 
                         if(Val.equals(valueFound)) //if this is equivalent to what is being searched for
