@@ -134,34 +134,37 @@ public class HomePage extends AppCompatActivity {
     private final View.OnClickListener onClickLineButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            goToLineActivity();
         }
     };
 
     private final View.OnClickListener onClickPieButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            goToPieActivity();
         }
     };
 
     private final View.OnClickListener onClickBarButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
+            goToBarActivity();
         }
     };
 
     protected void goToLineActivity(){
-        // TODO add intent
+        Intent i = new Intent(this, LineGraph.class);
+        startActivity(i);
     }
 
     protected void goToPieActivity(){
-        // TODO add intent
+        Intent i = new Intent(this, PieChart.class);
+        startActivity(i);
     }
 
     protected void goToBarActivity(){
-        // TODO add intent
+        Intent i = new Intent(this, BarGraph.class);
+        startActivity(i);
     }
 
     protected void openLoading(){        //open settings class on click

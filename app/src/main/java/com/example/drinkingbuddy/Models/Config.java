@@ -1,4 +1,4 @@
-package com.example.drinkingbuddy.Controllers;
+package com.example.drinkingbuddy.Models;
 
 public class Config {
 

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Models.Breathalyzer;
+import com.example.drinkingbuddy.Models.Config;
 import com.example.drinkingbuddy.Models.Profile;
 
 import java.util.ArrayList;
