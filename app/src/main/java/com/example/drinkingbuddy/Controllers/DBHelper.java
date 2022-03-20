@@ -26,9 +26,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = "DBHelper";
 
     private final Context context;
-    String CREATE_TABLE_RESULTS;
-    String CREATE_TABLE_PROFILE;
+
     String CREATE_TABLE_TYPE_OF_DRINK;
+    String CREATE_TABLE_PROFILE;
+    String CREATE_TABLE_RESULTS;
+
 
     public DBHelper(Context context)
     {
@@ -41,19 +43,19 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-        CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
+       CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
                 + " (" + Config.Result + " TEXT NOT NULL,"
                 +  Config.TimeStamp + " TEXT NOT NULL,"
                 + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
 
-        CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
+       CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
                 + " (" + Config.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Config.USERNAME + " TEXT NOT NULL,"
                 + Config.PASSWORD + " TEXT NOT NULL,"
                 + Config.DEVICE_NAME + " TEXT NOT NULL,"
                 + Config.DEVICE_CODE + " TEXT NOT NULL)";
 
-        CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
+       CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
                 + " (" + Config.TYPE_OF_DRINK + " TEXT NOT NULL)";
 
         Log.d(TAG, "db created");
@@ -261,7 +263,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 do {
                     String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
                     String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TimeStamp));
-                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp)));
+                    String dayOfWeek = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.DAY_OF_WEEK));
+                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp), dayOfWeek));
 
                 } while(userTableCursor.moveToNext());
             }

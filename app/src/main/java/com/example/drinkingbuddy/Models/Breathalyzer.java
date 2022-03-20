@@ -7,11 +7,7 @@ public class Breathalyzer {
     String TimeStamp;
     String DayOfWeek;
 
-    //constructor
-    public Breathalyzer(String result, String timeStamp) {
-        Result = result;
-        TimeStamp = timeStamp;
-    }
+
 
     public Breathalyzer(String result, String timeStamp, String dayOfWeek) {
         Result = result;

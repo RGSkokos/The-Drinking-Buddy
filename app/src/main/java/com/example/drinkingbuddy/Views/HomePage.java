@@ -114,6 +114,7 @@ public class HomePage extends AppCompatActivity {
                 {
                     Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
                 }
+                return true;
             case R.id.profileMenuItem:
                 goToProfile();
                 return true;
@@ -139,6 +140,7 @@ public class HomePage extends AppCompatActivity {
         {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
             timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
+
             temp = (((temp) / 5000)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }

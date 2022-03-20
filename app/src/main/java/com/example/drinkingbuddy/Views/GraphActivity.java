@@ -47,7 +47,6 @@ public class GraphActivity extends AppCompatActivity {
     List<Breathalyzer> breathalyzer_values;
     ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
     ArrayList<BarEntry> barGraphValues = new ArrayList<>();
-    List<PieEntry> pieGraphValues = new ArrayList<>();
     Map<String, Integer> DrinkType = new HashMap<>();
     String SpanOfData;
 
@@ -66,6 +65,7 @@ public class GraphActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        grabDataBase();
         insertLineChartValues();
         displayLineChart();
         insertPieChartValues();
@@ -85,8 +85,9 @@ public class GraphActivity extends AppCompatActivity {
 
         int[] drinks = {0, 0 , 0, 0};
 
-        for (int i = 0; i < Drink_Types.size(); i++) {
-            switch (Drink_Types.get(i)) {
+        for (String drink :
+                Drink_Types) {
+            switch (drink) {
                 case "liquor":
                     drinks[0]++;
                     break;
@@ -98,10 +99,9 @@ public class GraphActivity extends AppCompatActivity {
                     break;
                 default:
                     drinks[3]++; //if other type of value (unknown)
-
                     break;
             }
-        }
+            }
 
         DrinkType.put("Liquor",drinks[0]);
         DrinkType.put("Beer",drinks[2]);
@@ -111,6 +111,7 @@ public class GraphActivity extends AppCompatActivity {
 
     private void displayPieChart(){
 
+        List<PieEntry> pieGraphValues = new ArrayList<>();
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.RED);
@@ -142,35 +143,38 @@ public class GraphActivity extends AppCompatActivity {
 
 //region Bar Chart
     private void insertBarChartValues() {
-        barGraphValues = new ArrayList<>();
+
         ArrayList<Double> valueList = new ArrayList<>();
 
         //input data
-        double[] dayOfWeekCounter = {0, 0, 0, 0, 0, 0, 0};
+        double[] dayOfWeekCounter = {0, 0, 0, 0, 0, 0, 0, 0};
         for(int i = 0; i < breathalyzer_values.size(); i++){
             String day = breathalyzer_values.get(i).getDayOfWeek();
-            switch (day) {
-                case "Monday":
-                    dayOfWeekCounter[0]++;
-                    break;
-                case "Tuesday":
-                    dayOfWeekCounter[1]++;
-                    break;
-                case "Wednesday":
-                    dayOfWeekCounter[2]++;
-                    break;
-                case "Thursday":
-                    dayOfWeekCounter[3]++;
-                    break;
-                case "Friday":
-                    dayOfWeekCounter[4]++;
-                    break;
-                case "Saturday":
-                    dayOfWeekCounter[5]++;
-                    break;
-                case "Sunday":
-                    dayOfWeekCounter[6]++;
-                    break;
+            if(day != null)
+            {
+                switch (day) {
+                    case "Monday":
+                        dayOfWeekCounter[0]++;
+                        break;
+                    case "Tuesday":
+                        dayOfWeekCounter[1]++;
+                        break;
+                    case "Wednesday":
+                        dayOfWeekCounter[2]++;
+                        break;
+                    case "Thursday":
+                        dayOfWeekCounter[3]++;
+                        break;
+                    case "Friday":
+                        dayOfWeekCounter[4]++;
+                        break;
+                    case "Saturday":
+                        dayOfWeekCounter[5]++;
+                        break;
+                    case "Sunday":
+                        dayOfWeekCounter[6]++;
+                        break;
+                }
             }
         }
 
@@ -181,7 +185,7 @@ public class GraphActivity extends AppCompatActivity {
 
 
         //fit the data into a bar
-        for (int i = 1; i < valueList.size(); i++) {
+        for (int i = 0; i < valueList.size(); i++) {
             BarEntry barEntry = new BarEntry(i, valueList.get(i).floatValue());
             barGraphValues.add(barEntry);
         }
@@ -189,7 +193,7 @@ public class GraphActivity extends AppCompatActivity {
 
     private void displayBarChart(){
         BarDataSet barDataSet = new BarDataSet(barGraphValues, "# of samples");
-        String[] xAxisLabels = new String[]{"", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"};
+        String[] xAxisLabels = new String[]{"Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"};
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
         BarData data = new BarData(barDataSet);
         barChart.setData(data);
@@ -219,9 +223,6 @@ public class GraphActivity extends AppCompatActivity {
     //Set up Line Graph
     protected void insertLineChartValues()
     {
-        //Open database and grab all values
-        DBHelper db = new DBHelper(this);
-        breathalyzer_values = db.getAllResults();
 
         String startTime = ""; //first value time and date
         String EndTime = ""; //last value time and date
@@ -272,5 +273,11 @@ public class GraphActivity extends AppCompatActivity {
     }
 //endregion
 
+    private void grabDataBase()
+    {
+        //Open database and grab all values
+        DBHelper db = new DBHelper(this);
+        breathalyzer_values = db.getAllResults();
+    }
 
 }
