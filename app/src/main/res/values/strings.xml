@@ -7,4 +7,11 @@
     <string name="username_display_description">Username</string>
     <string name="device_name_display_description">Device Name</string>
     <string name="device_code_display_description">Device Code</string>
+    <string name="drink_consumption">Drink Consumption</string>
+    <string name="weekly_habits">Weekly Habits</string>
+    <string name="type_of_drink">Type of Drink</string>
+    <string name="drinking_activity">Drinking Activity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="type_of_drink_fragment">Hello blank fragment</string>
+    <string name="todo">TODO</string>
 </resources>

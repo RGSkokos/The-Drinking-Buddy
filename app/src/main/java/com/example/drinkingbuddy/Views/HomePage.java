@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -21,14 +21,19 @@ import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomePage extends AppCompatActivity {
+
+    //instance variables
     protected BluetoothAdapter bluetoothAdapter;
     protected Button newBreath;
+    protected FloatingActionButton SpecifyDrinkButton;
     protected TextView response;
+    protected TextView TimeStampTextview;
+    protected TextView CurrentDrinkTextView;
     protected Toolbar toolbar;
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
@@ -38,6 +43,7 @@ public class HomePage extends AppCompatActivity {
     protected ImageButton lineChartButton;
     protected ImageButton pieChartButton;
     protected ImageButton barChartButton;
+    String type_of_drink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +54,14 @@ public class HomePage extends AppCompatActivity {
         initializeComponents();
         sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
         setSupportActionBar(toolbar);
+
+        SpecifyDrinkButton.setOnClickListener(view -> OpenFragment());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        displayResults(); //will display nothing if never entered data or most recent value of breathelizer
+        displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
 
         // Checks if a user is logged in by getting profile ID
         if (sharedPreferencesHelper.getLoginId() == 0) {
@@ -71,16 +79,25 @@ public class HomePage extends AppCompatActivity {
     protected void initializeComponents() {
         newBreath = findViewById(R.id.newBreath);
         response = findViewById(R.id.response);
+        CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
-
         lineChartButton = findViewById(R.id.lineChartButton);
         lineChartButton.setOnClickListener(onClickLineButton);
         pieChartButton = findViewById(R.id.pieChartButton);
         pieChartButton.setOnClickListener(onClickPieButton);
         barChartButton = findViewById(R.id.barChartButton);
         barChartButton.setOnClickListener(onClickBarButton);
+        TimeStampTextview = findViewById(R.id.TimeStampTextView);
+        SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
+
+    //fragment open for type of drink
+    private void OpenFragment() {
+        TypeOfDrinkFragment dialog = new TypeOfDrinkFragment();
+        dialog.show(getSupportFragmentManager(), "TypeOfDrink");
+    }
+
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")
@@ -98,6 +115,16 @@ public class HomePage extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
+            case R.id.trendsMenuItem:
+                if(myDB.getAllResults().size() > 0)
+                {
+                    goToTrends();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+                }
+                return true;
             case R.id.profileMenuItem:
                 goToProfile();
                 return true;
@@ -110,24 +137,45 @@ public class HomePage extends AppCompatActivity {
     }
 
     // Display the Database
+    @SuppressLint("SetTextI18n")
     public void displayResults () {
         breathalyzer_values = myDB.getAllResults();
-        ArrayList<String> sampledResults = new ArrayList<>();
-        for (int i = breathalyzer_values.size() - 1; i >= 0; i--) {
-            double temp = Double.parseDouble(breathalyzer_values.get(i).getResult());
-            String timeStamp = breathalyzer_values.get(i).getTimeStamp();
-            temp = (((temp - 1500) / 5000));
-            temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for contraint purposes
-
-            sampledResults.add(String.valueOf(decimalFormat.format(temp) + "%, Time:" + timeStamp));
+        String drink = "";
+        double temp = 0;
+        String timeStamp = "";
+        if(myDB.ReturnDrinkTypes().size() > 0) {
+            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1);
         }
-        response.setText("Your Blood Alchool Level is: " + sampledResults);
+        if(breathalyzer_values.size() > 0)
+        {
+            temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
+            timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
+
+            temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+        }
+
+
+
+        response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
+        TimeStampTextview.setText("Measurement Taken: " + timeStamp);
+        CurrentDrinkTextView.setText("Last Drink: " + drink);
+        Log.d("Changing", "Changing Display " + drink);
     }
 
     private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             openLoading();
+            if(type_of_drink != null)
+            {
+                myDB.SaveDrinkType(type_of_drink);
+            }
+            else
+            {
+                myDB.SaveDrinkType("Unknown");
+            }
+
         }
     };
 
@@ -168,7 +216,9 @@ public class HomePage extends AppCompatActivity {
     }
 
     protected void openLoading(){        //open settings class on click
+
         Intent i = new Intent(this, LoadActivity.class);
+        i.putExtra("type_of_drink", type_of_drink);
         startActivity(i);
     }
 
@@ -185,6 +235,16 @@ public class HomePage extends AppCompatActivity {
     protected void logout() {
         sharedPreferencesHelper.saveLoginId(0);
         goToLogin();
+    }
+
+    private void goToTrends() {
+        Intent intent = new Intent(this, GraphActivity.class);
+        startActivity(intent);
+    }
+
+    public void setTypeOfDrink(String choice) {
+        type_of_drink = choice;
+
     }
 }
 

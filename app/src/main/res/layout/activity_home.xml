@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,68 +8,103 @@
 
     <Button
         android:id="@+id/newBreath"
-        android:layout_width="366dp"
-        android:layout_height="208dp"
+        android:layout_width="282dp"
+        android:layout_height="171dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="124dp"
         android:text="NEW BREATH"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.644"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.363" />
+        android:textSize="34sp" />
 
     <TextView
         android:id="@+id/response"
-        android:layout_width="247dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="20dp"
         android:text="Your Blood Alcohol Level is: "
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newBreath" />
+        android:textSize="16sp" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="-1dp"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:theme="?attr/actionBarTheme" />
 
     <ImageButton
         android:id="@+id/lineChartButton"
-        android:layout_width="132dp"
-        android:layout_height="124dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="522dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/line_chart" />
+        android:layout_width="141dp"
+        android:layout_height="129dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="468dp" />
 
     <ImageButton
         android:id="@+id/pieChartButton"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="521dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pie_chart" />
+        android:layout_width="135dp"
+        android:layout_height="129dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="468dp" />
 
     <ImageButton
         android:id="@+id/barChartButton"
-        android:layout_width="128dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="521dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bar_chart" />
+        android:layout_width="wrap_content"
+        android:layout_height="129dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="282dp"
+        android:layout_marginTop="468dp"
+        android:layout_marginEnd="1dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/TimeStampTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="389dp"
+        android:layout_marginEnd="157dp"
+        android:layout_marginBottom="256dp"
+        android:text="Time Measurement was Taken: "
+        android:textSize="16sp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/SpecifyDrink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="330dp"
+        android:layout_marginTop="627dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="48dp"
+        android:clickable="true"
+        app:backgroundTint="#E0E1E8"
+        app:maxImageSize="90dp" />
+
+    <TextView
+        android:id="@+id/CurrentDrinktextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="156dp"
+        android:text="Current Drink: "
+        android:textSize="16sp" />
+</RelativeLayout>
+
