@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -45,6 +46,7 @@ public class LoadActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     public Handler handler;
     private DBHelper myDB;
+    private String type_of_drink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,12 @@ public class LoadActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null)
+        {
+            type_of_drink = bundle.getString("type_of_drink");
+        }
     }
 
     // Link Variables to Components in .XML file
@@ -75,6 +83,7 @@ public class LoadActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
+        type_of_drink = "Unknown";
     }
 
     @Override
@@ -191,16 +200,26 @@ public class LoadActivity extends AppCompatActivity {
                 if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
                     String message = (String) receivedMessage.obj;
                     myDB.insertNewResult(message);
+                    myDB.SaveDrinkType(type_of_drink);
+                    type_of_drink = "Unknown";
                     //double temp = Double.parseDouble(message);
                     //temp = (((temp-1500)/5000));
                     //response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp)));
                     //displayResults();
                 }
             }
+
         };
         newThread = new ConnectedThread(bluetoothSocket, handler);
         newThread.start();
     }
+
+    @SuppressLint("SetTextI18n")
+    public void setTypeOfDrink(String type) {
+        type_of_drink = type;
+    }
+
+
     @Override
     protected void onStart() {
         super.onStart();

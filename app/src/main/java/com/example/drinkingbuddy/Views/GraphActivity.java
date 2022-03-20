@@ -126,13 +126,13 @@ public class GraphActivity extends AppCompatActivity {
             pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
         }
 
-        //collecting the entries with label name
+
         PieDataSet pieDataSet = new PieDataSet(pieGraphValues, "");
-        //providing color list for coloring different entries
+
         pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
 
-        //grouping the data set from entry to chart
+
         PieData pieData = new PieData(pieDataSet);
 
         pieChart.getDescription().setEnabled(false);
@@ -153,25 +153,25 @@ public class GraphActivity extends AppCompatActivity {
             if(day != null)
             {
                 switch (day) {
-                    case "Monday":
+                    case "Sunday":
                         dayOfWeekCounter[0]++;
                         break;
-                    case "Tuesday":
+                    case "Monday":
                         dayOfWeekCounter[1]++;
                         break;
-                    case "Wednesday":
+                    case "Tuesday":
                         dayOfWeekCounter[2]++;
                         break;
-                    case "Thursday":
+                    case "Wednesday":
                         dayOfWeekCounter[3]++;
                         break;
-                    case "Friday":
+                    case "Thursday":
                         dayOfWeekCounter[4]++;
                         break;
-                    case "Saturday":
+                    case "Friday":
                         dayOfWeekCounter[5]++;
                         break;
-                    case "Sunday":
+                    case "Saturday":
                         dayOfWeekCounter[6]++;
                         break;
                 }

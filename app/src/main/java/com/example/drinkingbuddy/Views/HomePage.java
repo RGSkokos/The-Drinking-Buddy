@@ -38,7 +38,8 @@ public class HomePage extends AppCompatActivity {
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
     private SharedPreferencesHelper sharedPreferencesHelper;
     protected int profileId;
-    private String type_of_drink;
+    String type_of_drink;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class HomePage extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarHome);
         TimeStampTextview = findViewById(R.id.TimeStampTextView);
         SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
-        type_of_drink = "Unknown";
+
     }
 
     //fragment open for type of drink
@@ -141,7 +142,7 @@ public class HomePage extends AppCompatActivity {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
             timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
 
-            temp = (((temp) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (((temp - 1300) / 5000)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
 
@@ -157,20 +158,15 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             openLoading();
-            myDB.SaveDrinkType(type_of_drink);
-            type_of_drink = "Unknown";
+
         }
     };
 
 
-    @SuppressLint("SetTextI18n")
-    public void setTypeOfDrink(String type) {
-        CurrentDrinkTextView.setText("Current Drink: " + type);
-        type_of_drink = type;
-    }
-
     protected void openLoading(){        //open settings class on click
+
         Intent i = new Intent(this, LoadActivity.class);
+        i.putExtra("type_of_drink", type_of_drink);
         startActivity(i);
     }
 
@@ -192,6 +188,11 @@ public class HomePage extends AppCompatActivity {
     private void goToTrends() {
         Intent intent = new Intent(this, GraphActivity.class);
         startActivity(intent);
+    }
+
+    public void setTypeOfDrink(String choice) {
+        type_of_drink = choice;
+
     }
 }
 

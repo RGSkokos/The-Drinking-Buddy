@@ -20,6 +20,7 @@ import com.example.drinkingbuddy.Models.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DBHelper extends SQLiteOpenHelper {
 
@@ -41,7 +42,6 @@ public class DBHelper extends SQLiteOpenHelper {
     //simply creates database to hold breathalyzer entries
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
        CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
                 + " (" + Config.Result + " TEXT NOT NULL,"
                 +  Config.TimeStamp + " TEXT NOT NULL,"
@@ -65,6 +65,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+
+
     //not currently needed but can be implemented in the future
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
@@ -84,8 +86,12 @@ public class DBHelper extends SQLiteOpenHelper {
     @SuppressLint("SimpleDateFormat")
     public String TimeStamp()
     {
+        TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
         return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
+        //REFERENCE: https://howtodoinjava.com/java/date-time/convert-date-time-to-est-est5edt/
     }
+
+
 
     //Method to add new Profile
     public void insertNewProfile(Profile profile)
