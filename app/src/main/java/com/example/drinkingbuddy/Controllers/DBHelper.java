@@ -27,6 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private final Context context;
 
+
     public DBHelper(Context context)
     {
         super(context, Config.DATABASE_NAME, null, Config.DATABASE_VERSION );
@@ -54,16 +55,16 @@ public class DBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
     }
 
-    @SuppressLint("SimpleDateFormat")
-    public String TimeStamp()
-    {
-        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
-    }
-
     //not currently needed but can be implemented in the future
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public String TimeStamp()
+    {
+        return new SimpleDateFormat("hh:mm MM/dd/yyyy").format(new Date());
     }
 
     //Method to add new Profile
@@ -88,6 +89,20 @@ public class DBHelper extends SQLiteOpenHelper {
         finally {
             db.close();
         }
+    }
+
+    //Method to update a profile
+    //REFERENCE: https://www.youtube.com/watch?v=pFktQj69SbU
+    public  boolean update(Profile profile, int id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(Config.USERNAME, profile.getUsername());
+        contentValues.put(Config.PASSWORD, profile.getPassword());
+        contentValues.put(Config.DEVICE_NAME, profile.getDeviceName());
+        contentValues.put(Config.DEVICE_CODE, profile.getDeviceCode());
+        db.update(Config.TABLE_NAME_PROFILE, contentValues, Config.ID + "=?", new String[] {String.valueOf(id)});
+        return true;
     }
 
     //Method to insert a new entry for result from breathalyzer
@@ -163,10 +178,11 @@ public class DBHelper extends SQLiteOpenHelper {
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     String username = cursor.getString(cursor.getColumnIndex(Config.USERNAME));
+                    String password = cursor.getString(cursor.getColumnIndex(Config.PASSWORD));
                     String deviceName = cursor.getString(cursor.getColumnIndex(Config.DEVICE_NAME));
                     String deviceCode = cursor.getString(cursor.getColumnIndex(Config.DEVICE_CODE));
 
-                    return new Profile(username, deviceName, deviceCode);
+                    return new Profile(username, password, deviceName, deviceCode);
                 }
             }
         } catch (SQLiteException e){

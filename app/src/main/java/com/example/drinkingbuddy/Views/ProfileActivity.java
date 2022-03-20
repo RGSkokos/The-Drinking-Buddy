@@ -88,7 +88,6 @@ public class ProfileActivity extends AppCompatActivity {
             String passwordEntered = (password.getText().length() != 0) ? password.getText().toString() : "";
             String deviceNameEntered = (deviceName.getText().length() != 0) ? deviceName.getText().toString() : "";
             String deviceCodeEntered = (deviceCode.getText().length() != 0) ? deviceCode.getText().toString() : "";
-
             boolean error = false;
 
             if (usernameEntered.length() != 0 && usernameEntered.length() < 3) {
@@ -116,7 +115,28 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (!error) {
                 // TODO: Add non-empty values entered in DB
+                //find and edit old user values
                 profile = database.getProfileById(sharedPreferencesHelper.getLoginId()); //update profile
+
+                if(usernameEntered.length() != 0)
+                {
+                    profile.setUsername(usernameEntered);
+                }
+                if(passwordEntered.length() != 0)
+                {
+                    profile.setPassword(passwordEntered);
+                }
+                if(deviceCodeEntered.length() != 0)
+                {
+                    profile.setDeviceCode(deviceCodeEntered);
+                }
+                if(deviceNameEntered.length() != 0)
+                {
+                    profile.setDeviceName(deviceNameEntered);
+                }
+
+                database.update(profile, sharedPreferencesHelper.getLoginId());
+
                 setDisplayMode();
                 menuItemTitleChange(false);
                 flag = !flag;

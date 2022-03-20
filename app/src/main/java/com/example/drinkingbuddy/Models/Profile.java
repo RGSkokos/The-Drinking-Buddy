@@ -8,6 +8,9 @@ public class Profile {
     String deviceName;
     String deviceCode;
 
+    public Profile()
+    {}
+
     public Profile(String username, String password, String deviceName, String deviceCode) {
         this.username = username;
         this.password = password;
@@ -15,11 +18,7 @@ public class Profile {
         this.deviceCode = deviceCode;
     }
 
-    public Profile(String username, String deviceName, String deviceCode) {
-        this.username = username;
-        this.deviceName = deviceName;
-        this.deviceCode = deviceCode;
-    }
+
 
     public String getUsername() {
         return username;
