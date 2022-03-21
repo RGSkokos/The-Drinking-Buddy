@@ -46,8 +46,9 @@
         android:layout_width="141dp"
         android:layout_height="129dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="468dp" />
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="468dp"
+        android:src="@drawable/line_chart"/>
 
     <ImageButton
         android:id="@+id/pieChartButton"
@@ -56,7 +57,8 @@
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="144dp"
-        android:layout_marginTop="468dp" />
+        android:layout_marginTop="468dp"
+        android:src="@drawable/pie_chart"/>
 
     <ImageButton
         android:id="@+id/barChartButton"
@@ -66,7 +68,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="282dp"
         android:layout_marginTop="468dp"
-        android:layout_marginEnd="1dp" />
+        android:layout_marginEnd="1dp"
+        android:src="@drawable/bar_chart"/>
 
     <TextView
         android:id="@+id/TimeStampTextView"
@@ -87,11 +90,13 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="330dp"
-        android:layout_marginTop="627dp"
+        android:layout_marginTop="628dp"
         android:layout_marginEnd="25dp"
         android:clickable="true"
         app:backgroundTint="#E0E1E8"
-        app:maxImageSize="90dp" />
+        app:maxImageSize="90dp"
+        tools:ignore="SpeakableTextPresentCheck"
+        android:src="@drawable/beer_bottle_foreground"/>
 
     <TextView
         android:id="@+id/CurrentDrinktextView"
