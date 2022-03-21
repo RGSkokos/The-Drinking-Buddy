@@ -86,11 +86,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginStart="330dp"
         android:layout_marginTop="627dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="48dp"
         android:clickable="true"
         app:backgroundTint="#E0E1E8"
         app:maxImageSize="90dp" />

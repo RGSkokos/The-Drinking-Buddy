@@ -182,21 +182,42 @@ public class HomePage extends AppCompatActivity {
     private final View.OnClickListener onClickLineButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            goToLineActivity();
+            if(myDB.getAllResults().size() > 0)
+            {
+                goToLineActivity();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+            }
         }
     };
 
     private final View.OnClickListener onClickPieButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            goToPieActivity();
+            if(myDB.getAllResults().size() > 0)
+            {
+                goToPieActivity();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+            }
         }
     };
 
     private final View.OnClickListener onClickBarButton = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            goToBarActivity();
+            if(myDB.getAllResults().size() > 0)
+            {
+                goToBarActivity();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+            }
         }
     };
 
