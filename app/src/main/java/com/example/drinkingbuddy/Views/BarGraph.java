@@ -8,23 +8,13 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
@@ -33,22 +23,16 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 // Only the line graph was implemented thus far, the library files can be found within models
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BarGraph extends AppCompatActivity {
 
     protected Toolbar toolbar;
     protected Menu menu;
     private DBHelper database;
-    private SharedPreferencesHelper sharedPreferencesHelper;
     BarChart barChart;
     List<Breathalyzer> breathalyzer_values;
-    ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
     ArrayList<BarEntry> barGraphValues = new ArrayList<>();
-    Map<String, Integer> DrinkType = new HashMap<>();
-    String SpanOfData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +40,15 @@ public class BarGraph extends AppCompatActivity {
         setContentView(R.layout.activity_bar_graph);
 
         initializeComponents();
-
-        database = new DBHelper(this);
-        sharedPreferencesHelper = new SharedPreferencesHelper(BarGraph.this);
-        breathalyzer_values = database.getAllResults();
     }
 
     @Override
     protected void onStart(){
         super.onStart();
+
+        database = new DBHelper(this);
+        breathalyzer_values = database.getAllResults();
+
         insertBarChartValues();
         displayBarChart();
     }

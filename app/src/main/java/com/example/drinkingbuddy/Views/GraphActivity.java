@@ -120,19 +120,15 @@ public class GraphActivity extends AppCompatActivity {
         colors.add(Color.GREEN);
         colors.add(Color.CYAN);
 
-
-
         //input data and fit data into pie chart entry
         for(String type: DrinkType.keySet()){
             pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
         }
 
-
         PieDataSet pieDataSet = new PieDataSet(pieGraphValues, "");
 
         pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
-
 
         PieData pieData = new PieData(pieDataSet);
 

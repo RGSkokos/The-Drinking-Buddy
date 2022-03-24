@@ -21,9 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="465dp"
         android:text="Your Blood Alcohol Level is: "
         android:textSize="16sp" />
 
@@ -46,19 +46,25 @@
         android:layout_width="141dp"
         android:layout_height="129dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="-7dp"
         android:layout_marginTop="468dp"
-        android:src="@drawable/line_chart"/>
+        android:layout_marginBottom="20dp"
+        android:background="@null"
+        android:src="@drawable/line_chart" />
 
     <ImageButton
         android:id="@+id/pieChartButton"
         android:layout_width="135dp"
         android:layout_height="129dp"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="144dp"
+        android:layout_marginStart="139dp"
         android:layout_marginTop="468dp"
-        android:src="@drawable/pie_chart"/>
+        android:layout_marginBottom="20dp"
+        android:background="@null"
+        android:src="@drawable/pie_chart" />
 
     <ImageButton
         android:id="@+id/barChartButton"
@@ -66,18 +72,22 @@
         android:layout_height="129dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="282dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="277dp"
         android:layout_marginTop="468dp"
-        android:layout_marginEnd="1dp"
-        android:src="@drawable/bar_chart"/>
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="19dp"
+        android:background="@null"
+        android:src="@drawable/bar_chart" />
 
     <TextView
         android:id="@+id/TimeStampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="389dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="499dp"
         android:layout_marginEnd="157dp"
         android:layout_marginBottom="256dp"
         android:text="Time Measurement was Taken: "
@@ -89,14 +99,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
         android:layout_marginStart="330dp"
-        android:layout_marginTop="628dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginTop="333dp"
+        android:layout_marginEnd="181dp"
         android:clickable="true"
+        android:src="@drawable/beer_bottle_foreground"
         app:backgroundTint="#E0E1E8"
         app:maxImageSize="90dp"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:src="@drawable/beer_bottle_foreground"/>
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/CurrentDrinktextView"
