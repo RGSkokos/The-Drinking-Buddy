@@ -26,9 +26,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
+            android:name=".Views.BarGraphActivity"
+            android:exported="false"
+            android:label="Weekly Habits"
+            android:parentActivityName=".Views.HomePage"/>
+        <activity
+            android:name=".Views.PieChartActivity"
+            android:exported="false"
+            android:label="Type Of Drink"
+            android:parentActivityName=".Views.HomePage"/>
+        <activity
+            android:name=".Views.LineGraphActivity"
+            android:exported="false"
+            android:label="Overall Consumption"
+            android:parentActivityName=".Views.HomePage"/>
+        <activity
             android:name=".Views.RegistrationActivity"
-            android:label="Register"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Register" />
         <activity
             android:name=".Views.GraphActivity"
             android:exported="false"
@@ -40,12 +55,12 @@
 
         <activity
             android:name=".Views.LoginActivity"
-            android:label="Login"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Login" />
         <activity
             android:name=".Views.ProfileActivity"
-            android:label="Profile"
             android:exported="false"
+            android:label="Profile"
             android:parentActivityName=".Views.HomePage">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -63,8 +78,8 @@
         </activity>
         <activity
             android:name=".Views.HomePage"
-            android:label="@string/app_name"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

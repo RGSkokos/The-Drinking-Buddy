@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +40,10 @@ public class HomePage extends AppCompatActivity {
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
     private SharedPreferencesHelper sharedPreferencesHelper;
     protected int profileId;
+    protected ImageButton lineChartButton;
+    protected ImageButton pieChartButton;
+    protected ImageButton barChartButton;
     String type_of_drink;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +82,14 @@ public class HomePage extends AppCompatActivity {
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
+        lineChartButton = findViewById(R.id.lineChartButton);
+        lineChartButton.setOnClickListener(onClickLineButton);
+        pieChartButton = findViewById(R.id.pieChartButton);
+        pieChartButton.setOnClickListener(onClickPieButton);
+        barChartButton = findViewById(R.id.barChartButton);
+        barChartButton.setOnClickListener(onClickBarButton);
         TimeStampTextview = findViewById(R.id.TimeStampTextView);
         SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
-
     }
 
     //fragment open for type of drink
@@ -171,6 +179,62 @@ public class HomePage extends AppCompatActivity {
         }
     };
 
+    private final View.OnClickListener onClickLineButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(myDB.getAllResults().size() > 0)
+            {
+                goToLineActivity();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private final View.OnClickListener onClickPieButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(myDB.getAllResults().size() > 0)
+            {
+                goToPieActivity();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    private final View.OnClickListener onClickBarButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(myDB.getAllResults().size() > 0)
+            {
+                goToBarActivity();
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
+
+    protected void goToLineActivity(){
+        Intent i = new Intent(this, LineGraphActivity.class);
+        startActivity(i);
+    }
+
+    protected void goToPieActivity(){
+        Intent i = new Intent(this, PieChartActivity.class);
+        startActivity(i);
+    }
+
+    protected void goToBarActivity(){
+        Intent i = new Intent(this, BarGraphActivity.class);
+        startActivity(i);
+    }
 
     protected void openLoading(){        //open settings class on click
 

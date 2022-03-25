@@ -11,6 +11,8 @@ import android.os.Bundle;
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
+
+
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -25,7 +27,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -119,19 +120,15 @@ public class GraphActivity extends AppCompatActivity {
         colors.add(Color.GREEN);
         colors.add(Color.CYAN);
 
-
-
         //input data and fit data into pie chart entry
         for(String type: DrinkType.keySet()){
             pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
         }
 
-
         PieDataSet pieDataSet = new PieDataSet(pieGraphValues, "");
 
         pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
-
 
         PieData pieData = new PieData(pieDataSet);
 
