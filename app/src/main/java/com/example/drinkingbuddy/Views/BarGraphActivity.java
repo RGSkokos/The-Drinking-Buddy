@@ -25,7 +25,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BarGraph extends AppCompatActivity {
+public class BarGraphActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
     protected Menu menu;
@@ -63,7 +63,7 @@ public class BarGraph extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        barChart = findViewById(R.id.BarChart);
+        barChart = findViewById(R.id.barGraph);
     }
 
     //region Bar Chart

@@ -222,17 +222,17 @@ public class HomePage extends AppCompatActivity {
     };
 
     protected void goToLineActivity(){
-        Intent i = new Intent(this, LineGraph.class);
+        Intent i = new Intent(this, LineGraphActivity.class);
         startActivity(i);
     }
 
     protected void goToPieActivity(){
-        Intent i = new Intent(this, PieChart.class);
+        Intent i = new Intent(this, PieChartActivity.class);
         startActivity(i);
     }
 
     protected void goToBarActivity(){
-        Intent i = new Intent(this, BarGraph.class);
+        Intent i = new Intent(this, BarGraphActivity.class);
         startActivity(i);
     }
 

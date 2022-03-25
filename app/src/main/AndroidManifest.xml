@@ -26,17 +26,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".Views.BarGraph"
+            android:name=".Views.BarGraphActivity"
             android:exported="false"
             android:label="Weekly Habits"
             android:parentActivityName=".Views.HomePage"/>
         <activity
-            android:name=".Views.PieChart"
+            android:name=".Views.PieChartActivity"
             android:exported="false"
             android:label="Type Of Drink"
             android:parentActivityName=".Views.HomePage"/>
         <activity
-            android:name=".Views.LineGraph"
+            android:name=".Views.LineGraphActivity"
             android:exported="false"
             android:label="Overall Consumption"
             android:parentActivityName=".Views.HomePage"/>

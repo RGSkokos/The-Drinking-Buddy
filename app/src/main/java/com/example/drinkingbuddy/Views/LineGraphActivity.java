@@ -26,7 +26,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LineGraph extends AppCompatActivity {
+public class LineGraphActivity extends AppCompatActivity {
 
     //Variables
     LineChart lineChart;
@@ -67,7 +67,7 @@ public class LineGraph extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        lineChart = findViewById(R.id.LineChart);
+        lineChart = findViewById(R.id.lineGraph);
     }
 
     //region Line Graph

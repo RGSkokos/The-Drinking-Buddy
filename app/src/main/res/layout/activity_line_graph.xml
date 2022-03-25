@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.LineGraph">
+    tools:context=".Views.LineGraphActivity">
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
+        android:id="@+id/lineGraph"
         android:layout_width="342dp"
         android:layout_height="154dp"
         android:layout_alignParentStart="true"

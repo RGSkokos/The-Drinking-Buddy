@@ -9,11 +9,9 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -28,12 +26,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PieChart extends AppCompatActivity {
+public class PieChartActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
-    protected Menu menu;
     private DBHelper database;
-    com.github.mikephil.charting.charts.PieChart pieChart;
+    PieChart pieChart;
     List<Breathalyzer> breathalyzer_values;
     Map<String, Integer> DrinkType = new HashMap<>();
 
@@ -66,7 +63,7 @@ public class PieChart extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        pieChart = findViewById(R.id.PieChart);
+        pieChart = findViewById(R.id.pieGraph);
     }
 
     //region Pie Chart
