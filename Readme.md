@@ -4,6 +4,7 @@
 * Argiro Skokos | 40126415
 * Lina Ismail | 40132107
 * Abhinav Batra | 40086809
+
 # Objective
 The objective of this project is to build hardware and link it to an android application while using the Agile project methodologies. 
 # Description
