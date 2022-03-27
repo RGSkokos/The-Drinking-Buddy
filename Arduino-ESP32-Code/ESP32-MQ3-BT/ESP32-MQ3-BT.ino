@@ -17,10 +17,10 @@ void setup() {
 }
 
 void loop() {
-  if(SerialBT.available()) { // Run if There is Incomming Bluetooth Message
+  if(SerialBT.available()) { // Run if There is Incoming Bluetooth Message
     userCommand = SerialBT.read(); // SerialBT.read() Produces ASCII Code Values
     if(userCommand == 48) { // (48)ASCII = (0)DECIMAL -> Android App Buttons Send 1s and 0s, Nothing Else
-      digitalWrite(LEDpin, LOW); // Tunring off LED if user wants to stop sampling
+      digitalWrite(LEDpin, LOW); // Turning off LED if user wants to stop sampling
       takeSample = false; // Turn Off Sampler
       Serial.println("Average is: ");
       Serial.print(sum/counter);

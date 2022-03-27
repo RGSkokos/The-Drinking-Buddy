@@ -13,4 +13,8 @@ public class BluetoothHelper extends Application {
         super.onCreate();
         BT = new LoadActivity();
     }
+
+
+
+
 }
