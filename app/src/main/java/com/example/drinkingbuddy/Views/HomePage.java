@@ -55,7 +55,12 @@ public class HomePage extends AppCompatActivity {
         sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
         setSupportActionBar(toolbar);
 
-        SpecifyDrinkButton.setOnClickListener(view -> OpenFragment());
+        SpecifyDrinkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToDrinkInputActivity();
+            }
+        });
     }
 
     @Override
@@ -220,6 +225,11 @@ public class HomePage extends AppCompatActivity {
             }
         }
     };
+
+    protected void goToDrinkInputActivity(){
+        Intent i = new Intent(this, DrinkInputActivity.class);
+        startActivity(i);
+    }
 
     protected void goToLineActivity(){
         Intent i = new Intent(this, LineGraphActivity.class);
