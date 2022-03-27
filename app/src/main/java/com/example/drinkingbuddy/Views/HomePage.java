@@ -48,6 +48,8 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_home);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

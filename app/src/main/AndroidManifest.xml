@@ -25,6 +25,7 @@
         android:roundIcon="@mipmap/drinking_buddy_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity
             android:name=".Views.DrinkInputActivity"
             android:exported="false"
@@ -80,13 +81,19 @@
                 android:value=".Views.HomePage" />
         </activity>
         <activity
+            android:name=".Views.Splash"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Views.HomePage"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
