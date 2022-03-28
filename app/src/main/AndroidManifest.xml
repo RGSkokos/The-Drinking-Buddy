@@ -25,22 +25,24 @@
         android:roundIcon="@mipmap/drinking_buddy_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
+        <activity
+            android:name=".Views.GraphsActivity"
+            android:exported="false" />
         <activity
             android:name=".Views.BarGraphActivity"
             android:exported="false"
             android:label="Weekly Habits"
-            android:parentActivityName=".Views.HomePage"/>
+            android:parentActivityName=".Views.HomePage" />
         <activity
             android:name=".Views.PieChartActivity"
             android:exported="false"
             android:label="Type Of Drink"
-            android:parentActivityName=".Views.HomePage"/>
+            android:parentActivityName=".Views.HomePage" />
         <activity
             android:name=".Views.LineGraphActivity"
             android:exported="false"
             android:label="Overall Consumption"
-            android:parentActivityName=".Views.HomePage"/>
+            android:parentActivityName=".Views.HomePage" />
         <activity
             android:name=".Views.RegistrationActivity"
             android:exported="false"
@@ -53,7 +55,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Views.HomePage" />
         </activity>
-
         <activity
             android:name=".Views.LoginActivity"
             android:exported="false"
@@ -67,7 +68,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Views.HomePage" />
         </activity>
-
         <activity
             android:name=".Views.LoadActivity"
             android:exported="true"
@@ -82,6 +82,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

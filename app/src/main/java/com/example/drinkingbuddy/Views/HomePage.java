@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -21,7 +22,10 @@ import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -35,6 +39,7 @@ public class HomePage extends AppCompatActivity {
     protected TextView TimeStampTextview;
     protected TextView CurrentDrinkTextView;
     protected Toolbar toolbar;
+    protected BottomNavigationView bottomNav;
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
@@ -58,6 +63,26 @@ public class HomePage extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         SpecifyDrinkButton.setOnClickListener(view -> OpenFragment());
+
+        bottomNav = findViewById(R.id.bottom_nav);
+
+        // Set Home selected
+        bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
+
+        // Perform item selected listener
+        bottomNav.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.graphsBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                        overridePendingTransition(0,0);
+                    case R.id.homeBottomMenuItem:
+                }
+            }
+        });
     }
 
     @Override
@@ -106,6 +131,7 @@ public class HomePage extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.bottom_menu, menu);
         if(menu instanceof MenuBuilder){
             MenuBuilder m = (MenuBuilder) menu;
             m.setOptionalIconsVisible(true);
