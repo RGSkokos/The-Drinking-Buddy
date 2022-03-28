@@ -17,7 +17,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
-        android:name=".Controllers.BluetoothHelper"
         android:allowBackup="true"
         android:icon="@mipmap/drinking_buddy_icon"
         android:label="@string/app_name"
@@ -26,6 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+        <activity android:name=".Models.Bluetooth">
+
+        </activity>
         <activity
             android:name=".Views.BarGraphActivity"
             android:exported="false"
