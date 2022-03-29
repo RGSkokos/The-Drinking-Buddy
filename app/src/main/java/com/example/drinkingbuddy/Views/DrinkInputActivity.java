@@ -28,6 +28,7 @@ public class DrinkInputActivity extends AppCompatActivity {
 
     protected void initializeComponents(){
         beerNumber = findViewById(R.id.beerNumber);
+
         wineNumber = findViewById(R.id.wineNumber);
         liquorNumber = findViewById(R.id.liquorNumber);
         ciderNumber = findViewById(R.id.ciderNumber);
@@ -46,7 +47,16 @@ public class DrinkInputActivity extends AppCompatActivity {
     private final View.OnClickListener saveDrinks = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            int beer = 0;
+            int wine = 0;
+            int liquor = 0;
+            int cider = 0;
 
+            String beerTemp = beerNumber.getText().toString();
+
+            if(!"".equals(beerTemp)){
+                beer = Integer.parseInt(beerTemp);
+            }
         }
     };
 }
