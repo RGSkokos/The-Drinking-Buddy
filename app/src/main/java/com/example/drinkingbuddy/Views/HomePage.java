@@ -186,13 +186,13 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             openLoading();
-            if(type_of_drink != null) {
-                myDB.SaveDrinkType(type_of_drink);
-            }
-            else {
-                myDB.SaveDrinkType("Unknown");
-            }
-
+            // TODO: check all instances of type_of_drink and remove after drink input page is complete
+//            if(type_of_drink != null) {
+//                myDB.saveDrinkType(type_of_drink);
+//            }
+//            else {
+//                myDB.saveDrinkType("Unknown");
+//            }
         }
     };
 
@@ -230,7 +230,6 @@ public class HomePage extends AppCompatActivity {
 
     public void setTypeOfDrink(String choice) {
         type_of_drink = choice;
-
     }
 }
 
