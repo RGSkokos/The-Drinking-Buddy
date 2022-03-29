@@ -21,14 +21,14 @@ public class ConnectedThread extends Thread{
     public ConnectedThread(BluetoothSocket socket, Handler newHandler) {
         bluetoothSocket = socket;
         handler = newHandler;
-        try{
+        try {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             outputStream.flush();
         }
 
         catch(Exception e) {
-            Log.d("Problem","Something is Wrong");
+            Log.d("Problem","Something is Wrong 1 " + e.getMessage());
         }
     }
 
@@ -37,15 +37,19 @@ public class ConnectedThread extends Thread{
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         while(true) {
             try{
+                // The following 5 lines below have been extracted from the cited source
+                // ----
                 String response = bufferedReader.readLine();
                 Message newMessage = new Message();
                 newMessage.what = RESPONSE_MESSAGE;
                 newMessage.obj = response;
                 handler.sendMessage(newMessage);
+                // ----
+                bluetoothSocket.close();
             }
 
             catch(Exception e) {
-                Log.d("Problem","Something is Wrong");
+                Log.d("Problem","Something is Wrong 2" + e.getMessage());
                 break;
             }
         }
@@ -58,7 +62,7 @@ public class ConnectedThread extends Thread{
         }
 
         catch(Exception e) {
-            Log.d("Problem","Something is Wrong");
+            Log.d("Problem","Something is Wrong 3" + e.getMessage());
         }
     }
 }
