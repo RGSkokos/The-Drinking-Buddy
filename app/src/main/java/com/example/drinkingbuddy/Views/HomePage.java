@@ -9,10 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -21,7 +21,10 @@ import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -30,25 +33,22 @@ public class HomePage extends AppCompatActivity {
     //instance variables
     protected BluetoothAdapter bluetoothAdapter;
     protected Button newBreath;
-    protected FloatingActionButton SpecifyDrinkButton;
+    protected FloatingActionButton specifyDrinkButton;
     protected TextView response;
     protected TextView TimeStampTextview;
     protected TextView CurrentDrinkTextView;
     protected Toolbar toolbar;
+    protected BottomNavigationView bottomNav;
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
     private SharedPreferencesHelper sharedPreferencesHelper;
     protected int profileId;
-    protected ImageButton lineChartButton;
-    protected ImageButton pieChartButton;
-    protected ImageButton barChartButton;
     String type_of_drink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_home);
@@ -57,10 +57,31 @@ public class HomePage extends AppCompatActivity {
         sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
         setSupportActionBar(toolbar);
 
-        SpecifyDrinkButton.setOnClickListener(new View.OnClickListener() {
+        specifyDrinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToDrinkInputActivity();
+            }
+        });
+
+        // Set Home selected
+        bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
+
+        // Perform item selected listener
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.graphsBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.homeBottomMenuItem:
+                        return true;
+                }
+                return false;
             }
         });
     }
@@ -89,14 +110,9 @@ public class HomePage extends AppCompatActivity {
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
-        lineChartButton = findViewById(R.id.lineChartButton);
-        lineChartButton.setOnClickListener(onClickLineButton);
-        pieChartButton = findViewById(R.id.pieChartButton);
-        pieChartButton.setOnClickListener(onClickPieButton);
-        barChartButton = findViewById(R.id.barChartButton);
-        barChartButton.setOnClickListener(onClickBarButton);
+        bottomNav = findViewById(R.id.bottomNavigation);
         TimeStampTextview = findViewById(R.id.TimeStampTextView);
-        SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
+        specifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
 
     //fragment open for type of drink
@@ -123,12 +139,10 @@ public class HomePage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
             case R.id.trendsMenuItem:
-                if(myDB.getAllResults().size() > 0)
-                {
+                if(myDB.getAllResults().size() > 0) {
                     goToTrends();
                 }
-                else
-                {
+                else {
                     Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
                 }
                 return true;
@@ -158,11 +172,9 @@ public class HomePage extends AppCompatActivity {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
             timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
 
-            temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
-
-
 
         response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
         TimeStampTextview.setText("Measurement Taken: " + timeStamp);
@@ -174,77 +186,18 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             openLoading();
-            if(type_of_drink != null)
-            {
+            if(type_of_drink != null) {
                 myDB.SaveDrinkType(type_of_drink);
             }
-            else
-            {
+            else {
                 myDB.SaveDrinkType("Unknown");
             }
 
         }
     };
 
-    private final View.OnClickListener onClickLineButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(myDB.getAllResults().size() > 0)
-            {
-                goToLineActivity();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private final View.OnClickListener onClickPieButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(myDB.getAllResults().size() > 0)
-            {
-                goToPieActivity();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private final View.OnClickListener onClickBarButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(myDB.getAllResults().size() > 0)
-            {
-                goToBarActivity();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
     protected void goToDrinkInputActivity(){
         Intent i = new Intent(this, DrinkInputActivity.class);
-        startActivity(i);
-    }
-
-    protected void goToLineActivity(){
-        Intent i = new Intent(this, LineGraphActivity.class);
-        startActivity(i);
-    }
-
-    protected void goToPieActivity(){
-        Intent i = new Intent(this, PieChartActivity.class);
-        startActivity(i);
-    }
-
-    protected void goToBarActivity(){
-        Intent i = new Intent(this, BarGraphActivity.class);
         startActivity(i);
     }
 

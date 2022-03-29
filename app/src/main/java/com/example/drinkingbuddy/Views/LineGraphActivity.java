@@ -33,10 +33,9 @@ public class LineGraphActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected Menu menu;
     private DBHelper database;
-    List<Breathalyzer> breathalyzer_values;
+    List<Breathalyzer> breathalyzerValues;
     ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
     String SpanOfData;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +50,7 @@ public class LineGraphActivity extends AppCompatActivity {
         super.onStart();
 
         database = new DBHelper(this);
-        breathalyzer_values = database.getAllResults();
+        breathalyzerValues = database.getAllResults();
 
         insertLineChartValues();
         displayLineChart();
@@ -80,17 +79,17 @@ public class LineGraphActivity extends AppCompatActivity {
 
         //iterate through results from breathalyzer to set datapoint values
         //set start and end time for easy reference of how far the data spans
-        if(breathalyzer_values.size() > 0) {
-            for (int i = 0; i < breathalyzer_values.size(); i++) {
-                if (i == (breathalyzer_values.size() - 1)) {
-                    EndTime = breathalyzer_values.get(i).getTimeStamp();
+        if(breathalyzerValues.size() > 0) {
+            for (int i = 0; i < breathalyzerValues.size(); i++) {
+                if (i == (breathalyzerValues.size() - 1)) {
+                    EndTime = breathalyzerValues.get(i).getTimeStamp();
                 }
                 if (i == 0) {
-                    startTime = breathalyzer_values.get(i).getTimeStamp();
+                    startTime = breathalyzerValues.get(i).getTimeStamp();
                 }
 
-                float temp = Float.parseFloat(breathalyzer_values.get(i).getResult());
-                temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
+                float temp = Float.parseFloat(breathalyzerValues.get(i).getResult());
+                temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
                 temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
                 lineGraphValues.add(new Entry((i + 1), temp));
