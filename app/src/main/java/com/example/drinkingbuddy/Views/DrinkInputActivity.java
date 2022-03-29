@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.R;
 
 public class DrinkInputActivity extends AppCompatActivity {
@@ -32,11 +33,14 @@ public class DrinkInputActivity extends AppCompatActivity {
     protected Button ciderDecrement;
     protected Button saveDrinkButton;
     protected Toolbar toolbar;
+    protected DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drink_input);
+
+        dbHelper = new DBHelper(this);
         initializeComponents();
     }
 
@@ -124,10 +128,27 @@ public class DrinkInputActivity extends AppCompatActivity {
             int cider = 0;
 
             String beerTemp = beerNumber.getText().toString();
+            String wineTemp = wineNumber.getText().toString();
+            String liquorTemp = liquorNumber.getText().toString();
+            String ciderTemp = ciderNumber.getText().toString();
 
             if(!"".equals(beerTemp)){
                 beer = Integer.parseInt(beerTemp);
+                dbHelper.saveDrinkType("beer", beer);
             }
+            if(!"".equals(wineTemp)){
+                wine = Integer.parseInt(wineTemp);
+                dbHelper.saveDrinkType("wine", wine);
+            }
+            if(!"".equals(liquorTemp)){
+                liquor = Integer.parseInt(liquorTemp);
+                dbHelper.saveDrinkType("liquor", liquor);
+            }
+            if(!"".equals(ciderTemp)){
+                cider = Integer.parseInt(ciderTemp);
+                dbHelper.saveDrinkType("cider", cider);
+            }
+
         }
     };
 }

@@ -95,7 +95,7 @@ public class PieChartActivity extends AppCompatActivity {
         DrinkType.put("Liquor",drinks[0]);
         DrinkType.put("Beer",drinks[2]);
         DrinkType.put("Wine",drinks[1]);
-        DrinkType.put("Unknown", drinks[3]);
+        DrinkType.put("Cider", drinks[3]);
     }
 
     private void displayPieChart(){

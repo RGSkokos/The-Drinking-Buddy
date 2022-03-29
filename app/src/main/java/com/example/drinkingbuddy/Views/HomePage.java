@@ -115,12 +115,6 @@ public class HomePage extends AppCompatActivity {
         specifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
 
-    //fragment open for type of drink
-    private void OpenFragment() {
-        TypeOfDrinkFragment dialog = new TypeOfDrinkFragment();
-        dialog.show(getSupportFragmentManager(), "TypeOfDrink");
-    }
-
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")

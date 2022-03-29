@@ -43,7 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //simply creates database to hold breathalyzer entries
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {// might need id autoincrement (?)
        CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME_SENSOR
                 + " (" + Config.SENSOR_RESULT + " TEXT NOT NULL,"
                 + Config.TIME_STAMP_SENSOR + " TEXT NOT NULL,"
