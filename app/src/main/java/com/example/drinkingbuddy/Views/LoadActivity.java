@@ -130,8 +130,9 @@ public class LoadActivity extends AppCompatActivity {
 
     // When a Button is Pressed, Sampling is Taken and Result Fetched Automatically
     protected void sendMessage() {
-       String sendMessage = "1"; // "1" = Start Sampling
-       newThread.write(sendMessage.getBytes());
+        String sendMessage = "1"; // "1" = Start Sampling
+        newThread.write(sendMessage.getBytes());
+        Log.d("Problem","SEND MESSAGE 1111");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -164,6 +165,7 @@ public class LoadActivity extends AppCompatActivity {
                             public void run() {
                                 String sendMessage1 = "0"; // "0" = Stop Sampling and Get Final Data
                                 newThread.write(sendMessage1.getBytes());
+                                Log.d("Problem","SEND MESSAGE 0000");
                             }
                         });
                     }
@@ -206,8 +208,8 @@ public class LoadActivity extends AppCompatActivity {
                     //displayResults();
                 }
             }
-
         };
+
         newThread = new ConnectedThread(bluetoothSocket, handler);
         newThread.start();
     }
