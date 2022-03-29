@@ -31,7 +31,7 @@ import com.example.drinkingbuddy.R;
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "7C:9E:BD:45:43:F2";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");

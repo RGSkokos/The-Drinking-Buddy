@@ -27,22 +27,24 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".Views.GraphsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Graphs"
+            android:parentActivityName=".Views.HomePage" />
         <activity
             android:name=".Views.BarGraphActivity"
             android:exported="false"
             android:label="Weekly Habits"
-            android:parentActivityName=".Views.HomePage" />
+            android:parentActivityName=".Views.GraphsActivity" />
         <activity
             android:name=".Views.PieChartActivity"
             android:exported="false"
             android:label="Type Of Drink"
-            android:parentActivityName=".Views.HomePage" />
+            android:parentActivityName=".Views.GraphsActivity" />
         <activity
             android:name=".Views.LineGraphActivity"
             android:exported="false"
             android:label="Overall Consumption"
-            android:parentActivityName=".Views.HomePage" />
+            android:parentActivityName=".Views.GraphsActivity" />
         <activity
             android:name=".Views.RegistrationActivity"
             android:exported="false"

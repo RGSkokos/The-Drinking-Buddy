@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +33,7 @@ public class HomePage extends AppCompatActivity {
     //instance variables
     protected BluetoothAdapter bluetoothAdapter;
     protected Button newBreath;
-    protected FloatingActionButton SpecifyDrinkButton;
+    protected FloatingActionButton specifyDrinkButton;
     protected TextView response;
     protected TextView TimeStampTextview;
     protected TextView CurrentDrinkTextView;
@@ -45,15 +44,11 @@ public class HomePage extends AppCompatActivity {
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
     private SharedPreferencesHelper sharedPreferencesHelper;
     protected int profileId;
-    protected ImageButton lineChartButton;
-    protected ImageButton pieChartButton;
-    protected ImageButton barChartButton;
     String type_of_drink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_home);
@@ -62,25 +57,26 @@ public class HomePage extends AppCompatActivity {
         sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
         setSupportActionBar(toolbar);
 
-        SpecifyDrinkButton.setOnClickListener(view -> OpenFragment());
-
-        bottomNav = findViewById(R.id.bottom_nav);
+        specifyDrinkButton.setOnClickListener(view -> OpenFragment());
 
         // Set Home selected
         bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
 
         // Perform item selected listener
-        bottomNav.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
-            public void onNavigationItemReselected(@NonNull MenuItem item) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId())
                 {
                     case R.id.graphsBottomMenuItem:
                         startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
                         overridePendingTransition(0,0);
+                        return true;
                     case R.id.homeBottomMenuItem:
+                        return true;
                 }
+                return false;
             }
         });
     }
@@ -109,14 +105,9 @@ public class HomePage extends AppCompatActivity {
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
-        lineChartButton = findViewById(R.id.lineChartButton);
-        lineChartButton.setOnClickListener(onClickLineButton);
-        pieChartButton = findViewById(R.id.pieChartButton);
-        pieChartButton.setOnClickListener(onClickPieButton);
-        barChartButton = findViewById(R.id.barChartButton);
-        barChartButton.setOnClickListener(onClickBarButton);
+        bottomNav = findViewById(R.id.bottomNavigation);
         TimeStampTextview = findViewById(R.id.TimeStampTextView);
-        SpecifyDrinkButton = findViewById(R.id.SpecifyDrink);
+        specifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
 
     //fragment open for type of drink
@@ -131,7 +122,6 @@ public class HomePage extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
-        getMenuInflater().inflate(R.menu.bottom_menu, menu);
         if(menu instanceof MenuBuilder){
             MenuBuilder m = (MenuBuilder) menu;
             m.setOptionalIconsVisible(true);
@@ -144,12 +134,10 @@ public class HomePage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
             case R.id.trendsMenuItem:
-                if(myDB.getAllResults().size() > 0)
-                {
+                if(myDB.getAllResults().size() > 0) {
                     goToTrends();
                 }
-                else
-                {
+                else {
                     Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
                 }
                 return true;
@@ -179,11 +167,9 @@ public class HomePage extends AppCompatActivity {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
             timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
 
-            temp = (((temp - 1500) / 5000)); //second value in numerator needs to be based on calibration
+            temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
-
-
 
         response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
         TimeStampTextview.setText("Measurement Taken: " + timeStamp);
@@ -195,74 +181,15 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             openLoading();
-            if(type_of_drink != null)
-            {
+            if(type_of_drink != null) {
                 myDB.SaveDrinkType(type_of_drink);
             }
-            else
-            {
+            else {
                 myDB.SaveDrinkType("Unknown");
             }
 
         }
     };
-
-    private final View.OnClickListener onClickLineButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(myDB.getAllResults().size() > 0)
-            {
-                goToLineActivity();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private final View.OnClickListener onClickPieButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(myDB.getAllResults().size() > 0)
-            {
-                goToPieActivity();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    private final View.OnClickListener onClickBarButton = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if(myDB.getAllResults().size() > 0)
-            {
-                goToBarActivity();
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-    protected void goToLineActivity(){
-        Intent i = new Intent(this, LineGraphActivity.class);
-        startActivity(i);
-    }
-
-    protected void goToPieActivity(){
-        Intent i = new Intent(this, PieChartActivity.class);
-        startActivity(i);
-    }
-
-    protected void goToBarActivity(){
-        Intent i = new Intent(this, BarGraphActivity.class);
-        startActivity(i);
-    }
 
     protected void openLoading(){        //open settings class on click
 
