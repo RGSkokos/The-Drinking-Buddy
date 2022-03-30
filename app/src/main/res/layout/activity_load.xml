@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#3d3f45"
     android:layout_height="match_parent">
 
     <pl.droidsonroids.gif.GifImageView
@@ -27,6 +28,7 @@
         android:textAlignment="center"
         android:textSize="60sp"
         android:textStyle="bold"
+        android:textColor="#00C2FF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,14 +41,29 @@
         android:layout_height="190dp"
         android:text="DONE!"
         android:textAlignment="center"
-        android:textColor="#73CD19"
+        android:textColor="#00C2FF"
         android:textSize="96sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.567" />
+        app:layout_constraintVertical_bias="0.192" />
+
+    <TextView
+        android:id="@+id/sensorResult"
+        android:layout_width="313dp"
+        android:layout_height="341dp"
+        android:textAlignment="center"
+        android:textColor="#00C2FF"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarLoad"
@@ -55,6 +72,8 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:backgroundTint="#45464a"
+        app:titleTextColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

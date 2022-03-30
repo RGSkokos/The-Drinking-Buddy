@@ -101,12 +101,12 @@ public class HomePage extends AppCompatActivity {
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
         newBreath = findViewById(R.id.newBreath);
-        response = findViewById(R.id.response);
+        //response = findViewById(R.id.response);
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
         bottomNav = findViewById(R.id.bottomNavigation);
-        TimeStampTextview = findViewById(R.id.TimeStampTextView);
+        //TimeStampTextview = findViewById(R.id.TimeStampTextView);
         specifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
 
@@ -171,8 +171,8 @@ public class HomePage extends AppCompatActivity {
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
 
-        response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
-        TimeStampTextview.setText("Measurement Taken: " + timeStamp);
+        //response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
+        //TimeStampTextview.setText("Measurement Taken: " + timeStamp);
         CurrentDrinkTextView.setText("Last Drink: " + drink);
         Log.d("Changing", "Changing Display " + drink);
     }
