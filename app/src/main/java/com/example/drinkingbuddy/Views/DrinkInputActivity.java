@@ -1,10 +1,14 @@
 package com.example.drinkingbuddy.Views;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class DrinkInputActivity extends AppCompatActivity {
 
@@ -35,6 +41,7 @@ public class DrinkInputActivity extends AppCompatActivity {
     protected ImageButton ciderDecrement;
     protected Button saveDrinkButton;
     protected Toolbar toolbar;
+    protected BottomNavigationView bottomNav;
     protected DBHelper dbHelper;
 
     @Override
@@ -47,7 +54,6 @@ public class DrinkInputActivity extends AppCompatActivity {
     }
 
     protected void initializeComponents(){
-        // TODO: initialize all components
         beerNumber = findViewById(R.id.beerNumber);
         wineNumber = findViewById(R.id.wineNumber);
         liquorNumber = findViewById(R.id.liquorNumber);
@@ -55,6 +61,9 @@ public class DrinkInputActivity extends AppCompatActivity {
         saveDrinkButton = findViewById(R.id.saveDrinkButton);
         saveDrinkButton.setOnClickListener(saveDrinks);
         toolbar = findViewById(R.id.drinkInputToolbar);
+        bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setSelectedItemId(R.id.drinksBottomMenuItem);
+        bottomNav.setOnItemSelectedListener(navBarOnClick);
 
         beerIncrement = findViewById(R.id.beerIncrementButton);
         beerIncrement.setOnClickListener(incrementBeerCount);
@@ -76,66 +85,82 @@ public class DrinkInputActivity extends AppCompatActivity {
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
+
+    private final NavigationBarView.OnItemSelectedListener navBarOnClick = new NavigationBarView.OnItemSelectedListener() {
+        @SuppressLint("NonConstantResourceId")
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch(item.getItemId())
+            {
+                case R.id.drinksBottomMenuItem:
+                    return true;
+                case R.id.homeBottomMenuItem:
+                    startActivity(new Intent(getApplicationContext(), HomePage.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.graphsBottomMenuItem:
+                    startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+            }
+            return false;
+        }
+    };
 
     private final View.OnClickListener incrementBeerCount = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String beerTemp = beerNumber.getText().toString();
-            int beer = 0;
-            if(!"".equals(beerTemp)){
-                beer = Integer.parseInt(beerTemp);
-                beer++;
-            }
-            else beer = 1;
-            beerNumber.setText(String.valueOf(beer));
+            String beer = beerNumber.getText().toString();
+            if (!"".equals(beer)) {
+                if (Integer.parseInt(beer) < 999)
+                    beerNumber.setText(String.valueOf(Integer.parseInt(beer) + 1));
+                else
+                    Toast.makeText(getApplicationContext(), "Max input reached", Toast.LENGTH_LONG).show();
+            } else
+                beerNumber.setText("1");
         }
     };
 
     private final View.OnClickListener incrementWineCount = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String wineTemp = wineNumber.getText().toString();
-            int wine = 0;
-            if(!"".equals(wineTemp)){
-                wine = Integer.parseInt(wineTemp);
-                wine++;
-            }
-            else wine = 1;
-            wineNumber.setText(String.valueOf(wine));
+            String wine = wineNumber.getText().toString();
+            if (!"".equals(wine)) {
+                if (Integer.parseInt(wine) < 999)
+                    wineNumber.setText(String.valueOf(Integer.parseInt(wine) + 1));
+                else
+                    Toast.makeText(getApplicationContext(), "Max input reached", Toast.LENGTH_LONG).show();
+            } else
+                wineNumber.setText("1");
         }
     };
 
     private final View.OnClickListener incrementLiquorCount = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String liquorTemp = liquorNumber.getText().toString();
-            int liquor = 0;
-            if(!"".equals(liquorTemp)){
-                liquor = Integer.parseInt(liquorTemp);
-                liquor++;
-            }
-            else liquor = 1;
-            liquorNumber.setText(String.valueOf(liquor));
+            String liquor = liquorNumber.getText().toString();
+            if(!"".equals(liquor)){
+                if (Integer.parseInt(liquor) < 999)
+                    liquorNumber.setText(String.valueOf(Integer.parseInt(liquor) + 1));
+                else
+                    Toast.makeText(getApplicationContext(), "Max input reached", Toast.LENGTH_LONG).show();
+            } else
+                liquorNumber.setText("1");
         }
     };
 
     private final View.OnClickListener incrementCiderCount = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String ciderTemp = ciderNumber.getText().toString();
-            int cider = 0;
-            if(!"".equals(ciderTemp)){
-                cider = Integer.parseInt(ciderTemp);
-                cider++;
-            }
-            else cider = 1;
-            ciderNumber.setText(String.valueOf(cider));
+            String cider = ciderNumber.getText().toString();
+            if(!"".equals(cider)){
+                if (Integer.parseInt(cider) < 999)
+                    ciderNumber.setText(String.valueOf(Integer.parseInt(cider) + 1));
+                else
+                    Toast.makeText(getApplicationContext(), "Max input reached", Toast.LENGTH_LONG).show();
+            } else
+                ciderNumber.setText("1");
         }
     };
 
@@ -210,30 +235,38 @@ public class DrinkInputActivity extends AppCompatActivity {
             int wine = 0;
             int liquor = 0;
             int cider = 0;
+            boolean storedInDB = false;
 
             String beerTemp = beerNumber.getText().toString();
             String wineTemp = wineNumber.getText().toString();
             String liquorTemp = liquorNumber.getText().toString();
             String ciderTemp = ciderNumber.getText().toString();
 
-            if(!"".equals(beerTemp)){
+            if(!"".equals(beerTemp) && Integer.parseInt(beerTemp) != 0){
                 beer = Integer.parseInt(beerTemp);
                 dbHelper.saveDrinkType("beer", beer);
+                storedInDB = true;
             }
-            if(!"".equals(wineTemp)){
+            if(!"".equals(wineTemp) && Integer.parseInt(beerTemp) != 0){
                 wine = Integer.parseInt(wineTemp);
                 dbHelper.saveDrinkType("wine", wine);
+                storedInDB = true;
             }
-            if(!"".equals(liquorTemp)){
+            if(!"".equals(liquorTemp) && Integer.parseInt(beerTemp) != 0){
                 liquor = Integer.parseInt(liquorTemp);
                 dbHelper.saveDrinkType("liquor", liquor);
+                storedInDB = true;
             }
-            if(!"".equals(ciderTemp)){
+            if(!"".equals(ciderTemp) && Integer.parseInt(beerTemp) != 0){
                 cider = Integer.parseInt(ciderTemp);
                 dbHelper.saveDrinkType("cider", cider);
+                storedInDB = true;
             }
-
-            Toast.makeText(getApplicationContext(), "Input Saved!", Toast.LENGTH_LONG).show();
+            if (storedInDB) {
+                Toast.makeText(getApplicationContext(), "Input Saved!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), HomePage.class));
+            } else
+                Toast.makeText(getApplicationContext(), "No input provided", Toast.LENGTH_LONG).show();
         }
     };
 }

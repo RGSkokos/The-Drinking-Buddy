@@ -81,6 +81,10 @@ public class GraphsActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), HomePage.class));
                         overridePendingTransition(0,0);
                         return true;
+                    case R.id.drinksBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), DrinkInputActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
                 }
                 return false;
             }
