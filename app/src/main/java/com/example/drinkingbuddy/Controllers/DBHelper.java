@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Config;
+import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.Models.Profile;
 
 import java.util.ArrayList;
@@ -34,9 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
     String CREATE_TABLE_RESULTS;
     SQLiteDatabase db;
 
-
-    public DBHelper(Context context)
-    {
+    public DBHelper(Context context) {
         super(context, Config.DATABASE_NAME, null, Config.DATABASE_VERSION );
         this.context = context;
         db = getWritableDatabase();
@@ -44,31 +44,32 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //simply creates database to hold breathalyzer entries
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-       CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME
-                + " (" + Config.Result + " TEXT NOT NULL,"
-                +  Config.TimeStamp + " TEXT NOT NULL,"
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {// might need id autoincrement (?)
+       CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME_SENSOR
+                + " (" + Config.SENSOR_RESULT + " TEXT NOT NULL,"
+                + Config.TIME_STAMP_SENSOR + " TEXT NOT NULL,"
                 + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
 
        CREATE_TABLE_PROFILE = "CREATE TABLE " + Config.TABLE_NAME_PROFILE
-                + " (" + Config.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + " (" + Config.PROFILE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + Config.USERNAME + " TEXT NOT NULL,"
                 + Config.PASSWORD + " TEXT NOT NULL,"
                 + Config.DEVICE_NAME + " TEXT NOT NULL,"
                 + Config.DEVICE_CODE + " TEXT NOT NULL)";
 
        CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
-                + " (" + Config.TYPE_OF_DRINK + " TEXT NOT NULL)";
+               + " (" + Config.DRINK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+               + Config.TIME_STAMP_DRINK + " TEXT NOT NULL,"
+               + Config.TYPE_OF_DRINK + " TEXT NOT NULL,"
+               + Config.DRINK_QUANTITY + " INTEGER NOT NULL,"
+               + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
 
         Log.d(TAG, "db created");
 
         sqLiteDatabase.execSQL(CREATE_TABLE_RESULTS);
         sqLiteDatabase.execSQL(CREATE_TABLE_PROFILE);
         sqLiteDatabase.execSQL(CREATE_TABLE_TYPE_OF_DRINK);
-
     }
-
-
 
     //not currently needed but can be implemented in the future
     @Override
@@ -94,8 +95,6 @@ public class DBHelper extends SQLiteOpenHelper {
         //REFERENCE: https://howtodoinjava.com/java/date-time/convert-date-time-to-est-est5edt/
     }
 
-
-
     //Method to add new Profile
     public void insertNewProfile(Profile profile)
     {
@@ -113,7 +112,6 @@ public class DBHelper extends SQLiteOpenHelper {
         {
             Log.d(TAG, "EXCEPTION" + e);
             Toast.makeText(context, "Operation Failed!: " + e, Toast.LENGTH_LONG).show();
-
         }
         finally {
             db.close();
@@ -130,7 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(Config.PASSWORD, profile.getPassword());
         contentValues.put(Config.DEVICE_NAME, profile.getDeviceName());
         contentValues.put(Config.DEVICE_CODE, profile.getDeviceCode());
-        db.update(Config.TABLE_NAME_PROFILE, contentValues, Config.ID + "=?", new String[] {String.valueOf(id)});
+        db.update(Config.TABLE_NAME_PROFILE, contentValues, Config.PROFILE_ID + "=?", new String[] {String.valueOf(id)});
         return true;
     }
 
@@ -139,14 +137,13 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        String currentStamp = TimeStamp();
-        String dayOfWeek = DayOfWeek();
-        contentValues.put(Config.Result, result);
-        contentValues.put(Config.TimeStamp, currentStamp);
-        contentValues.put(Config.DAY_OF_WEEK, dayOfWeek);
+
+        contentValues.put(Config.SENSOR_RESULT, result);
+        contentValues.put(Config.TIME_STAMP_SENSOR, TimeStamp());
+        contentValues.put(Config.DAY_OF_WEEK, DayOfWeek());
 
         try{
-            db.insertOrThrow(Config.TABLE_NAME, null, contentValues);
+            db.insertOrThrow(Config.TABLE_NAME_SENSOR, null, contentValues);
             Log.d(TAG, "db value added");
         } catch(SQLException e)
         {
@@ -158,26 +155,25 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void SaveDrinkType(String type_of_drink) {
+    public void saveDrinkType(String typeOfDrink, int quantity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(Config.TYPE_OF_DRINK, type_of_drink);
+        contentValues.put(Config.TIME_STAMP_DRINK, TimeStamp());
+        contentValues.put(Config.TYPE_OF_DRINK, typeOfDrink);
+        contentValues.put(Config.DRINK_QUANTITY, quantity);
+        contentValues.put(Config.DAY_OF_WEEK, DayOfWeek());
 
         try {
             db.insertOrThrow(Config.TABLE_NAME_DRINK_TYPE, null, contentValues);
-            Log.d(TAG, type_of_drink);
-
-
+            Log.d(TAG, typeOfDrink);
         } catch (SQLException e)
         {
             Log.d(TAG, "EXCEPTION: " + e);
             Toast.makeText(context, "Operation Failed!: " + e, Toast.LENGTH_LONG).show();
-
         }
         finally {
             db.close();
-
         }
     }
 
@@ -200,7 +196,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         Log.d(TAG, "User " + Username + "Password " + Password);
                         if(user.equals(Username) && pass.equals(Password)) //if the user and password in database matches passed parameters
                         {
-                            return Cursor.getInt(Cursor.getColumnIndexOrThrow(Config.ID));
+                            return Cursor.getInt(Cursor.getColumnIndexOrThrow(Config.PROFILE_ID));
                         }
                     } while(Cursor.moveToNext());
                 }
@@ -227,7 +223,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
+            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.PROFILE_ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
@@ -257,7 +253,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;
 
         try {
-            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
+            cursor = db.query(Config.TABLE_NAME_PROFILE, null, Config.PROFILE_ID + "= ?", new String[]{Integer.toString(id)}, null, null, null);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
@@ -280,12 +276,12 @@ public class DBHelper extends SQLiteOpenHelper {
         List<Breathalyzer> breathalyzer_values = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
 
-        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME, null, null, null, null, null, null);
+        Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_SENSOR, null, null, null, null, null, null);
         if(userTableCursor != null) {
             if(userTableCursor.moveToFirst()) {
                 do {
-                    String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.Result));
-                    String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TimeStamp));
+                    String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.SENSOR_RESULT));
+                    String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TIME_STAMP_SENSOR));
                     String dayOfWeek = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.DAY_OF_WEEK));
                     breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp), dayOfWeek));
 
@@ -353,15 +349,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<String> ReturnDrinkTypes(){
-        ArrayList<String> drink_types = new ArrayList<>();
+    public ArrayList<Drink> ReturnDrinkTypes(){
+        ArrayList<Drink> drink_types = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
         @SuppressLint("Recycle") Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_DRINK_TYPE, null, null, null, null, null, null);
         if(userTableCursor != null) {
             if(userTableCursor.moveToFirst()) {
                 do {
                     String drink_type = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TYPE_OF_DRINK));
-                    drink_types.add(drink_type);
+                    Integer quantity = userTableCursor.getInt(userTableCursor.getColumnIndexOrThrow(Config.DRINK_QUANTITY));
+                    drink_types.add(new Drink(drink_type, quantity));
 
                 } while(userTableCursor.moveToNext());
             }

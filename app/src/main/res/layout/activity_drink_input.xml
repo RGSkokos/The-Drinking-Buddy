@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Views.DrinkInputActivity">
+
+    <EditText
+        android:id="@+id/beerNumber"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="132dp"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drinkInputToolbar" />
+
+    <EditText
+        android:id="@+id/wineNumber"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/beerNumber"
+        app:layout_constraintTop_toBottomOf="@+id/beerNumber" />
+
+    <EditText
+        android:id="@+id/liquorNumber"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number"
+        android:minHeight="48dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/wineNumber"
+        app:layout_constraintTop_toBottomOf="@+id/wineNumber" />
+
+    <EditText
+        android:id="@+id/ciderNumber"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="0"
+        android:inputType="number"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/liquorNumber"
+        app:layout_constraintTop_toBottomOf="@+id/liquorNumber" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/drinkInputToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/colorPrimary"
+        android:hint="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/saveDrinkButton"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:text="SAVE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ciderTextView" />
+
+    <ImageButton
+        android:id="@+id/beerIncrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/beerNumber"
+        app:layout_constraintTop_toTopOf="@+id/beerNumber"
+        app:srcCompat="@drawable/ic_add_outline" />
+
+    <ImageButton
+        android:id="@+id/wineIncrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/beerIncrementButton"
+        app:layout_constraintTop_toTopOf="@+id/wineNumber"
+        app:srcCompat="@drawable/ic_add_outline" />
+
+    <ImageButton
+        android:id="@+id/liquorIncrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="28dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/wineIncrementButton"
+        app:layout_constraintTop_toTopOf="@+id/liquorNumber"
+        app:srcCompat="@drawable/ic_add_outline" />
+
+    <ImageButton
+        android:id="@+id/ciderIncrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/liquorIncrementButton"
+        app:layout_constraintTop_toTopOf="@+id/ciderNumber"
+        app:srcCompat="@drawable/ic_add_outline" />
+
+    <ImageButton
+        android:id="@+id/beerDecrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="4dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/beerNumber"
+        app:layout_constraintTop_toTopOf="@+id/beerNumber"
+        app:srcCompat="@drawable/ic_minus_outline" />
+
+    <ImageButton
+        android:id="@+id/wineDecrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/beerDecrementButton"
+        app:layout_constraintTop_toTopOf="@+id/wineNumber"
+        app:srcCompat="@drawable/ic_minus_outline" />
+
+    <ImageButton
+        android:id="@+id/liquorDecrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/wineDecrementButton"
+        app:layout_constraintTop_toTopOf="@+id/liquorNumber"
+        app:srcCompat="@drawable/ic_minus_outline" />
+
+    <ImageButton
+        android:id="@+id/ciderDecrementButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:background="@null"
+        android:padding="1dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="@+id/liquorDecrementButton"
+        app:layout_constraintTop_toTopOf="@+id/ciderNumber"
+        app:srcCompat="@drawable/ic_minus_outline" />
+
+    <TextView
+        android:id="@+id/beerTextView"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:background="#c6c6c6"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Beer"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/beerDecrementButton"
+        app:layout_constraintHorizontal_bias="0.551"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/beerNumber" />
+
+    <TextView
+        android:id="@+id/wineTextView"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:background="#c6c6c6"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Wine"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/wineDecrementButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/beerTextView"
+        app:layout_constraintTop_toTopOf="@+id/wineNumber" />
+
+    <TextView
+        android:id="@+id/liquorTextView"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:background="#c6c6c6"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Liquor"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/liquorDecrementButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/wineTextView"
+        app:layout_constraintTop_toTopOf="@+id/liquorNumber" />
+
+    <TextView
+        android:id="@+id/ciderTextView"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:background="#c6c6c6"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Cider"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/ciderDecrementButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/liquorTextView"
+        app:layout_constraintTop_toTopOf="@+id/ciderNumber" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
