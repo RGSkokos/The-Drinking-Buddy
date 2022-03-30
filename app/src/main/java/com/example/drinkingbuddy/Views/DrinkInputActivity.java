@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.R;
@@ -23,14 +25,14 @@ public class DrinkInputActivity extends AppCompatActivity {
     protected EditText wineNumber;
     protected EditText liquorNumber;
     protected EditText ciderNumber;
-    protected Button beerIncrement;
-    protected Button wineIncrement;
-    protected Button liquorIncrement;
-    protected Button ciderIncrement;
-    protected Button beerDecrement;
-    protected Button wineDecrement;
-    protected Button liquorDecrement;
-    protected Button ciderDecrement;
+    protected ImageButton beerIncrement;
+    protected ImageButton wineIncrement;
+    protected ImageButton liquorIncrement;
+    protected ImageButton ciderIncrement;
+    protected ImageButton beerDecrement;
+    protected ImageButton wineDecrement;
+    protected ImageButton liquorDecrement;
+    protected ImageButton ciderDecrement;
     protected Button saveDrinkButton;
     protected Toolbar toolbar;
     protected DBHelper dbHelper;
@@ -53,6 +55,25 @@ public class DrinkInputActivity extends AppCompatActivity {
         saveDrinkButton = findViewById(R.id.saveDrinkButton);
         saveDrinkButton.setOnClickListener(saveDrinks);
         toolbar = findViewById(R.id.drinkInputToolbar);
+
+        beerIncrement = findViewById(R.id.beerIncrementButton);
+        beerIncrement.setOnClickListener(incrementBeerCount);
+        wineIncrement = findViewById(R.id.wineIncrementButton);
+        wineIncrement.setOnClickListener(incrementWineCount);
+        liquorIncrement = findViewById(R.id.liquorIncrementButton);
+        liquorIncrement.setOnClickListener(incrementLiquorCount);
+        ciderIncrement = findViewById(R.id.ciderIncrementButton);
+        ciderIncrement.setOnClickListener(incrementCiderCount);
+
+        beerDecrement = findViewById(R.id.beerDecrementButton);
+        beerDecrement.setOnClickListener(decrementBeerCount);
+        wineDecrement = findViewById(R.id.wineDecrementButton);
+        wineDecrement.setOnClickListener(decrementWineCount);
+        liquorDecrement = findViewById(R.id.liquorDecrementButton);
+        liquorDecrement.setOnClickListener(decrementLiquorCount);
+        ciderDecrement = findViewById(R.id.ciderDecrementButton);
+        ciderDecrement.setOnClickListener(decrementCiderCount);
+
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -62,62 +83,125 @@ public class DrinkInputActivity extends AppCompatActivity {
         }
     }
 
-    // TODO: implement listeners and assign to buttons
-//    private final View.OnClickListener incrementBeerCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener incrementWineCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener incrementLiquorCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener incrementCiderCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener decrementBeerCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener decrementWineCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener decrementLiquorCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
-//
-//    private final View.OnClickListener decrementCiderCount = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//
-//        }
-//    }
+    private final View.OnClickListener incrementBeerCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String beerTemp = beerNumber.getText().toString();
+            int beer = 0;
+            if(!"".equals(beerTemp)){
+                beer = Integer.parseInt(beerTemp);
+                beer++;
+            }
+            else beer = 1;
+            beerNumber.setText(String.valueOf(beer));
+        }
+    };
+
+    private final View.OnClickListener incrementWineCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String wineTemp = wineNumber.getText().toString();
+            int wine = 0;
+            if(!"".equals(wineTemp)){
+                wine = Integer.parseInt(wineTemp);
+                wine++;
+            }
+            else wine = 1;
+            wineNumber.setText(String.valueOf(wine));
+        }
+    };
+
+    private final View.OnClickListener incrementLiquorCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String liquorTemp = liquorNumber.getText().toString();
+            int liquor = 0;
+            if(!"".equals(liquorTemp)){
+                liquor = Integer.parseInt(liquorTemp);
+                liquor++;
+            }
+            else liquor = 1;
+            liquorNumber.setText(String.valueOf(liquor));
+        }
+    };
+
+    private final View.OnClickListener incrementCiderCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String ciderTemp = ciderNumber.getText().toString();
+            int cider = 0;
+            if(!"".equals(ciderTemp)){
+                cider = Integer.parseInt(ciderTemp);
+                cider++;
+            }
+            else cider = 1;
+            ciderNumber.setText(String.valueOf(cider));
+        }
+    };
+
+    private final View.OnClickListener decrementBeerCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String beerTemp = beerNumber.getText().toString();
+            int beer = 0;
+            if(!"".equals(beerTemp)){
+                beer = Integer.parseInt(beerTemp);
+                if(beer >= 1){
+                    beer--;
+                }
+            }
+            else beer = 0;
+            beerNumber.setText(String.valueOf(beer));
+        }
+    };
+
+    private final View.OnClickListener decrementWineCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String wineTemp = wineNumber.getText().toString();
+            int wine = 0;
+            if(!"".equals(wineTemp)){
+                wine = Integer.parseInt(wineTemp);
+                if(wine >= 1){
+                    wine--;
+                }
+            }
+            else wine = 0;
+            wineNumber.setText(String.valueOf(wine));
+        }
+    };
+
+    private final View.OnClickListener decrementLiquorCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String liquorTemp = liquorNumber.getText().toString();
+            int liquor = 0;
+            if(!"".equals(liquorTemp)){
+                liquor = Integer.parseInt(liquorTemp);
+                if(liquor >= 1){
+                    liquor--;
+                }
+            }
+            else liquor = 0;
+            liquorNumber.setText(String.valueOf(liquor));
+        }
+    };
+
+    private final View.OnClickListener decrementCiderCount = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            String ciderTemp = ciderNumber.getText().toString();
+            int cider = 0;
+            if(!"".equals(ciderTemp)){
+                cider = Integer.parseInt(ciderTemp);
+                if(cider >= 1){
+                    cider--;
+                }
+            }
+            else cider = 0;
+            ciderNumber.setText(String.valueOf(cider));
+        }
+    };
 
     private final View.OnClickListener saveDrinks = new View.OnClickListener() {
         @Override
@@ -149,6 +233,7 @@ public class DrinkInputActivity extends AppCompatActivity {
                 dbHelper.saveDrinkType("cider", cider);
             }
 
+            Toast.makeText(getApplicationContext(), "Input Saved!", Toast.LENGTH_LONG).show();
         }
     };
 }

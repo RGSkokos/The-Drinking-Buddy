@@ -134,7 +134,7 @@ public class HomePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.trendsMenuItem:
                 if(myDB.getAllResults().size() > 0) {
-                    goToTrends();
+                    //goToTrends();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
@@ -159,7 +159,7 @@ public class HomePage extends AppCompatActivity {
         double temp = 0;
         String timeStamp = "";
         if(myDB.ReturnDrinkTypes().size() > 0) {
-            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1);
+            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1).getDrinkName();
         }
         if(breathalyzer_values.size() > 0)
         {
@@ -217,10 +217,7 @@ public class HomePage extends AppCompatActivity {
         goToLogin();
     }
 
-    private void goToTrends() {
-        Intent intent = new Intent(this, GraphActivity.class);
-        startActivity(intent);
-    }
+
 
     public void setTypeOfDrink(String choice) {
         type_of_drink = choice;

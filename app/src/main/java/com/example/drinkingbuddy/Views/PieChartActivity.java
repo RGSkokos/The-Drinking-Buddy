@@ -10,6 +10,7 @@ import android.view.Menu;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
+import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -70,32 +71,31 @@ public class PieChartActivity extends AppCompatActivity {
     private void insertPieChartValues()
     {
         DBHelper db = new DBHelper(this);
-        ArrayList<String> Drink_Types = db.ReturnDrinkTypes();
+        ArrayList<Drink> drinks = db.ReturnDrinkTypes();
 
-        int[] drinks = {0, 0 , 0, 0};
+        int[] drinkNumber = {0, 0 , 0, 0};
 
-        for (String drink :
-                Drink_Types) {
-            switch (drink) {
+        for (Drink drink: drinks) {
+            switch (drink.getDrinkName()) {
                 case "liquor":
-                    drinks[0]++;
+                    drinkNumber[0] += drink.getQuantity();
                     break;
                 case "wine":
-                    drinks[1]++;
+                    drinkNumber[1] += drink.getQuantity();
                     break;
                 case "beer":
-                    drinks[2]++;
+                    drinkNumber[2] += drink.getQuantity();
                     break;
                 default:
-                    drinks[3]++; //if other type of value (unknown)
+                    drinkNumber[3] += drink.getQuantity();
                     break;
             }
         }
 
-        DrinkType.put("Liquor",drinks[0]);
-        DrinkType.put("Beer",drinks[2]);
-        DrinkType.put("Wine",drinks[1]);
-        DrinkType.put("Cider", drinks[3]);
+        DrinkType.put("Liquor",drinkNumber[0]);
+        DrinkType.put("Beer",drinkNumber[2]);
+        DrinkType.put("Wine",drinkNumber[1]);
+        DrinkType.put("Cider", drinkNumber[3]);
     }
 
     private void displayPieChart(){

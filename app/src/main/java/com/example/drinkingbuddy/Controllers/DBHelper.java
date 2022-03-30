@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Config;
+import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.Models.Profile;
 
 import java.util.ArrayList;
@@ -348,15 +349,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public ArrayList<String> ReturnDrinkTypes(){
-        ArrayList<String> drink_types = new ArrayList<>();
+    public ArrayList<Drink> ReturnDrinkTypes(){
+        ArrayList<Drink> drink_types = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
         @SuppressLint("Recycle") Cursor userTableCursor = userDatabase.query(Config.TABLE_NAME_DRINK_TYPE, null, null, null, null, null, null);
         if(userTableCursor != null) {
             if(userTableCursor.moveToFirst()) {
                 do {
                     String drink_type = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TYPE_OF_DRINK));
-                    drink_types.add(drink_type);
+                    Integer quantity = userTableCursor.getInt(userTableCursor.getColumnIndexOrThrow(Config.DRINK_QUANTITY));
+                    drink_types.add(new Drink(drink_type, quantity));
 
                 } while(userTableCursor.moveToNext());
             }
