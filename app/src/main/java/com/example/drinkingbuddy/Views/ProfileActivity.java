@@ -22,6 +22,10 @@ import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +53,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Profile profile;
     private boolean flag;
     private String UID;
+    protected String currentPassword;
+    FirebaseUser user;
     private DatabaseReference databaseReference;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseAuth firebaseAuth;
@@ -62,9 +68,6 @@ public class ProfileActivity extends AppCompatActivity {
         initializeComponents();
 
 
-        //database = new DBHelper(this);
-        //sharedPreferencesHelper = new SharedPreferencesHelper(ProfileActivity.this);
-        //profile = database.getProfileById(sharedPreferencesHelper.getLoginId());
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -103,7 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void addProfileListener() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
+        user = firebaseAuth.getCurrentUser();
         UID = user.getUid();
         databaseReference.child(UID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -117,6 +120,7 @@ public class ProfileActivity extends AppCompatActivity {
                 username.setHint(profile.getUsername());
                 deviceName.setHint(profile.getDeviceName());
                 deviceCode.setHint(profile.getDeviceCode());
+                currentPassword = profile.getPassword();
 
 
             }
@@ -175,6 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
                 {
                     //profile.setPassword(passwordEntered);
                     databaseReference.child(UID).child("password").setValue(passwordEntered);
+                    updateAuthentication(passwordEntered);
                     //firebaseAuth.getCurrentUser().updatePassword(passwordEntered);
 
                 }
@@ -197,6 +202,25 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     };
+
+    //REFERENCE: https://writeach.com/posts/-MAOS1OT_oHIJBKqXVQZ/Firebase-Authentication---9---Change-password
+    private void updateAuthentication(String newPass)
+    {
+        String email = user.getEmail();
+        AuthCredential credential = EmailAuthProvider.getCredential(email, currentPassword);
+
+        user.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful())
+                        {
+                            user.updatePassword(newPass);
+                            Toast.makeText(getApplicationContext(), "Password change successful", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")
