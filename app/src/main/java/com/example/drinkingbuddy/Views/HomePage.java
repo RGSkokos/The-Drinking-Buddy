@@ -74,11 +74,15 @@ public class HomePage extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch(item.getItemId())
                 {
+                    case R.id.homeBottomMenuItem:
+                        return true;
                     case R.id.graphsBottomMenuItem:
                         startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
-                    case R.id.homeBottomMenuItem:
+                    case R.id.drinksBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), DrinkInputActivity.class));
+                        overridePendingTransition(0,0);
                         return true;
                 }
                 return false;
@@ -216,8 +220,6 @@ public class HomePage extends AppCompatActivity {
         sharedPreferencesHelper.saveLoginId(0);
         goToLogin();
     }
-
-
 
     public void setTypeOfDrink(String choice) {
         type_of_drink = choice;
