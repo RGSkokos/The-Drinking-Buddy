@@ -277,17 +277,17 @@ public class DrinkInputActivity extends AppCompatActivity {
                 dbHelper.saveDrinkType("beer", beer);
                 storedInDB = true;
             }
-            if(!"".equals(wineTemp) && Integer.parseInt(beerTemp) != 0){
+            if(!"".equals(wineTemp) && Integer.parseInt(wineTemp) != 0){
                 wine = Integer.parseInt(wineTemp);
                 dbHelper.saveDrinkType("wine", wine);
                 storedInDB = true;
             }
-            if(!"".equals(liquorTemp) && Integer.parseInt(beerTemp) != 0){
+            if(!"".equals(liquorTemp) && Integer.parseInt(liquorTemp) != 0){
                 liquor = Integer.parseInt(liquorTemp);
                 dbHelper.saveDrinkType("liquor", liquor);
                 storedInDB = true;
             }
-            if(!"".equals(ciderTemp) && Integer.parseInt(beerTemp) != 0){
+            if(!"".equals(ciderTemp) && Integer.parseInt(ciderTemp) != 0){
                 cider = Integer.parseInt(ciderTemp);
                 dbHelper.saveDrinkType("cider", cider);
                 storedInDB = true;
