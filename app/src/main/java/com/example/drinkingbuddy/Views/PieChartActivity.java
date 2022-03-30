@@ -6,7 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
@@ -34,6 +35,7 @@ public class PieChartActivity extends AppCompatActivity {
     PieChart pieChart;
     List<Breathalyzer> breathalyzer_values;
     Map<String, Integer> DrinkType = new HashMap<>();
+    protected ListView drinkInputsListview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class PieChartActivity extends AppCompatActivity {
 
         insertPieChartValues();
         displayPieChart();
+
+        loadListView();
     }
 
     protected void initializeComponents(){
@@ -65,6 +69,22 @@ public class PieChartActivity extends AppCompatActivity {
         }
 
         pieChart = findViewById(R.id.pieGraph);
+        drinkInputsListview = findViewById(R.id.drinkInputsListview);
+    }
+
+    protected void loadListView(){
+        //List<Breathalyzer> readings = database.getAllResults();
+        ArrayList<Drink> drinks = database.ReturnDrinkTypes();
+        ArrayList<String> drinksText = new ArrayList<>();
+
+        for(Drink drink: drinks){
+            String temp = "";
+            temp += drink.getDrinkName() + " - " + drink.getQuantity();
+
+            drinksText.add(temp);
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, drinksText);
+        drinkInputsListview.setAdapter(arrayAdapter);
     }
 
     //region Pie Chart
