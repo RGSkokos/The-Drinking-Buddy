@@ -3,11 +3,13 @@ package com.example.drinkingbuddy.Views;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -42,7 +45,8 @@ public class DrinkInputActivity extends AppCompatActivity {
     protected Button saveDrinkButton;
     protected Toolbar toolbar;
     protected BottomNavigationView bottomNav;
-    protected DBHelper dbHelper;
+    private SharedPreferencesHelper sharedPreferencesHelper;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,32 @@ public class DrinkInputActivity extends AppCompatActivity {
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
+        sharedPreferencesHelper = new SharedPreferencesHelper(DrinkInputActivity.this);
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.profileMenuItem:
+                goToProfile();
+                return true;
+            case R.id.logoutMenuItem:
+                logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private final NavigationBarView.OnItemSelectedListener navBarOnClick = new NavigationBarView.OnItemSelectedListener() {
@@ -269,4 +299,19 @@ public class DrinkInputActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "No input provided", Toast.LENGTH_LONG).show();
         }
     };
+
+    protected void goToProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    protected void logout() {
+        sharedPreferencesHelper.saveLoginId(0);
+        goToLogin();
+    }
+
+    protected void goToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
 }
