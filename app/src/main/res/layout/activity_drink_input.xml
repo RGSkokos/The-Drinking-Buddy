@@ -93,6 +93,7 @@
         android:background="?attr/colorPrimary"
         android:hint="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

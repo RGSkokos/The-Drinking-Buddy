@@ -9,33 +9,20 @@
 
     <Button
         android:id="@+id/newBreath"
-        android:layout_width="166dp"
-        android:layout_height="171dp"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/new_breath"
-        android:text="NEW BREATH"
         android:fontFamily="@font/open_sans"
+        android:text="NEW BREATH"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CurrentDrinktextView" />
-
-    <TextView
-        android:id="@+id/response"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="32dp"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.075"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarHome" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHome"
@@ -46,26 +33,13 @@
         android:layout_alignParentEnd="true"
         android:background="?attr/colorPrimary"
         android:backgroundTint="#4A4A4A"
-        app:titleTextColor="#FFFFFF"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:fontFamily="@font/open_sans"
+        app:titleTextColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/TimeStampTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/response" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/SpecifyDrink"
@@ -91,14 +65,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="80dp"
         android:text="Current Drink: "
         android:textColor="#ffffff"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TimeStampTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHome" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/upArrowGif"
@@ -119,7 +93,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/open_sans"
         app:menu="@menu/bottom_menu"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CurrentDrinktextView"
+        app:srcCompat="@drawable/new_breath_circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
