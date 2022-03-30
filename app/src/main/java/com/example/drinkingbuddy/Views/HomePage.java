@@ -136,14 +136,6 @@ public class HomePage extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
-            case R.id.trendsMenuItem:
-                if(myDB.getAllResults().size() > 0) {
-                    //goToTrends();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
-                }
-                return true;
             case R.id.profileMenuItem:
                 goToProfile();
                 return true;
