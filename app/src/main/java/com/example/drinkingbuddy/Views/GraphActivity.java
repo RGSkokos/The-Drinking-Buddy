@@ -34,11 +34,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+//TODO add reference to graphs
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
 // The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
 // Only the line graph was implemented thus far, the library files can be found within models
-
+/*
 public class GraphActivity extends AppCompatActivity {
 
     //Global Variables
@@ -79,6 +80,7 @@ public class GraphActivity extends AppCompatActivity {
 //endregion
 
 //region Pie Chart
+    /*
     private void insertPieChartValues()
     {
         DBHelper db = new DBHelper(this);
@@ -109,6 +111,8 @@ public class GraphActivity extends AppCompatActivity {
         DrinkType.put("Wine",drinks[1]);
         DrinkType.put("Unknown", drinks[3]);
     }
+
+
 
     private void displayPieChart(){
 
@@ -278,3 +282,5 @@ public class GraphActivity extends AppCompatActivity {
     }
 
 }
+
+ */

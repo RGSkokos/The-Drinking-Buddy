@@ -46,7 +46,7 @@ public class GraphsActivity extends AppCompatActivity {
         drinksConsumed = findViewById(R.id.drinksConsumedButton);
         weeklyTrends = findViewById(R.id.weeklyDrinksButton);
         bottomNav = findViewById(R.id.bottomNavigation);
-        bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
+        bottomNav.setSelectedItemId(R.id.graphsBottomMenuItem);
         toolbar = findViewById(R.id.toolbarGraphs);
     }
 
@@ -79,6 +79,10 @@ public class GraphsActivity extends AppCompatActivity {
                         return true;
                     case R.id.homeBottomMenuItem:
                         startActivity(new Intent(getApplicationContext(), HomePage.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.drinksBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), DrinkInputActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                 }

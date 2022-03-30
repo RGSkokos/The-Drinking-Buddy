@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -22,9 +23,9 @@ import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -45,9 +46,7 @@ public class HomePage extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     protected int profileId;
     String type_of_drink;
-    //private SharedPreferencesHelper sharedPreferencesHelper;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,23 +58,36 @@ public class HomePage extends AppCompatActivity {
         initializeComponents();
         setSupportActionBar(toolbar);
 
-        specifyDrinkButton.setOnClickListener(view -> OpenFragment());
+        specifyDrinkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToDrinkInputActivity();
+            }
+        });
 
         // Set Home selected
         bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
 
         // Perform item selected listener
-        bottomNav.setOnItemSelectedListener(item -> {
-            switch(item.getItemId())
-            {
-                case R.id.graphsBottomMenuItem:
-                    startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;
-                case R.id.homeBottomMenuItem:
-                    return true;
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.homeBottomMenuItem:
+                        return true;
+                    case R.id.graphsBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                    case R.id.drinksBottomMenuItem:
+                        startActivity(new Intent(getApplicationContext(), DrinkInputActivity.class));
+                        overridePendingTransition(0,0);
+                        return true;
+                }
+                return false;
             }
-            return false;
         });
     }
 
@@ -99,19 +111,13 @@ public class HomePage extends AppCompatActivity {
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
         newBreath = findViewById(R.id.newBreath);
-        response = findViewById(R.id.response);
+        //response = findViewById(R.id.response);
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
         bottomNav = findViewById(R.id.bottomNavigation);
-        TimeStampTextview = findViewById(R.id.TimeStampTextView);
+        //TimeStampTextview = findViewById(R.id.TimeStampTextView);
         specifyDrinkButton = findViewById(R.id.SpecifyDrink);
-    }
-
-    //fragment open for type of drink
-    private void OpenFragment() {
-        TypeOfDrinkFragment dialog = new TypeOfDrinkFragment();
-        dialog.show(getSupportFragmentManager(), "TypeOfDrink");
     }
 
 
@@ -133,7 +139,7 @@ public class HomePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.trendsMenuItem:
                 if(myDB.getAllResults().size() > 0) {
-                    goToTrends();
+                    //goToTrends();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
@@ -158,7 +164,7 @@ public class HomePage extends AppCompatActivity {
         double temp = 0;
         String timeStamp = "";
         if(myDB.ReturnDrinkTypes().size() > 0) {
-            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1);
+            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1).getDrinkName();
         }
         if(breathalyzer_values.size() > 0)
         {
@@ -169,22 +175,30 @@ public class HomePage extends AppCompatActivity {
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
 
-        response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
-        TimeStampTextview.setText("Measurement Taken: " + timeStamp);
+        //response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
+        //TimeStampTextview.setText("Measurement Taken: " + timeStamp);
         CurrentDrinkTextView.setText("Last Drink: " + drink);
         Log.d("Changing", "Changing Display " + drink);
     }
 
-    private final View.OnClickListener onClickBreathButton= view -> {
-        openLoading();
-        /*if(type_of_drink != null) {
-            myDB.SaveDrinkType(type_of_drink);
+    private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            openLoading();
+            // TODO: check all instances of type_of_drink and remove after drink input page is complete
+//            if(type_of_drink != null) {
+//                myDB.saveDrinkType(type_of_drink);
+//            }
+//            else {
+//                myDB.saveDrinkType("Unknown");
+//            }
         }
-        else {
-            myDB.SaveDrinkType("Unknown");
-        }*/
-
     };
+
+    protected void goToDrinkInputActivity(){
+        Intent i = new Intent(this, DrinkInputActivity.class);
+        startActivity(i);
+    }
 
     protected void openLoading(){        //open settings class on click
 
@@ -209,14 +223,8 @@ public class HomePage extends AppCompatActivity {
         goToLogin();
     }
 
-    private void goToTrends() {
-        Intent intent = new Intent(this, GraphActivity.class);
-        startActivity(intent);
-    }
-
     public void setTypeOfDrink(String choice) {
         type_of_drink = choice;
-
     }
 }
 

@@ -11,6 +11,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
@@ -31,7 +32,7 @@ import com.example.drinkingbuddy.R;
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "EC:94:CB:4C:72:02";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "7C:9E:BD:45:43:F2";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -43,9 +44,11 @@ public class LoadActivity extends AppCompatActivity {
     protected ConnectedThread newThread = null;
     protected TextView countDown;
     protected TextView done;
+    protected TextView sensorResult;
     protected Toolbar toolbar;
     public Handler handler;
     private DBHelper myDB;
+    private String type_of_drink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class LoadActivity extends AppCompatActivity {
         //MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
+        sensorResult.setText("");
         loadingTimer();
 
         // Set up the toolbar
@@ -78,6 +82,8 @@ public class LoadActivity extends AppCompatActivity {
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
         //type_of_drink = "Unknown";
+        type_of_drink = "Unknown";
+        sensorResult = (TextView) findViewById(R.id.sensorResult);
     }
 
     @Override
@@ -99,6 +105,7 @@ public class LoadActivity extends AppCompatActivity {
                 countDown.setVisibility(View.VISIBLE);
                 done.setEnabled(false);
                 done.setVisibility(View.INVISIBLE);
+                sendMessage();
             }
         }.start();
     }
@@ -110,7 +117,7 @@ public class LoadActivity extends AppCompatActivity {
         }
         else {
             initializeBluetoothProcess(); //if bluetooth is indeed enabled, then the bluetooth process must be enabled and established
-            sendMessage();
+            //sendMessage();
         }
     }
 
@@ -122,10 +129,9 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
+
     // When a Button is Pressed, Sampling is Taken and Result Fetched Automatically
     protected void sendMessage() {
-        String sendMessage = "1"; // "1" = Start Sampling
-        newThread.write(sendMessage.getBytes());
         Log.d("Problem","SEND MESSAGE 1111");
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -147,6 +153,8 @@ public class LoadActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
+                            String sendMessage = "1"; // "1" = Start Sampling
+                            newThread.write(sendMessage.getBytes());
                             Log.d("Problem","THREAD IS SLEEPING...Z...Z...");
                             Thread.sleep(5000);
                         }
@@ -196,6 +204,10 @@ public class LoadActivity extends AppCompatActivity {
                 if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
                     String message = (String) receivedMessage.obj;
                     myDB.insertNewResult(message);
+                    float temp = Float.parseFloat(message);
+                    temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
+                    temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+                    sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.3f", temp) + "% of Blood Alcohol Level"));
                     //double temp = Double.parseDouble(message);
                     //temp = (((temp-1500)/5000));
                     //response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp)));
