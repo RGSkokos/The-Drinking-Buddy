@@ -26,10 +26,6 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class DrinkInputActivity extends AppCompatActivity {
 
-    protected TextView beerTextView;
-    protected TextView wineTextView;
-    protected TextView liquorTextView;
-    protected TextView ciderTextView;
     protected EditText beerNumber;
     protected EditText wineNumber;
     protected EditText liquorNumber;
@@ -261,6 +257,8 @@ public class DrinkInputActivity extends AppCompatActivity {
     private final View.OnClickListener saveDrinks = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            saveDrinkButton.getBackground().setAlpha(128);
+
             int beer = 0;
             int wine = 0;
             int liquor = 0;

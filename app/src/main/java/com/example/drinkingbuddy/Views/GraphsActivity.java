@@ -140,7 +140,7 @@ public class GraphsActivity extends AppCompatActivity {
     }
 
     protected void goToPieChart() {
-        if(myDB.getAllResults().size() > 0)
+        if(myDB.ReturnDrinkTypes().size() > 0)
             startActivity(new Intent(this, PieChartActivity.class));
         else
             Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();

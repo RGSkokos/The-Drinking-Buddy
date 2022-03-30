@@ -4,19 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3d3f45"
+    android:background="#242424"
     tools:context=".Views.HomePage">
 
     <Button
         android:id="@+id/newBreath"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="166dp"
+        android:layout_height="171dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:background="@drawable/new_breath"
         android:text="NEW BREATH"
-        android:textSize="34sp"
+        android:fontFamily="@font/open_sans"
+        android:textColor="@color/white"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CurrentDrinktextView" />
@@ -43,7 +45,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:background="?attr/colorPrimary"
-        android:backgroundTint="#45464a"
+        android:backgroundTint="#4A4A4A"
         app:titleTextColor="#FFFFFF"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
@@ -72,13 +74,14 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:clickable="true"
         android:src="@drawable/beer_bottle_foreground"
         app:backgroundTint="#E0E1E8"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newBreath"
+        app:layout_constraintTop_toBottomOf="@+id/upArrowGif"
         app:maxImageSize="90dp"
         tools:ignore="SpeakableTextPresentCheck" />
 
@@ -97,14 +100,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TimeStampTextView" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/upArrowGif"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/up_arrow_gif"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newBreath" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#45464a"
+        android:background="#4A4A4A"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_menu"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
