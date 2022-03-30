@@ -46,7 +46,7 @@ public class GraphsActivity extends AppCompatActivity {
         drinksConsumed = findViewById(R.id.drinksConsumedButton);
         weeklyTrends = findViewById(R.id.weeklyDrinksButton);
         bottomNav = findViewById(R.id.bottomNavigation);
-        bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
+        bottomNav.setSelectedItemId(R.id.graphsBottomMenuItem);
         toolbar = findViewById(R.id.toolbarGraphs);
     }
 
