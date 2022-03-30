@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".Views.LoginActivity">
 
+    <Button
+        android:id="@+id/forgotPasswordButton"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:text="Password Reset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
     <TextView
         android:id="@+id/loginTitleTextView"
         android:layout_width="wrap_content"
@@ -28,12 +39,12 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordLoginEditText" />
 
     <EditText
-        android:id="@+id/usernameLoginEditText"
+        android:id="@+id/emailLoginEditText"
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="40dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="Email"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,18 +60,19 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameLoginEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/emailLoginEditText" />
 
     <TextView
         android:id="@+id/registrationOptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="59dp"
         android:text="Don't have an account? Register now"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+        app:layout_constraintTop_toBottomOf="@+id/forgotPasswordButton" />
 
     <Button
         android:id="@+id/registrationRedirectButton"

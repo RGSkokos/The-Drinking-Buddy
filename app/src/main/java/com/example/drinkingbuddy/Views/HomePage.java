@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -23,7 +22,8 @@ import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -42,19 +42,21 @@ public class HomePage extends AppCompatActivity {
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
-    private SharedPreferencesHelper sharedPreferencesHelper;
+    private FirebaseAuth firebaseAuth;
     protected int profileId;
     String type_of_drink;
+    //private SharedPreferencesHelper sharedPreferencesHelper;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         myDB = new DBHelper(this);
+        firebaseAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_home);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         initializeComponents();
-        sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
         setSupportActionBar(toolbar);
 
         specifyDrinkButton.setOnClickListener(view -> OpenFragment());
@@ -63,21 +65,17 @@ public class HomePage extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
 
         // Perform item selected listener
-        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId())
-                {
-                    case R.id.graphsBottomMenuItem:
-                        startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.homeBottomMenuItem:
-                        return true;
-                }
-                return false;
+        bottomNav.setOnItemSelectedListener(item -> {
+            switch(item.getItemId())
+            {
+                case R.id.graphsBottomMenuItem:
+                    startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.homeBottomMenuItem:
+                    return true;
             }
+            return false;
         });
     }
 
@@ -86,12 +84,12 @@ public class HomePage extends AppCompatActivity {
         super.onStart();
         displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
 
-        // Checks if a user is logged in by getting profile ID
-        if (sharedPreferencesHelper.getLoginId() == 0) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null){
             goToLogin();
-        } else {
-            profileId = sharedPreferencesHelper.getLoginId();
         }
+        // Checks if a user is logged in by getting profile ID
+
     }
 
     // Don't allow back button to lead to login page (or anywhere)
@@ -177,24 +175,21 @@ public class HomePage extends AppCompatActivity {
         Log.d("Changing", "Changing Display " + drink);
     }
 
-    private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            openLoading();
-            if(type_of_drink != null) {
-                myDB.SaveDrinkType(type_of_drink);
-            }
-            else {
-                myDB.SaveDrinkType("Unknown");
-            }
-
+    private final View.OnClickListener onClickBreathButton= view -> {
+        openLoading();
+        /*if(type_of_drink != null) {
+            myDB.SaveDrinkType(type_of_drink);
         }
+        else {
+            myDB.SaveDrinkType("Unknown");
+        }*/
+
     };
 
     protected void openLoading(){        //open settings class on click
 
         Intent i = new Intent(this, LoadActivity.class);
-        i.putExtra("type_of_drink", type_of_drink);
+        //i.putExtra("type_of_drink", type_of_drink);
         startActivity(i);
     }
 
@@ -209,7 +204,8 @@ public class HomePage extends AppCompatActivity {
     }
 
     protected void logout() {
-        sharedPreferencesHelper.saveLoginId(0);
+        FirebaseAuth.getInstance().signOut();
+        //sharedPreferencesHelper.saveLoginId(0);
         goToLogin();
     }
 
