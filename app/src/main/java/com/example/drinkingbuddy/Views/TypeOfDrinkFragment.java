@@ -83,21 +83,21 @@ public class TypeOfDrinkFragment extends DialogFragment {
             Liquor.setBackgroundColor(Color.RED);
             Wine.setBackgroundColor(Color.WHITE);
             Beer.setBackgroundColor(Color.WHITE);
-            Choice = "liquor";
+            Choice = "Liquor";
         });
 
         Wine.setOnClickListener(view -> {
             Liquor.setBackgroundColor(Color.WHITE);
             Wine.setBackgroundColor(Color.RED);
             Beer.setBackgroundColor(Color.WHITE);
-            Choice = "wine";
+            Choice = "Wine";
         });
 
         Beer.setOnClickListener(view -> {
             Liquor.setBackgroundColor(Color.WHITE);
             Wine.setBackgroundColor(Color.WHITE);
             Beer.setBackgroundColor(Color.RED);
-            Choice = "beer";
+            Choice = "Beer";
         });
     }
 //endregion
