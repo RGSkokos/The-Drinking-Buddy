@@ -48,8 +48,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected TextView deviceCodeDescription;
     protected Toolbar toolbar;
     protected Menu menu;
-    //private DBHelper database;
-    //private SharedPreferencesHelper sharedPreferencesHelper;
     private Profile profile;
     private boolean flag;
     private String UID;
@@ -63,9 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //initializeListeners();
         setContentView(R.layout.activity_profile);
         initializeComponents();
+        addProfileListener();
 
 
         // Set up the toolbar
@@ -82,8 +80,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
 
         flag = true;
-        addProfileListener();
-        //profile = databaseReference.child(UID).getClass();
+
         setDisplayMode();
     }
 
@@ -166,32 +163,25 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (!error) {
                 //find and edit old user values
-                //profile = database.getProfileById(sharedPreferencesHelper.getLoginId()); //update profile
 
 
                 if(usernameEntered.length() != 0)
                 {
-                    //profile.setUsername(usernameEntered);
-                    //databaseReference.child()
                     databaseReference.child(UID).child("username").setValue(usernameEntered);
                 }
                 if(passwordEntered.length() != 0)
                 {
-                    //profile.setPassword(passwordEntered);
                     databaseReference.child(UID).child("password").setValue(passwordEntered);
                     updateAuthentication(passwordEntered);
-                    //firebaseAuth.getCurrentUser().updatePassword(passwordEntered);
 
                 }
                 if(deviceCodeEntered.length() != 0)
                 {
                     databaseReference.child(UID).child("deviceCode").setValue(deviceCodeEntered);
-                    //profile.setDeviceCode(deviceCodeEntered);
                 }
                 if(deviceNameEntered.length() != 0)
                 {
                     databaseReference.child(UID).child("deviceName").setValue(deviceNameEntered);
-                   // profile.setDeviceName(deviceNameEntered);
                 }
 
                 //database.update(profile, sharedPreferencesHelper.getLoginId());
@@ -271,10 +261,6 @@ public class ProfileActivity extends AppCompatActivity {
         confirmPassword.setVisibility(View.GONE);
         deviceName.setEnabled(false);
         deviceCode.setEnabled(false);
-
-        //username.setHint(profile.getUsername());
-        //deviceName.setHint(profile.getDeviceName());
-        //deviceCode.setHint(profile.getDeviceCode());
 
         usernameDescription.setText(R.string.username_display_description);
         passwordDescription.setVisibility(View.GONE);

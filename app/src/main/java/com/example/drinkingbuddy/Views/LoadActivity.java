@@ -1,19 +1,15 @@
 package com.example.drinkingbuddy.Views;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -21,18 +17,30 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.UUID;
-
-import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
+import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.UUID;
+
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "7C:9E:BD:45:43:F2";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "EC:94:CB:4C:72:02";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -48,7 +56,11 @@ public class LoadActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     public Handler handler;
     private DBHelper myDB;
-    private String type_of_drink;
+    protected FirebaseDatabase database;
+    protected DatabaseReference dbReference;
+    protected FirebaseAuth firebaseAuth;
+    protected FirebaseUser user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +70,7 @@ public class LoadActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(LoadActivity.this);
         //MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
+        //addProfileListener();
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
         sensorResult.setText("");
@@ -75,16 +88,42 @@ public class LoadActivity extends AppCompatActivity {
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        gifImageView = (GifImageView) findViewById(R.id.loading_gif);
+        database = FirebaseDatabase.getInstance();
+        dbReference = database.getReference("Profiles");
+        gifImageView = findViewById(R.id.loading_gif);
         done = (TextView) findViewById(R.id.done);
         countDown = (TextView) findViewById(R.id.ReadingCount);
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
         //type_of_drink = "Unknown";
-        type_of_drink = "Unknown";
+        String type_of_drink = "Unknown";
         sensorResult = (TextView) findViewById(R.id.sensorResult);
     }
+
+    private void addProfileListener() {
+        user = firebaseAuth.getCurrentUser();
+        String UID = user.getUid();
+        dbReference.child(UID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Profile profile = snapshot.getValue(Profile.class);
+                //Log.d("Firebase", value);
+                if(profile == null)
+                {
+                    Log.d("Firebase", "could not grab MAC address, (no one logged in)");
+                    return;
+                }
+                MODULE_MAC = profile.getDeviceCode();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("Firebase", "database could not be reached");
+            }
+        });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -74,10 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //not currently needed but can be implemented in the future
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_PROFILE);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_RESULTS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CREATE_TABLE_TYPE_OF_DRINK);
-        onCreate(sqLiteDatabase);
+
     }
 
     public String DayOfWeek()
