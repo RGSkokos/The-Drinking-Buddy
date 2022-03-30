@@ -57,7 +57,12 @@ public class HomePage extends AppCompatActivity {
         sharedPreferencesHelper = new SharedPreferencesHelper(HomePage.this);
         setSupportActionBar(toolbar);
 
-        specifyDrinkButton.setOnClickListener(view -> OpenFragment());
+        specifyDrinkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToDrinkInputActivity();
+            }
+        });
 
         // Set Home selected
         bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
@@ -110,12 +115,6 @@ public class HomePage extends AppCompatActivity {
         specifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
 
-    //fragment open for type of drink
-    private void OpenFragment() {
-        TypeOfDrinkFragment dialog = new TypeOfDrinkFragment();
-        dialog.show(getSupportFragmentManager(), "TypeOfDrink");
-    }
-
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")
@@ -135,7 +134,7 @@ public class HomePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.trendsMenuItem:
                 if(myDB.getAllResults().size() > 0) {
-                    goToTrends();
+                    //goToTrends();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
@@ -160,7 +159,7 @@ public class HomePage extends AppCompatActivity {
         double temp = 0;
         String timeStamp = "";
         if(myDB.ReturnDrinkTypes().size() > 0) {
-            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1);
+            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1).getDrinkName();
         }
         if(breathalyzer_values.size() > 0)
         {
@@ -181,15 +180,20 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             openLoading();
-            if(type_of_drink != null) {
-                myDB.SaveDrinkType(type_of_drink);
-            }
-            else {
-                myDB.SaveDrinkType("Unknown");
-            }
-
+            // TODO: check all instances of type_of_drink and remove after drink input page is complete
+//            if(type_of_drink != null) {
+//                myDB.saveDrinkType(type_of_drink);
+//            }
+//            else {
+//                myDB.saveDrinkType("Unknown");
+//            }
         }
     };
+
+    protected void goToDrinkInputActivity(){
+        Intent i = new Intent(this, DrinkInputActivity.class);
+        startActivity(i);
+    }
 
     protected void openLoading(){        //open settings class on click
 
@@ -213,14 +217,10 @@ public class HomePage extends AppCompatActivity {
         goToLogin();
     }
 
-    private void goToTrends() {
-        Intent intent = new Intent(this, GraphActivity.class);
-        startActivity(intent);
-    }
+
 
     public void setTypeOfDrink(String choice) {
         type_of_drink = choice;
-
     }
 }
 

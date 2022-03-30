@@ -31,6 +31,11 @@
             android:label="Graphs"
             android:parentActivityName=".Views.HomePage" />
         <activity
+            android:name=".Views.DrinkInputActivity"
+            android:exported="false"
+            android:label="Drink Input"
+            android:parentActivityName=".Views.HomePage"/>
+        <activity
             android:name=".Views.BarGraphActivity"
             android:exported="false"
             android:label="Weekly Habits"
