@@ -41,14 +41,11 @@ public class RegistrationActivity extends AppCompatActivity {
     private String email;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-   // private DBHelper db;
     private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-        //db = new DBHelper(this);
         initializeComponents();
         setupButtonListeners();
     }
@@ -75,10 +72,7 @@ public class RegistrationActivity extends AppCompatActivity {
             email = emailRegisterEditText.getText().toString();
 
 
-            /*if(db.checkIfValExists(username, "username") || db.checkIfValExists(deviceCode, "device_code")) //check if either the user or device code already exist
-            {
-                Toast.makeText(getApplicationContext(), "User name or device code already exists", Toast.LENGTH_LONG).show();
-            }*/
+
             //need to fix user and device code authentication
 
 
@@ -109,13 +103,11 @@ public class RegistrationActivity extends AppCompatActivity {
                                         firebaseAuth.updateCurrentUser(user);
                                         Log.d("Firebase", "Successful login");
                                     } else {
+                                        Log.d("Firebase", task.getException().getMessage());
                                         Toast.makeText(getApplicationContext(), "Authentication failed: email in use", Toast.LENGTH_LONG).show();
-                                        firebaseAuth.updateCurrentUser(null);
                                     }
                                 }
                             });
-
-                    //db.insertNewProfile(NewProfile);
                     redirectToMain();
                 }
 

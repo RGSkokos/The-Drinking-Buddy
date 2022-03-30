@@ -27,6 +27,8 @@ import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +42,7 @@ import java.util.UUID;
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "EC:94:CB:4C:72:02";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -56,10 +58,6 @@ public class LoadActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     public Handler handler;
     private DBHelper myDB;
-    protected FirebaseDatabase database;
-    protected DatabaseReference dbReference;
-    protected FirebaseAuth firebaseAuth;
-    protected FirebaseUser user;
 
 
     @Override
@@ -68,14 +66,16 @@ public class LoadActivity extends AppCompatActivity {
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_load);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        //SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(LoadActivity.this);
-        //MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
-        //addProfileListener();
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
         sensorResult.setText("");
         loadingTimer();
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null)
+        {
+            MODULE_MAC = extras.getString("MAC");
+        }
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -88,42 +88,14 @@ public class LoadActivity extends AppCompatActivity {
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        database = FirebaseDatabase.getInstance();
-        dbReference = database.getReference("Profiles");
         gifImageView = findViewById(R.id.loading_gif);
         done = (TextView) findViewById(R.id.done);
         countDown = (TextView) findViewById(R.id.ReadingCount);
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
-        //type_of_drink = "Unknown";
-        String type_of_drink = "Unknown";
         sensorResult = (TextView) findViewById(R.id.sensorResult);
     }
-
-    private void addProfileListener() {
-        user = firebaseAuth.getCurrentUser();
-        String UID = user.getUid();
-        dbReference.child(UID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Profile profile = snapshot.getValue(Profile.class);
-                //Log.d("Firebase", value);
-                if(profile == null)
-                {
-                    Log.d("Firebase", "could not grab MAC address, (no one logged in)");
-                    return;
-                }
-                MODULE_MAC = profile.getDeviceCode();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "database could not be reached");
-            }
-        });
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

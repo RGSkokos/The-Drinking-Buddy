@@ -7,6 +7,7 @@ public class Profile {
     String password;
     String deviceName;
     String deviceCode;
+
     public Profile()
     {}
 

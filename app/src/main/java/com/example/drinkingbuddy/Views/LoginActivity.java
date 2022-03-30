@@ -5,14 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.CharacterPickerDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     protected Button registrationRedirect;
     private DBHelper db;
     private FirebaseAuth firebaseAuth;
-    private SharedPreferencesHelper sharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         db = new DBHelper(this);
         firebaseAuth = FirebaseAuth.getInstance();
-        sharedPreferencesHelper = new SharedPreferencesHelper(LoginActivity.this);
         initializeComponents();
         setupButtonListeners();
     }
@@ -56,28 +52,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String emailEntered = emailLoginTextEdit.getText().toString();
                 String passwordEntered = passwordLoginTextEdit.getText().toString();
-                /*if (usernameEntered.isEmpty() || passwordEntered.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Missing input", Toast.LENGTH_LONG).show();
-                }
-                int id = db.checkProfile(usernameEntered, passwordEntered);
-                if (id != 0) //check if profile with given user and password exists
+                if(emailEntered.isEmpty() || passwordEntered.isEmpty())
                 {
-                    Toast.makeText(getApplicationContext(), "Login successful", Toast.LENGTH_LONG).show();
-                    sharedPreferencesHelper.saveLoginId(id);
-                    Log.d("LOGIN ID", Integer.toString(id));
-                    redirectToMain(); //if exists redirect to main with extras to stay on MainActivity
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Username or password doesn't exist", Toast.LENGTH_LONG).show();
-                    //Simply tell the user the inputted username and password is wrong
-                }*/
-                if(!emailEntered.isEmpty() || !passwordEntered.isEmpty())
-                {
-                    authorizeUser(emailEntered, passwordEntered);
+                    Toast.makeText(getApplicationContext(), "Please enter an email and password", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "Please enter an email and password", Toast.LENGTH_LONG).show();
+                    authorizeUser(emailEntered, passwordEntered);
                 }
 
 
@@ -124,12 +105,11 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             firebaseAuth.updateCurrentUser(user);
-                            redirectToMain();
+                            redirectToMain();  //if exists redirect to main
                         } else
                         {
                             Toast.makeText(getApplicationContext(), "login failed", Toast.LENGTH_LONG).show();
                             //Simply tell the user the inputted username and password is wrong
-                            //firebaseAuth.updateCurrentUser(null);
                         }
 
                     }

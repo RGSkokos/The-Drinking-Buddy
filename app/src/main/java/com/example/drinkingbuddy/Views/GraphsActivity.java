@@ -15,11 +15,17 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+//REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
+// The code within each graph activity is heavily adapted from the reference above which makes use of
+// MPAndroidChart library
+// The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
+// Only the line graph was implemented thus far, the library files can be found within models
 public class GraphsActivity extends AppCompatActivity {
 
     protected Button sensorResults;
@@ -27,7 +33,6 @@ public class GraphsActivity extends AppCompatActivity {
     protected Button weeklyTrends;
     protected Toolbar toolbar;
     protected BottomNavigationView bottomNav;
-    private SharedPreferencesHelper sharedPreferencesHelper;
     private DBHelper myDB;
 
     @Override
@@ -36,9 +41,18 @@ public class GraphsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_graphs);
         initializeComponents();
         setUpListeners();
-        sharedPreferencesHelper = new SharedPreferencesHelper(GraphsActivity.this);
         myDB = new DBHelper(this);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null){
+            goToLogin();
+        }
     }
 
     protected void initializeComponents() {
@@ -123,7 +137,7 @@ public class GraphsActivity extends AppCompatActivity {
     }
 
     protected void logout() {
-        sharedPreferencesHelper.saveLoginId(0);
+        FirebaseAuth.getInstance().signOut();
         goToLogin();
     }
 
