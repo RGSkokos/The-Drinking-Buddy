@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 goToRegistration();
             }
         });
+        //REFERENCE: https://riptutorial.com/android/example/13300/send-firebase-password-reset-email
         resetPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

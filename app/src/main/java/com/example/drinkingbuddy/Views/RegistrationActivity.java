@@ -25,6 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+//Code for firebase throughout the project was developed using these references
+//REFERENCE: https://blog.mindorks.com/firebase-realtime-database-android-tutorial
+//REFERENCE: https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial
+//REFERENCE: https://www.learnhowtoprogram.com/android/data-persistence/firebase-reading-data-and-event-listeners
+//REFERENCE: https://firebase.google.com/docs/auth/android/start
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -96,7 +101,6 @@ public class RegistrationActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
-                                        //databaseReference.child("Profiles").child(email).setValue(NewProfile);
                                         FirebaseUser user = firebaseAuth.getCurrentUser();
                                         String UID = user.getUid();
                                         databaseReference.child(UID).setValue(NewProfile);
