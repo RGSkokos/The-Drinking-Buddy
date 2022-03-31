@@ -53,6 +53,7 @@ public class LoadActivity extends AppCompatActivity {
     public Handler handler;
     private DBHelper myDB;
     private String type_of_drink;
+    private float messageResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class LoadActivity extends AppCompatActivity {
         //progressBarView.setVisibility(View.INVISIBLE);
         static_circle.setVisibility(View.INVISIBLE);
         loading_circle.setVisibility(View.INVISIBLE);
+        messageResult = 0;
     }
 
     @Override
@@ -150,14 +152,13 @@ public class LoadActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                new CountDownTimer(5000, 1000) {
+                new CountDownTimer(6000, 1000) {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onTick(long millisUntilFinished) {
                         static_circle.setVisibility(View.VISIBLE);
                         loading_circle.setVisibility(View.VISIBLE);
                         countDown.setText(""+millisUntilFinished / 1000);
-
 
                     }
                     @Override
@@ -167,6 +168,10 @@ public class LoadActivity extends AppCompatActivity {
                         done.setVisibility(View.VISIBLE);
                         static_circle.setVisibility(View.INVISIBLE);
                         loading_circle.setVisibility(View.INVISIBLE);
+                        if (messageResult != 0) {
+                            sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.2f", messageResult) + "% of Blood Alcohol Level"));
+                        }
+                        messageResult = 0;
                     }
                 }.start();
                 new Thread(new Runnable() {
@@ -227,7 +232,8 @@ public class LoadActivity extends AppCompatActivity {
                     float temp = Float.parseFloat(message);
                     temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
                     temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
-                    sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.3f", temp) + "% of Blood Alcohol Level"));
+                    messageResult = temp;
+//                    sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.3f", temp) + "% of Blood Alcohol Level"));
 
                     //double temp = Double.parseDouble(message);
                     //temp = (((temp-1500)/5000));
