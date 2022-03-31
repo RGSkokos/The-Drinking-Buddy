@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "142178645401",
+    "firebase_url": "https://drinkingbuddy-e80e7-default-rtdb.firebaseio.com",
+    "project_id": "drinkingbuddy-e80e7",
+    "storage_bucket": "drinkingbuddy-e80e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142178645401:android:28377f90aaa6399e0b0f08",
+        "android_client_info": {
+          "package_name": "com.example.drinkingbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "142178645401-h04at0u9mfdanj9urjs1pohfvepdi4dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGfIjkmJ6ODauWJPioJFqWFjGRZs50yus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "142178645401-h04at0u9mfdanj9urjs1pohfvepdi4dm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
