@@ -1,19 +1,15 @@
 package com.example.drinkingbuddy.Views;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -21,18 +17,32 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.UUID;
-
-import android.os.Handler;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
+import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.UUID;
+
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "7C:9E:BD:45:43:F2";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -48,7 +58,7 @@ public class LoadActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     public Handler handler;
     private DBHelper myDB;
-    private String type_of_drink;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +66,16 @@ public class LoadActivity extends AppCompatActivity {
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_load);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(LoadActivity.this);
-        MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
         sensorResult.setText("");
         loadingTimer();
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null)
+        {
+            MODULE_MAC = extras.getString("MAC");
+        }
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -71,22 +84,16 @@ public class LoadActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null)
-        {
-            type_of_drink = bundle.getString("type_of_drink");
-        }
     }
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        gifImageView = (GifImageView) findViewById(R.id.loading_gif);
+        gifImageView = findViewById(R.id.loading_gif);
         done = (TextView) findViewById(R.id.done);
         countDown = (TextView) findViewById(R.id.ReadingCount);
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
-        type_of_drink = "Unknown";
         sensorResult = (TextView) findViewById(R.id.sensorResult);
     }
 
@@ -226,7 +233,7 @@ public class LoadActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void setTypeOfDrink(String type) {
-        type_of_drink = type;
+        //type_of_drink = type;
     }
 
 

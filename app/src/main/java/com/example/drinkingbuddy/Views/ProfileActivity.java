@@ -11,15 +11,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -35,19 +45,23 @@ public class ProfileActivity extends AppCompatActivity {
     protected TextView deviceCodeDescription;
     protected Toolbar toolbar;
     protected Menu menu;
-    private DBHelper database;
-    private SharedPreferencesHelper sharedPreferencesHelper;
     private Profile profile;
     private boolean flag;
+    private String UID;
+    protected String currentPassword;
+    FirebaseUser user;
+    private DatabaseReference databaseReference;
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         initializeComponents();
-        database = new DBHelper(this);
-        sharedPreferencesHelper = new SharedPreferencesHelper(ProfileActivity.this);
-        profile = database.getProfileById(sharedPreferencesHelper.getLoginId());
+        addProfileListener();
+
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
@@ -63,10 +77,14 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
 
         flag = true;
+
         setDisplayMode();
     }
 
     protected void initializeComponents() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Profiles");
         username = findViewById(R.id.usernameProfileEditText);
         password = findViewById(R.id.passwordProfileEditText);
         confirmPassword = findViewById(R.id.confirmPasswordEditText);
@@ -79,6 +97,33 @@ public class ProfileActivity extends AppCompatActivity {
         deviceCodeDescription = findViewById(R.id.changeDeviceCodeTextView);
         toolbar = findViewById(R.id.profileToolbar);
         saveButton.setOnClickListener(saveOnClick);
+    }
+
+    private void addProfileListener() {
+        user = firebaseAuth.getCurrentUser();
+        UID = user.getUid();
+        databaseReference.child(UID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                profile = snapshot.getValue(Profile.class);
+                //Log.d("Firebase", value);
+                if(profile == null)
+                {
+                    return;
+                }
+                username.setHint(profile.getUsername());
+                deviceName.setHint(profile.getDeviceName());
+                deviceCode.setHint(profile.getDeviceCode());
+                currentPassword = profile.getPassword();
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private final View.OnClickListener saveOnClick = new View.OnClickListener() {
@@ -115,26 +160,28 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (!error) {
                 //find and edit old user values
-                profile = database.getProfileById(sharedPreferencesHelper.getLoginId()); //update profile
+
 
                 if(usernameEntered.length() != 0)
                 {
-                    profile.setUsername(usernameEntered);
+                    databaseReference.child(UID).child("username").setValue(usernameEntered);
                 }
                 if(passwordEntered.length() != 0)
                 {
-                    profile.setPassword(passwordEntered);
+                    databaseReference.child(UID).child("password").setValue(passwordEntered);
+                    updateAuthentication(passwordEntered);
+
                 }
                 if(deviceCodeEntered.length() != 0)
                 {
-                    profile.setDeviceCode(deviceCodeEntered);
+                    databaseReference.child(UID).child("deviceCode").setValue(deviceCodeEntered);
                 }
                 if(deviceNameEntered.length() != 0)
                 {
-                    profile.setDeviceName(deviceNameEntered);
+                    databaseReference.child(UID).child("deviceName").setValue(deviceNameEntered);
                 }
 
-                database.update(profile, sharedPreferencesHelper.getLoginId());
+                //database.update(profile, sharedPreferencesHelper.getLoginId());
 
                 setDisplayMode();
                 menuItemTitleChange(false);
@@ -142,6 +189,25 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
     };
+
+    //REFERENCE: https://writeach.com/posts/-MAOS1OT_oHIJBKqXVQZ/Firebase-Authentication---9---Change-password
+    private void updateAuthentication(String newPass)
+    {
+        String email = user.getEmail();
+        AuthCredential credential = EmailAuthProvider.getCredential(email, currentPassword);
+
+        user.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful())
+                        {
+                            user.updatePassword(newPass);
+                            Toast.makeText(getApplicationContext(), "Password change successful", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")
@@ -181,7 +247,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     protected void logout() {
-        sharedPreferencesHelper.saveLoginId(0);
+        //sharedPreferencesHelper.saveLoginId(0);
+        FirebaseAuth.getInstance().signOut();
         goToLogin();
     }
 
@@ -191,10 +258,6 @@ public class ProfileActivity extends AppCompatActivity {
         confirmPassword.setVisibility(View.GONE);
         deviceName.setEnabled(false);
         deviceCode.setEnabled(false);
-
-        username.setHint(profile.getUsername());
-        deviceName.setHint(profile.getDeviceName());
-        deviceCode.setHint(profile.getDeviceCode());
 
         usernameDescription.setText(R.string.username_display_description);
         passwordDescription.setVisibility(View.GONE);
@@ -228,4 +291,7 @@ public class ProfileActivity extends AppCompatActivity {
         else
             item.setTitle("Edit Profile");
     }
+
+
+
 }
