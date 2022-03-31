@@ -4,6 +4,7 @@ import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,21 +102,38 @@ public class RegistrationActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
-                                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                                        String UID = user.getUid();
-                                        databaseReference.child(UID).setValue(NewProfile);
-                                        firebaseAuth.updateCurrentUser(user);
-                                        Log.d("Firebase", "Successful login");
+                                        addToDatabase(NewProfile);
+                                        redirectToMain();
+                                        FirebaseAuth.getInstance().signOut();
                                     } else {
                                         Log.d("Firebase", task.getException().getMessage());
-                                        Toast.makeText(getApplicationContext(), "Authentication failed: email in use", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
-                    redirectToMain();
                 }
 
         });
+    }
+
+    private void addToDatabase(Profile NewProfile)
+    {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        String UID = user.getUid();
+        databaseReference.child(UID).setValue(NewProfile)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                        {
+                            Log.d("Firebase", "Profile added to db");
+                        }
+                        else
+                        {
+                            Log.d("Firebase", task.getException().getMessage());
+                        }
+                    }
+                });
     }
 
     protected void redirectToMain() {
