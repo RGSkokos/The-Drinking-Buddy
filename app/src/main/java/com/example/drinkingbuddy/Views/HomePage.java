@@ -111,7 +111,7 @@ public class HomePage extends AppCompatActivity {
     protected void initializeComponents() {
         newBreath = findViewById(R.id.newBreath);
         //response = findViewById(R.id.response);
-        CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
+       // CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
         bottomNav = findViewById(R.id.bottomNavigation);
@@ -176,7 +176,7 @@ public class HomePage extends AppCompatActivity {
 
         //response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
         //TimeStampTextview.setText("Measurement Taken: " + timeStamp);
-        CurrentDrinkTextView.setText("Last Drink: " + drink);
+       // CurrentDrinkTextView.setText("Last Drink: " + drink);
         Log.d("Changing", "Changing Display " + drink);
     }
 

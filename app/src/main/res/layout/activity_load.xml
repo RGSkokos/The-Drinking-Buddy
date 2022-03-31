@@ -6,6 +6,7 @@
     android:background="#3d3f45"
     android:layout_height="match_parent">
 
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/loading_gif"
         android:layout_width="414dp"
@@ -18,6 +19,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/loading_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/loading_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/static_circle" />
+
     <TextView
         android:id="@+id/ReadingCount"
         android:layout_width="317dp"
@@ -26,7 +37,7 @@
         android:textAlignment="center"
         android:textSize="60sp"
         android:textStyle="bold"
-        android:textColor="#00C2FF"
+        android:textColor="#3e78cf"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,21 +50,21 @@
         android:layout_height="190dp"
         android:text="DONE!"
         android:textAlignment="center"
-        android:textColor="#00C2FF"
+        android:textColor="#3e78cf"
         android:textSize="96sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192" />
+        app:layout_constraintVertical_bias="0.103" />
 
     <TextView
         android:id="@+id/sensorResult"
         android:layout_width="313dp"
         android:layout_height="341dp"
         android:textAlignment="center"
-        android:textColor="#00C2FF"
+        android:textColor="#3e78cf"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -75,5 +86,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/static_circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/loading_gif"
+        app:layout_constraintTop_toTopOf="@+id/toolbarLoad"
+        app:layout_constraintVertical_bias="0.333"
+        app:srcCompat="@drawable/static_loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

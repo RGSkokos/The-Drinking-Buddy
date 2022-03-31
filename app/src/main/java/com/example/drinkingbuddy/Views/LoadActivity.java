@@ -18,11 +18,13 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.ProgressBar;
 import java.util.UUID;
-
+import static android.view.animation.Animation.RELATIVE_TO_SELF;
 import android.os.Handler;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
@@ -37,7 +39,9 @@ public class LoadActivity extends AppCompatActivity {
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public GifImageView gifImageView;
-
+    protected ProgressBar progressBarView;
+    protected ImageView static_circle;
+    protected GifImageView loading_circle;
     protected BluetoothAdapter bluetoothAdapter;
     protected BluetoothSocket bluetoothSocket;
     protected BluetoothDevice bluetoothDevice;
@@ -81,6 +85,8 @@ public class LoadActivity extends AppCompatActivity {
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
         gifImageView = (GifImageView) findViewById(R.id.loading_gif);
+        loading_circle = (GifImageView) findViewById(R.id.loading_circle);
+        static_circle = (ImageView) findViewById(R.id.static_circle);
         done = (TextView) findViewById(R.id.done);
         countDown = (TextView) findViewById(R.id.ReadingCount);
         toolbar = findViewById(R.id.toolbarLoad);
@@ -88,6 +94,9 @@ public class LoadActivity extends AppCompatActivity {
         done.setVisibility(View.INVISIBLE);
         type_of_drink = "Unknown";
         sensorResult = (TextView) findViewById(R.id.sensorResult);
+        //progressBarView.setVisibility(View.INVISIBLE);
+        static_circle.setVisibility(View.INVISIBLE);
+        loading_circle.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -109,6 +118,7 @@ public class LoadActivity extends AppCompatActivity {
                 countDown.setVisibility(View.VISIBLE);
                 done.setEnabled(false);
                 done.setVisibility(View.INVISIBLE);
+
                 sendMessage();
             }
         }.start();
@@ -144,13 +154,19 @@ public class LoadActivity extends AppCompatActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onTick(long millisUntilFinished) {
+                        static_circle.setVisibility(View.VISIBLE);
+                        loading_circle.setVisibility(View.VISIBLE);
                         countDown.setText(""+millisUntilFinished / 1000);
+
+
                     }
                     @Override
                     public void onFinish() {
                         gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
                         countDown.setVisibility(View.INVISIBLE);
                         done.setVisibility(View.VISIBLE);
+                        static_circle.setVisibility(View.INVISIBLE);
+                        loading_circle.setVisibility(View.INVISIBLE);
                     }
                 }.start();
                 new Thread(new Runnable() {
@@ -212,6 +228,7 @@ public class LoadActivity extends AppCompatActivity {
                     temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
                     temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                     sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.3f", temp) + "% of Blood Alcohol Level"));
+
                     //double temp = Double.parseDouble(message);
                     //temp = (((temp-1500)/5000));
                     //response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp)));
@@ -223,6 +240,7 @@ public class LoadActivity extends AppCompatActivity {
         newThread = new ConnectedThread(bluetoothSocket, handler);
         newThread.start();
     }
+
 
     @SuppressLint("SetTextI18n")
     public void setTypeOfDrink(String type) {
