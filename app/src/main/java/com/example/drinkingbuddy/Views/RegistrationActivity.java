@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,11 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-//Code for firebase throughout the project was developed using these references
-//REFERENCE: https://blog.mindorks.com/firebase-realtime-database-android-tutorial
-//REFERENCE: https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial
-//REFERENCE: https://www.learnhowtoprogram.com/android/data-persistence/firebase-reading-data-and-event-listeners
-//REFERENCE: https://firebase.google.com/docs/auth/android/start
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -45,9 +41,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private String deviceName;
     private String deviceCode;
     private String email;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private FirebaseAuth firebaseAuth;
+    private FirebaseHelper firebaseHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +52,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     protected void initializeComponents() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Profiles");
+        firebaseHelper = new FirebaseHelper(this);
         usernameRegisterEditText = findViewById(R.id.usernameRegisterEditText);
         passwordRegisterEditText = findViewById(R.id.passwordRegisterEditText);
         deviceNameEditText = findViewById(R.id.deviceNameEditText);
@@ -96,44 +89,12 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
                 else { //If everything is okay
                     Profile NewProfile = new Profile(username, password, deviceName, deviceCode);
-                    firebaseAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
-                                        addToDatabase(NewProfile);
-                                        redirectToMain();
-                                        FirebaseAuth.getInstance().signOut();
-                                    } else {
-                                        Log.d("Firebase", task.getException().getMessage());
-                                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                    firebaseHelper.CreateUser(email, password, NewProfile);
+                    //redirectToMain();
+                    //create user with email and password
                 }
 
         });
-    }
-
-    private void addToDatabase(Profile NewProfile)
-    {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        String UID = user.getUid();
-        databaseReference.child(UID).setValue(NewProfile)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful())
-                        {
-                            Log.d("Firebase", "Profile added to db");
-                        }
-                        else
-                        {
-                            Log.d("Firebase", task.getException().getMessage());
-                        }
-                    }
-                });
     }
 
     protected void redirectToMain() {
