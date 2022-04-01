@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/loading_gif"
+        android:id="@+id/loadingGif"
         android:layout_width="match_parent"
         android:layout_height="312dp"
         android:src="@drawable/loadingdrinks"
@@ -32,39 +32,40 @@
         app:layout_constraintVertical_bias="0.498" />
 
     <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/loading_circle"
+        android:id="@+id/loadingCircle"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:src="@drawable/loading_circle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="122dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        android:src="@drawable/loading_circle" />
 
     <TextView
-        android:id="@+id/ReadingCount"
+        android:id="@+id/readingCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginTop="216dp"
+        android:fontFamily="@font/open_sans"
+        android:text="5"
         android:textAlignment="center"
         android:textColor="#3e78cf"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbarLoad" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad" />
 
     <TextView
         android:id="@+id/done"
-        android:layout_width="317dp"
-        android:layout_height="190dp"
-        android:text="DONE!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RESULT"
         android:textAlignment="center"
         android:textColor="#3e78cf"
-        android:textSize="96sp"
-        android:textStyle="bold"
+        android:textSize="60sp"
+        android:fontFamily="@font/open_sans"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,29 +74,40 @@
 
     <TextView
         android:id="@+id/sensorResult"
-        android:layout_width="313dp"
-        android:layout_height="341dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textColor="#3e78cf"
-        android:textSize="34sp"
-        android:textStyle="bold"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.89" />
+        app:layout_constraintVertical_bias="0.74" />
 
     <ImageView
-        android:id="@+id/static_circle"
+        android:id="@+id/staticLoadingCircle"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/loading_gif"
+        android:layout_marginTop="122dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbarLoad"
-        app:layout_constraintVertical_bias="0.472"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
         app:srcCompat="@drawable/static_loading" />
+
+    <ImageView
+        android:id="@+id/resultCircle"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="122dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        app:srcCompat="@drawable/new_breath_circle"
+        tools:layout_editor_absoluteX="107dp"
+        tools:layout_editor_absoluteY="62dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

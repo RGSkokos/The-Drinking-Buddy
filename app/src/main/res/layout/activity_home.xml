@@ -13,7 +13,7 @@
         android:layout_height="190dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="152dp"
         android:background="@drawable/new_breath"
         android:fontFamily="@font/open_sans"
         android:text="NEW BREATH"
@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CurrentDrinktextView" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHome" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarHome"
@@ -59,20 +59,6 @@
         app:maxImageSize="90dp"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <TextView
-        android:id="@+id/CurrentDrinktextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarHome" />
-
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/upArrowGif"
         android:layout_width="100dp"
@@ -96,14 +82,14 @@
         app:menu="@menu/bottom_menu"/>
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/circleAroundNewBreath"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="122dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CurrentDrinktextView"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHome"
         app:srcCompat="@drawable/new_breath_circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

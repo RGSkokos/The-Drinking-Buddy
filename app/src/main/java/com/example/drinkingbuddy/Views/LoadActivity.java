@@ -5,26 +5,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ProgressBar;
 import java.util.UUID;
-import static android.view.animation.Animation.RELATIVE_TO_SELF;
+
 import android.os.Handler;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
@@ -85,11 +82,11 @@ public class LoadActivity extends AppCompatActivity {
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        gifImageView = (GifImageView) findViewById(R.id.loading_gif);
-        loading_circle = (GifImageView) findViewById(R.id.loading_circle);
-        static_circle = (ImageView) findViewById(R.id.static_circle);
+        gifImageView = (GifImageView) findViewById(R.id.loadingGif);
+        loading_circle = (GifImageView) findViewById(R.id.loadingCircle);
+        static_circle = (ImageView) findViewById(R.id.staticLoadingCircle);
         done = (TextView) findViewById(R.id.done);
-        countDown = (TextView) findViewById(R.id.ReadingCount);
+        countDown = (TextView) findViewById(R.id.readingCount);
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
@@ -169,7 +166,8 @@ public class LoadActivity extends AppCompatActivity {
                         static_circle.setVisibility(View.INVISIBLE);
                         loading_circle.setVisibility(View.INVISIBLE);
                         if (messageResult != 0) {
-                            sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.2f", messageResult) + "% of Blood Alcohol Level"));
+                            sensorResult.setText(String.valueOf(String.format("%.2f", messageResult) + "%"));
+                            setResultColour();
                         }
                         messageResult = 0;
                     }
@@ -253,6 +251,9 @@ public class LoadActivity extends AppCompatActivity {
         type_of_drink = type;
     }
 
+    protected void setResultColour() {
+        // TODO: implement coloured ring and result value
+    }
 
     @Override
     protected void onStart() {
