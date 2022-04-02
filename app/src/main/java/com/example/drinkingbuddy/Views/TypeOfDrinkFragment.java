@@ -75,7 +75,7 @@ public class TypeOfDrinkFragment extends DialogFragment {
 
         Submit.setOnClickListener(view -> {
             //set variable for drink type in home page
-            ((HomePage) requireActivity()).setTypeOfDrink(Choice);
+            //((HomePage) requireActivity()).setTypeOfDrink(Choice);
             dismiss();
         });
 

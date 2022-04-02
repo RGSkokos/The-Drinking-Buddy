@@ -1,7 +1,6 @@
 package com.example.drinkingbuddy.Views;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -19,10 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DrinkInputActivity extends AppCompatActivity {
 
@@ -41,7 +41,6 @@ public class DrinkInputActivity extends AppCompatActivity {
     protected Button saveDrinkButton;
     protected Toolbar toolbar;
     protected BottomNavigationView bottomNav;
-    private SharedPreferencesHelper sharedPreferencesHelper;
     private DBHelper dbHelper;
 
     @Override
@@ -51,6 +50,16 @@ public class DrinkInputActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);
         initializeComponents();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser == null){
+            goToLogin();
+        }
     }
 
     protected void initializeComponents(){
@@ -85,7 +94,6 @@ public class DrinkInputActivity extends AppCompatActivity {
 
         // Set up the toolbar
         setSupportActionBar(toolbar);
-        sharedPreferencesHelper = new SharedPreferencesHelper(DrinkInputActivity.this);
     }
 
     @SuppressLint("RestrictedApi")
@@ -304,7 +312,7 @@ public class DrinkInputActivity extends AppCompatActivity {
     }
 
     protected void logout() {
-        sharedPreferencesHelper.saveLoginId(0);
+        FirebaseAuth.getInstance().signOut();
         goToLogin();
     }
 

@@ -1,17 +1,17 @@
 package com.example.drinkingbuddy.Views;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -23,15 +23,32 @@ import android.widget.ProgressBar;
 import java.util.UUID;
 
 import android.os.Handler;
-
+import java.util.UUID;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import com.example.drinkingbuddy.Controllers.DBHelper;
-import com.example.drinkingbuddy.Controllers.SharedPreferencesHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
+import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.UUID;
+
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "7C:9E:BD:45:43:F2";    // put your own mac address found with bluetooth serial app
+    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -51,6 +68,7 @@ public class LoadActivity extends AppCompatActivity {
     private DBHelper myDB;
     private String type_of_drink;
     private float messageResult;
+    protected SharedPreferences cannotConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +76,20 @@ public class LoadActivity extends AppCompatActivity {
         myDB = new DBHelper(this);
         setContentView(R.layout.activity_load);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(LoadActivity.this);
-        MODULE_MAC = myDB.getDeviceCode(sharedPreferencesHelper.getLoginId());
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
+        cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
+        SharedPreferences.Editor connectionEditor = cannotConnect.edit();
+        connectionEditor.putString("noConnection", "");
+        connectionEditor.apply();
         sensorResult.setText("");
-        loadingTimer();
+        //loadingTimer();
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null)
+        {
+            MODULE_MAC = extras.getString("MAC");
+        }
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -73,11 +98,6 @@ public class LoadActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null)
-        {
-            type_of_drink = bundle.getString("type_of_drink");
-        }
     }
 
     // Link Variables to Components in .XML file
@@ -90,7 +110,6 @@ public class LoadActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
-        type_of_drink = "Unknown";
         sensorResult = (TextView) findViewById(R.id.sensorResult);
         //progressBarView.setVisibility(View.INVISIBLE);
         static_circle.setVisibility(View.INVISIBLE);
@@ -102,7 +121,12 @@ public class LoadActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1 && requestCode == 1) {
+            loadingTimer();
             initializeBluetoothProcess();
+        }
+
+        else {
+            goToHomeActivity();
         }
     }
 
@@ -112,8 +136,15 @@ public class LoadActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) { }
             @Override
             public void onFinish() {
-                gifImageView.setVisibility(View.INVISIBLE);        //gif should no longer be displayed
-                countDown.setText("READY");
+                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+                if(!cannotConnect.getString("noConnection", null).equals("")) {
+                    countDown.setText("");
+                }
+
+                else {
+                    countDown.setText("READY");
+                }
+
                 countDown.setVisibility(View.VISIBLE);
                 done.setEnabled(false);
                 done.setVisibility(View.INVISIBLE);
@@ -129,6 +160,7 @@ public class LoadActivity extends AppCompatActivity {
             turnOnPhoneBluetooth(); //checks if bluetooth is enabled on phone and if not turns on user bluetooth
         }
         else {
+            loadingTimer();
             initializeBluetoothProcess(); //if bluetooth is indeed enabled, then the bluetooth process must be enabled and established
             //sendMessage();
         }
@@ -209,6 +241,11 @@ public class LoadActivity extends AppCompatActivity {
             catch (Exception e) {
                 try {
                     bluetoothSocket.close();
+                    SharedPreferences cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor connectionEditor = cannotConnect.edit();
+                    connectionEditor.putString("noConnection", "Error! Cannot Connect to Breathalyzer");
+                    connectionEditor.apply();
+                    goToHomeActivity();
                 }
                 catch (Exception ex) {
                     ex.printStackTrace();
@@ -248,7 +285,7 @@ public class LoadActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void setTypeOfDrink(String type) {
-        type_of_drink = type;
+        //type_of_drink = type;
     }
 
     protected void setResultColour() {
@@ -259,5 +296,10 @@ public class LoadActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setup();
+    }
+
+    protected void goToHomeActivity() {
+        Intent intent = new Intent(this, HomePage.class);
+        startActivity(intent);
     }
 }
