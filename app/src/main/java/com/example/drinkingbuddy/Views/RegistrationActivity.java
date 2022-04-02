@@ -1,31 +1,16 @@
 package com.example.drinkingbuddy.Views;
 
-import androidx.annotation.LongDef;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.accounts.Account;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -42,6 +27,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private String deviceCode;
     private String email;
     private FirebaseHelper firebaseHelper;
+    private String[] addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +57,6 @@ public class RegistrationActivity extends AppCompatActivity {
             email = emailRegisterEditText.getText().toString();
 
 
-
             //need to fix user and device code authentication
 
 
@@ -86,11 +71,14 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_LONG).show();
                 } else if (deviceCode.length() != 17 || deviceCode.charAt(2) != ':' || deviceCode.charAt(5) != ':' || deviceCode.charAt(8) != ':' || deviceCode.charAt(11) != ':' || deviceCode.charAt(14) != ':') {
                     Toast.makeText(getApplicationContext(), "Invalid device code", Toast.LENGTH_LONG).show();
+                } else if (!checkDeviceCode(deviceCode))
+                {
+                    Toast.makeText(getApplicationContext(), "Device not registered", Toast.LENGTH_LONG).show();
                 }
                 else { //If everything is okay
                     Profile NewProfile = new Profile(username, password, deviceName, deviceCode);
                     firebaseHelper.CreateUser(email, password, NewProfile);
-                    //redirectToMain();
+                    redirectToMain();
                     //create user with email and password
                 }
 
@@ -100,5 +88,18 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void redirectToMain() {
         Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
+    }
+
+    public boolean checkDeviceCode(String addressEntered)
+    {
+        addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:DB:45:43:F2"};
+        for (String address :
+                addresses) {
+            if (address.equals(addressEntered))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

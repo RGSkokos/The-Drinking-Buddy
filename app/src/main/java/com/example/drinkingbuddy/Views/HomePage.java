@@ -24,6 +24,7 @@ import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -92,15 +93,22 @@ public class HomePage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
+        Bundle extras = getIntent().getExtras();
+        boolean loggedin = false;
+        if(extras != null)
+        {
+            loggedin = extras.getBoolean("Success");
 
-
-        if(firebaseHelper.ifUserLoggedIn()){
+        }
+        if(firebaseHelper.ifUserLoggedIn() || loggedin){
+            firebaseHelper.getCurrentUID();
             firebaseHelper.addProfileListener();
         }
         else
         {
             goToLogin();
         }
+
         // Checks if a user is logged in by checking current firebase user
 
     }
@@ -143,6 +151,7 @@ public class HomePage extends AppCompatActivity {
                 return true;
             case R.id.logoutMenuItem:
                 firebaseHelper.logout();
+                goToLogin();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

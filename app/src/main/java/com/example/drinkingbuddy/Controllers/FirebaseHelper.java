@@ -1,14 +1,12 @@
 package com.example.drinkingbuddy.Controllers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.drinkingbuddy.Models.Profile;
-import com.example.drinkingbuddy.Views.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -30,12 +28,14 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FirebaseHelper {
 
-    private FirebaseDatabase firebaseDatabase;
+    private static final String TAG = "Firebase";
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private Context context;
     private FirebaseUser user;
+    private FirebaseDatabase firebaseDatabase;
     private Profile profile;
+
 
     public FirebaseHelper(Context context) {
         this.context = context;
@@ -58,6 +58,11 @@ public class FirebaseHelper {
     }
 
     public void logout() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null)
+        {
+            Log.d(TAG, user.getEmail());
+        }
         FirebaseAuth.getInstance().signOut();
     }
 
@@ -86,13 +91,26 @@ public class FirebaseHelper {
                 });
     }
 
-    public void updateProfileDB(String child, String value)
+    public void authorizeUser(String emailEntered, String passwordEntered)
     {
-        databaseReference.child(user.getUid()).child(child).setValue(value);
+        firebaseAuth.signInWithEmailAndPassword(emailEntered, passwordEntered)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        user = firebaseAuth.getCurrentUser();
+                        firebaseAuth.updateCurrentUser(user);
+                    } else
+                    {
+                        Toast.makeText(context, "login failed", Toast.LENGTH_LONG).show();
+                        //Simply tell the user the inputted username and password is wrong
+                    }
+                });
     }
 
     public boolean ifUserLoggedIn()
     {
+        //Log.d(TAG, user.getEmail());
+        user = firebaseAuth.getCurrentUser();
         if(user == null)
         {
             return false;
@@ -123,6 +141,22 @@ public class FirebaseHelper {
                 Log.d("Firebase", "database could not be reached");
             }
         });
+    }
+
+
+    public void sendResetEmail(String emailEntered)
+    {
+        firebaseAuth.sendPasswordResetEmail(emailEntered)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Password reset email sent", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, "reset password failed, please enter a valid email connected to an account", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
 
@@ -163,6 +197,11 @@ public class FirebaseHelper {
                         }
                     }
                 });
+    }
+
+    public void updateProfileDB(String child, String value)
+    {
+        databaseReference.child(user.getUid()).child(child).setValue(value);
     }
 
 }
