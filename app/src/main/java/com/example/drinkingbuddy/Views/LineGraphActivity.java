@@ -62,6 +62,7 @@ public class LineGraphActivity extends AppCompatActivity {
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.LineGraphToolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -86,7 +87,7 @@ public class LineGraphActivity extends AppCompatActivity {
 
             readingsText.add(temp);
         }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, readingsText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
         sensorReadingsListview.setAdapter(arrayAdapter);
     }
 

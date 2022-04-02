@@ -60,6 +60,7 @@ public class PieChartActivity extends AppCompatActivity {
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.PieChartToolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -83,7 +84,7 @@ public class PieChartActivity extends AppCompatActivity {
 
             drinksText.add(temp);
         }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, drinksText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, drinksText);
         drinkInputsListview.setAdapter(arrayAdapter);
     }
 
