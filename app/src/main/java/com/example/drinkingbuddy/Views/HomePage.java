@@ -2,7 +2,9 @@ package com.example.drinkingbuddy.Views;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +55,7 @@ public class HomePage extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    protected SharedPreferences cannotConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,19 @@ public class HomePage extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         initializeComponents();
+        SharedPreferences cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
+        try {
+            if(!cannotConnect.getString("noConnection", null).equals("")) {
+                Toast toast = Toast.makeText(getApplicationContext(), cannotConnect.getString("noConnection", null), Toast.LENGTH_LONG);
+                toast.show();
+            }
+        }
+
+        catch(Exception e) { }
+        SharedPreferences.Editor connectionEditor = cannotConnect.edit();
+        connectionEditor.putString("noConnection", "");
+        connectionEditor.apply();
+
         setSupportActionBar(toolbar);
 
         specifyDrinkButton.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +139,7 @@ public class HomePage extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("Profiles");
         newBreath = findViewById(R.id.newBreath);
-        //response = findViewById(R.id.response);
+        response = findViewById(R.id.response);
         CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
