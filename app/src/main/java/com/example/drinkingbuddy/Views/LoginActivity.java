@@ -36,13 +36,17 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         initializeComponents();
         setupButtonListeners();
+        emailLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
+        passwordLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
     }
 
     protected void initializeComponents() {
         resetPasswordButton = findViewById(R.id.forgotPasswordButton);
         loginButton = findViewById(R.id.loginButton);
         emailLoginTextEdit = findViewById(R.id.emailLoginEditText);
+        emailLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
         passwordLoginTextEdit = findViewById(R.id.passwordLoginEditText);
+        passwordLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
         registrationRedirect = findViewById(R.id.registrationRedirectButton);
     }
 

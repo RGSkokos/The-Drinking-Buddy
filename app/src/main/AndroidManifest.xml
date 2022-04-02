@@ -53,7 +53,8 @@
         <activity
             android:name=".Views.RegistrationActivity"
             android:exported="false"
-            android:label="Register" />
+            android:label="Register"
+            android:parentActivityName=".Views.LoginActivity" />
 
         <activity
             android:name=".Views.LoginActivity"

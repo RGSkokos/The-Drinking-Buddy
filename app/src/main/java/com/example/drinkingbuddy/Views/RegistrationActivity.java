@@ -2,7 +2,9 @@ package com.example.drinkingbuddy.Views;
 
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +41,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected EditText deviceCodeEditText;
     protected EditText emailRegisterEditText;
     protected Button registerButton;
+    protected Toolbar toolbar;
     private String username;
     private String password;
     private String deviceName;
@@ -53,6 +56,13 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         initializeComponents();
         setupButtonListeners();
+
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     protected void initializeComponents() {
@@ -60,11 +70,17 @@ public class RegistrationActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Profiles");
         usernameRegisterEditText = findViewById(R.id.usernameRegisterEditText);
+        usernameRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
         passwordRegisterEditText = findViewById(R.id.passwordRegisterEditText);
+        passwordRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
         deviceNameEditText = findViewById(R.id.deviceNameEditText);
+        deviceNameEditText.setHintTextColor(getResources().getColor(R.color.white));
         deviceCodeEditText = findViewById(R.id.deviceCodeEditText);
+        deviceCodeEditText.setHintTextColor(getResources().getColor(R.color.white));
         registerButton = findViewById(R.id.registerButton);
         emailRegisterEditText = findViewById(R.id.EmailAddressTextView);
+        emailRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
+        toolbar = findViewById(R.id.registrationToolbar);
     }
 
     protected void setupButtonListeners() {
