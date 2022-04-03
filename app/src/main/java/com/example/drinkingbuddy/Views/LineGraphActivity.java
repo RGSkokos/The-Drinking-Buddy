@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
@@ -29,13 +31,14 @@ import java.util.List;
 public class LineGraphActivity extends AppCompatActivity {
 
     //Variables
-    LineChart lineChart;
+    protected LineChart lineChart;
     protected Toolbar toolbar;
     protected Menu menu;
     private DBHelper database;
-    List<Breathalyzer> breathalyzerValues;
-    ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
-    String SpanOfData;
+    protected List<Breathalyzer> breathalyzerValues;
+    protected ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
+    protected String SpanOfData;
+    protected ListView sensorReadingsListview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +57,12 @@ public class LineGraphActivity extends AppCompatActivity {
 
         insertLineChartValues();
         displayLineChart();
+        loadListView();
     }
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.LineGraphToolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -67,6 +72,23 @@ public class LineGraphActivity extends AppCompatActivity {
         }
 
         lineChart = findViewById(R.id.lineGraph);
+
+        sensorReadingsListview = findViewById(R.id.sensorReadingsListview);
+    }
+
+    protected void loadListView(){
+        //List<Breathalyzer> readings = database.getAllResults();
+
+        ArrayList<String> readingsText = new ArrayList<>();
+
+        for(Breathalyzer result: breathalyzerValues){
+            String temp = "";
+            temp += result.getTimeStamp() + ": " + result.getResult();
+
+            readingsText.add(temp);
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
+        sensorReadingsListview.setAdapter(arrayAdapter);
     }
 
     //region Line Graph
