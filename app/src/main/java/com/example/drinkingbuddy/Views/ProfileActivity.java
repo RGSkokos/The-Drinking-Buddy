@@ -262,7 +262,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public boolean checkDeviceCode(String addressEntered)
     {
-        String[] addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:DB:45:43:F2"};
+        String[] addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:DB:45:43:F2", "78:E3:6D:0A:87:92"};
         for (String address :
                 addresses) {
             if (address.equals(addressEntered))
