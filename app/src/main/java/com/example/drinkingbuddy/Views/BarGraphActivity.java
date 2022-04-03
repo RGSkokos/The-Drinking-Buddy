@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
@@ -32,9 +33,10 @@ public class BarGraphActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected Menu menu;
     private DBHelper database;
-    BarChart barChart;
-    ArrayList<Drink> drinks;
-    ArrayList<BarEntry> barGraphValues = new ArrayList<>();
+    protected BarChart barChart;
+    protected ArrayList<Drink> drinks;
+    protected ArrayList<BarEntry> barGraphValues = new ArrayList<>();
+    protected TextView statsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,8 @@ public class BarGraphActivity extends AppCompatActivity {
         }
 
         barChart = findViewById(R.id.barGraph);
+
+        statsTextView = findViewById(R.id.statsTextView);
     }
 
     //region Bar Chart
