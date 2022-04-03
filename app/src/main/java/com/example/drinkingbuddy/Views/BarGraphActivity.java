@@ -2,12 +2,16 @@ package com.example.drinkingbuddy.Views;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
@@ -31,6 +35,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// statistical data taken from https://www.canada.ca/en/health-canada/services/substance-use/alcohol/low-risk-alcohol-drinking-guidelines.html
+
 public class BarGraphActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
@@ -40,11 +46,15 @@ public class BarGraphActivity extends AppCompatActivity {
     protected ArrayList<Drink> drinks;
     protected ArrayList<BarEntry> barGraphValues = new ArrayList<>();
     protected TextView statsTextView;
+    protected TextView guidelinesTextView;
+    protected boolean gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bar_graph);
+
+        gender = true;
 
         initializeComponents();
     }
@@ -76,6 +86,36 @@ public class BarGraphActivity extends AppCompatActivity {
         barChart = findViewById(R.id.barGraph);
 
         statsTextView = findViewById(R.id.statsTextView);
+        guidelinesTextView = findViewById(R.id.guidelinesTextView);
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_bar_graph, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        this.menu = menu;
+        return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.changeGender:
+                gender = !gender;
+                if(gender){
+                    guidelinesTextView.setText("Women:\nLimit alcohol to no more than:\n-2 drinks per day\n-10 drinks per week\n-3 drinks on special occasions\n(our suggestion in red)");
+                }
+                else{
+                    guidelinesTextView.setText("Men:\nLimit alcohol to no more than:\n-3 drinks per day\n-15 drinks per week\n-4 drinks on special occasions\n(our suggestion in red)");
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //region Bar Chart

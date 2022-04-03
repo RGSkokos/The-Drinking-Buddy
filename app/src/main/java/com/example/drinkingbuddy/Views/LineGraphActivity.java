@@ -47,6 +47,8 @@ public class LineGraphActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_graph);
 
+        setTitle("Sensor readings");
+
         initializeComponents();
     }
 
@@ -143,7 +145,7 @@ public class LineGraphActivity extends AppCompatActivity {
         lineChart.animateX(1000);
         lineChart.getDescription().setEnabled(false); //REFERENCE:https://stackoverflow.com/questions/27566916/how-to-remove-description-from-chart-in-mpandroidchart
         //Define dataset with entries
-        LineDataSet overallConsumption = new LineDataSet(lineGraphValues, "Overall Consumption");
+        LineDataSet overallConsumption = new LineDataSet(lineGraphValues, "Sensor readings");
         Legend legend = lineChart.getLegend();
         legend.setTextColor(Color.WHITE);
         overallConsumption.setAxisDependency(YAxis.AxisDependency.RIGHT);
