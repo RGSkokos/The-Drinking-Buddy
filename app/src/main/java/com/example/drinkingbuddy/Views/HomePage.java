@@ -20,19 +20,13 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -52,15 +46,14 @@ public class HomePage extends AppCompatActivity {
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
     protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
-    private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
+    private FirebaseHelper firebaseHelper;
     protected SharedPreferences cannotConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDB = new DBHelper(this);
+        firebaseHelper = new FirebaseHelper(this);
         setContentView(R.layout.activity_home);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         initializeComponents();
@@ -116,15 +109,22 @@ public class HomePage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
+        Bundle extras = getIntent().getExtras();
+        boolean loggedin = false;
+        if(extras != null)
+        {
+            loggedin = extras.getBoolean("Success");
 
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
-            goToLogin();
+        }
+        if(firebaseHelper.ifUserLoggedIn() || loggedin){
+            firebaseHelper.getCurrentUID();
+            firebaseHelper.addProfileListener();
         }
         else
         {
-            addProfileListener();
+            goToLogin();
         }
+
         // Checks if a user is logged in by checking current firebase user
 
     }
@@ -135,9 +135,6 @@ public class HomePage extends AppCompatActivity {
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("Profiles");
         newBreath = findViewById(R.id.newBreath);
         //response = findViewById(R.id.response);
        // CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
@@ -169,7 +166,8 @@ public class HomePage extends AppCompatActivity {
                 goToProfile();
                 return true;
             case R.id.logoutMenuItem:
-                logout();
+                firebaseHelper.logout();
+                goToLogin();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -217,7 +215,8 @@ public class HomePage extends AppCompatActivity {
     protected void openLoading(){        //open settings class on click
 
         Intent i = new Intent(this, LoadActivity.class);
-        i.putExtra("MAC", MODULE_MAC);
+        Profile profile = firebaseHelper.getProfile();
+        i.putExtra("MAC", profile.getDeviceCode());
         startActivity(i);
     }
 
@@ -228,37 +227,11 @@ public class HomePage extends AppCompatActivity {
 
     protected void goToProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        Profile profile = firebaseHelper.getProfile();
+        intent.putExtra("profile", profile.getUsername() + " " + profile.getDeviceCode() + " " + profile.getDeviceName() + " " + profile.getPassword());
         startActivity(intent);
     }
 
-    protected void logout() {
-        FirebaseAuth.getInstance().signOut();
-        goToLogin();
-    }
-
-    private void addProfileListener() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        String UID = user.getUid();
-        databaseReference.child(UID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Profile profile = snapshot.getValue(Profile.class);
-                //Log.d("Firebase", value);
-                if(profile == null)
-                {
-                    Log.d("Firebase", "could not grab MAC address, (no one logged in)");
-                    return;
-                }
-                MODULE_MAC = profile.getDeviceCode();
-                Log.d("Firebase", MODULE_MAC);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("Firebase", "database could not be reached");
-            }
-        });
-    }
 
 }
 

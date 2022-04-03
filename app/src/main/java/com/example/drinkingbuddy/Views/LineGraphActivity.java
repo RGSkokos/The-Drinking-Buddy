@@ -7,12 +7,16 @@ import androidx.appcompat.widget.Toolbar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -29,18 +33,21 @@ import java.util.List;
 public class LineGraphActivity extends AppCompatActivity {
 
     //Variables
-    LineChart lineChart;
+    protected LineChart lineChart;
     protected Toolbar toolbar;
     protected Menu menu;
     private DBHelper database;
-    List<Breathalyzer> breathalyzerValues;
-    ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
-    String SpanOfData;
+    protected List<Breathalyzer> breathalyzerValues;
+    protected ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
+    protected String SpanOfData;
+    protected ListView sensorReadingsListview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_graph);
+
+        setTitle("Sensor readings");
 
         initializeComponents();
     }
@@ -54,10 +61,12 @@ public class LineGraphActivity extends AppCompatActivity {
 
         insertLineChartValues();
         displayLineChart();
+        loadListView();
     }
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.LineGraphToolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -67,6 +76,23 @@ public class LineGraphActivity extends AppCompatActivity {
         }
 
         lineChart = findViewById(R.id.lineGraph);
+
+        sensorReadingsListview = findViewById(R.id.sensorReadingsListview);
+    }
+
+    protected void loadListView(){
+        //List<Breathalyzer> readings = database.getAllResults();
+
+        ArrayList<String> readingsText = new ArrayList<>();
+
+        for(Breathalyzer result: breathalyzerValues){
+            String temp = "";
+            temp += result.getTimeStamp() + ": " + result.getResult();
+
+            readingsText.add(temp);
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
+        sensorReadingsListview.setAdapter(arrayAdapter);
     }
 
     //region Line Graph
@@ -103,20 +129,34 @@ public class LineGraphActivity extends AppCompatActivity {
     {
         //Library methods make values easier to read
         lineChart.setTouchEnabled(true);
+        lineChart.setBorderColor(Color.WHITE);
+        lineChart.setElevation(60);
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setTextColor(Color.WHITE);
+
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setTextColor(Color.WHITE);
+        YAxis rightAxis = lineChart.getAxisRight();
+        rightAxis.setTextColor(Color.WHITE);
+
+
         lineChart.setPinchZoom(true);
         lineChart.animateY(1000);
         lineChart.animateX(1000);
         lineChart.getDescription().setEnabled(false); //REFERENCE:https://stackoverflow.com/questions/27566916/how-to-remove-description-from-chart-in-mpandroidchart
-
         //Define dataset with entries
-        LineDataSet overallConsumption = new LineDataSet(lineGraphValues, "Overall Consumption");
+        LineDataSet overallConsumption = new LineDataSet(lineGraphValues, "Sensor readings");
+        Legend legend = lineChart.getLegend();
+        legend.setTextColor(Color.WHITE);
         overallConsumption.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
         //Styling for overallConsumption
-        overallConsumption.setColor(Color.RED);
+        overallConsumption.setColor(Color.WHITE);
+
 
         //Add to LineData object
         LineData lineData = new LineData(overallConsumption);
+        lineData.setValueTextColor(Color.WHITE);
         lineChart.setData(lineData);
         lineChart.invalidate();
 

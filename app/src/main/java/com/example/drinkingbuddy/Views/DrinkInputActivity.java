@@ -18,11 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
+import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class DrinkInputActivity extends AppCompatActivity {
 
@@ -42,6 +42,7 @@ public class DrinkInputActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected BottomNavigationView bottomNav;
     private DBHelper dbHelper;
+    private FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +56,18 @@ public class DrinkInputActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
+        if(firebaseHelper.ifUserLoggedIn()){
+            firebaseHelper.addProfileListener();
+        }
+        else
+        {
             goToLogin();
         }
+
     }
 
     protected void initializeComponents(){
+        firebaseHelper = new FirebaseHelper(this);
         beerNumber = findViewById(R.id.beerNumber);
         wineNumber = findViewById(R.id.wineNumber);
         liquorNumber = findViewById(R.id.liquorNumber);
@@ -114,7 +119,8 @@ public class DrinkInputActivity extends AppCompatActivity {
                 goToProfile();
                 return true;
             case R.id.logoutMenuItem:
-                logout();
+                firebaseHelper.logout();
+                goToLogin();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -308,13 +314,11 @@ public class DrinkInputActivity extends AppCompatActivity {
 
     protected void goToProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        Profile profile = firebaseHelper.getProfile();
+        intent.putExtra("profile", profile.getUsername() + " " + profile.getDeviceCode() + " " + profile.getDeviceName() + " " + profile.getPassword());
         startActivity(intent);
     }
 
-    protected void logout() {
-        FirebaseAuth.getInstance().signOut();
-        goToLogin();
-    }
 
     protected void goToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
