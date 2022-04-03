@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:name=".Controllers.BluetoothHelper"
         android:allowBackup="true"
         android:icon="@mipmap/drinking_buddy_icon"
@@ -54,14 +55,6 @@
             android:name=".Views.RegistrationActivity"
             android:exported="false"
             android:label="Register" />
-        <activity
-            android:name=".Views.GraphActivity"
-            android:exported="false"
-            android:parentActivityName=".Views.HomePage">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Views.HomePage" />
-        </activity>
         <activity
             android:name=".Views.LoginActivity"
             android:exported="false"

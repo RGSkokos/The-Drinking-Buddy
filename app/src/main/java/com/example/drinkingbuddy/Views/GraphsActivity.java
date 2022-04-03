@@ -15,11 +15,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
+import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // The code within each graph activity is heavily adapted from the reference above which makes use of
@@ -34,6 +34,7 @@ public class GraphsActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     protected BottomNavigationView bottomNav;
     private DBHelper myDB;
+    private FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +49,17 @@ public class GraphsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if(currentUser == null){
+        if(firebaseHelper.ifUserLoggedIn()){
+            firebaseHelper.addProfileListener();
+        }
+        else
+        {
             goToLogin();
         }
     }
 
     protected void initializeComponents() {
+        firebaseHelper = new FirebaseHelper(this);
         sensorResults = findViewById(R.id.sensorResultsButton);
         drinksConsumed = findViewById(R.id.drinksConsumedButton);
         weeklyTrends = findViewById(R.id.weeklyDrinksButton);
@@ -133,11 +137,13 @@ public class GraphsActivity extends AppCompatActivity {
 
     protected void goToProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        Profile profile = firebaseHelper.getProfile();
+        intent.putExtra("profile", profile.getUsername() + " " + profile.getDeviceCode() + " " + profile.getDeviceName() + " " + profile.getPassword());
         startActivity(intent);
     }
 
     protected void logout() {
-        FirebaseAuth.getInstance().signOut();
+        firebaseHelper.logout();
         goToLogin();
     }
 
