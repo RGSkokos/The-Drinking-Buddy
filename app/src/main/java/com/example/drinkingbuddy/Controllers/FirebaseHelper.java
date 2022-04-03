@@ -34,6 +34,7 @@ public class FirebaseHelper {
     private Context context;
     private FirebaseUser user;
     private FirebaseDatabase firebaseDatabase;
+    private boolean loggedIn;
     private Profile profile;
 
 
@@ -87,11 +88,15 @@ public class FirebaseHelper {
                             user.updatePassword(newPass);
                             Toast.makeText(context, "Password change successful", Toast.LENGTH_LONG).show();
                         }
+                        else
+                        {
+                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
     }
 
-    public void authorizeUser(String emailEntered, String passwordEntered)
+    public boolean authorizeUser(String emailEntered, String passwordEntered)
     {
         firebaseAuth.signInWithEmailAndPassword(emailEntered, passwordEntered)
                 .addOnCompleteListener(task -> {
@@ -99,12 +104,16 @@ public class FirebaseHelper {
                     {
                         user = firebaseAuth.getCurrentUser();
                         firebaseAuth.updateCurrentUser(user);
+                        loggedIn = true;
                     } else
                     {
-                        Toast.makeText(context, "login failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
+                        loggedIn = false;
                         //Simply tell the user the inputted username and password is wrong
                     }
                 });
+        return loggedIn;
     }
 
     public boolean ifUserLoggedIn()
@@ -173,7 +182,7 @@ public class FirebaseHelper {
                             FirebaseAuth.getInstance().signOut();
                         } else {
                             Log.d("Firebase", task.getException().getMessage());
-                            Toast.makeText(context, "Authentication failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

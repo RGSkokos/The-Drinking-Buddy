@@ -144,7 +144,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
             if (deviceCodeEntered.length() != 0) {
-                if (deviceCodeEntered.length() != 17 || deviceCodeEntered.charAt(2) != ':' || deviceCodeEntered.charAt(5) != ':' || deviceCodeEntered.charAt(8) != ':' || deviceCodeEntered.charAt(11) != ':' || deviceCodeEntered.charAt(14) != ':') {
+                if (deviceCodeEntered.length() != 17 || deviceCodeEntered.charAt(2) != ':' || deviceCodeEntered.charAt(5) != ':' || deviceCodeEntered.charAt(8) != ':' || deviceCodeEntered.charAt(11) != ':' || deviceCodeEntered.charAt(14) != ':' || !checkDeviceCode(deviceCodeEntered)) {
                     Toast.makeText(getApplicationContext(), "Invalid device code", Toast.LENGTH_LONG).show();
                     error = true;
                 }
@@ -174,6 +174,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
 
                 setDisplayMode();
+                updateProfileValues();
                 menuItemTitleChange(false);
                 flag = !flag;
             }
@@ -257,6 +258,19 @@ public class ProfileActivity extends AppCompatActivity {
             item.setTitle("Display Profile");
         else
             item.setTitle("Edit Profile");
+    }
+
+    public boolean checkDeviceCode(String addressEntered)
+    {
+        String[] addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:DB:45:43:F2"};
+        for (String address :
+                addresses) {
+            if (address.equals(addressEntered))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 

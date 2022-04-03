@@ -71,8 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else
                 {
-                   firebaseHelper.authorizeUser(emailEntered, passwordEntered);
-                   loadingTimer();
+                    firebaseHelper.authorizeUser(emailEntered, passwordEntered);
+                    loadingTimer();
                 }
 
             }
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
         registerTextView.setVisibility(View.INVISIBLE);
 
 
-        new CountDownTimer(2000, 1000) {
+        new CountDownTimer(1000, 500) {
             @Override
             public void onTick(long millisUntilFinished) { }
             @Override

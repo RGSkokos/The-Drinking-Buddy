@@ -57,8 +57,6 @@ public class RegistrationActivity extends AppCompatActivity {
             email = emailRegisterEditText.getText().toString();
 
 
-            //need to fix user and device code authentication
-
 
              //check if inputs are correct and, if so, finish registration
                 if (username.isEmpty() || password.isEmpty() || deviceName.isEmpty() || deviceCode.isEmpty() || email.isEmpty()) {
