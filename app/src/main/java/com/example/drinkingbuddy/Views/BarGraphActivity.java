@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -55,6 +56,7 @@ public class BarGraphActivity extends AppCompatActivity {
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.BarGraphToolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
