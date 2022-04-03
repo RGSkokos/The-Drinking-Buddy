@@ -4,6 +4,6 @@
 
     <item
         android:id="@+id/changeGender"
-        android:title="Men"/>
+        android:title="Men Averages" />
 
 </menu>
