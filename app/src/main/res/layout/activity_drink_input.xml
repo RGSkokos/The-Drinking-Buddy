@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     android:background="#242424"
-=======
-    android:background="#3d3f45"
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
     tools:context=".Views.DrinkInputActivity">
 
     <EditText
@@ -26,6 +22,7 @@
         android:text="0"
         android:textAlignment="center"
         android:textColor="@color/white"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.785"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,12 +39,10 @@
         android:hint="0"
         android:inputType="number"
         android:maxLength="3"
-<<<<<<< HEAD
         android:text="0"
-=======
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
         android:textAlignment="center"
         android:textColor="@color/white"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/beerNumber"
@@ -68,6 +63,7 @@
         android:text="0"
         android:textAlignment="center"
         android:textColor="@color/white"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/wineNumber"
@@ -84,12 +80,10 @@
         android:hint="0"
         android:inputType="number"
         android:maxLength="3"
-<<<<<<< HEAD
         android:text="0"
-=======
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
         android:textAlignment="center"
         android:textColor="@color/white"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/liquorNumber"
@@ -105,7 +99,6 @@
         android:backgroundTint="#4A4A4A"
         android:fontFamily="@font/open_sans"
         android:background="?attr/colorPrimary"
-        android:backgroundTint="#45464a"
         android:hint="?attr/actionBarTheme"
         android:minHeight="?attr/actionBarSize"
         app:titleTextColor="#FFFFFF"
@@ -273,17 +266,10 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="15dp"
         android:text="Wine"
-<<<<<<< HEAD
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.111"
-=======
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/wineDecrementButton"
-        app:layout_constraintHorizontal_bias="0.0"
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
         app:layout_constraintStart_toStartOf="@+id/beerTextView"
         app:layout_constraintTop_toBottomOf="@+id/beerTextView" />
 
@@ -297,15 +283,9 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="15dp"
         android:text="Liquor"
-<<<<<<< HEAD
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-=======
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/liquorDecrementButton"
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/wineTextView"
         app:layout_constraintTop_toBottomOf="@+id/wineTextView" />
@@ -320,15 +300,9 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="15dp"
         android:text="Cider"
-<<<<<<< HEAD
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-=======
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/ciderDecrementButton"
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/liquorTextView"
         app:layout_constraintTop_toBottomOf="@+id/liquorTextView" />
@@ -341,12 +315,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-<<<<<<< HEAD
         app:menu="@menu/bottom_menu"
         android:fontFamily="@font/open_sans" />
-=======
-        app:menu="@menu/bottom_menu" />
->>>>>>> c5d681361224895feb7b6667cab76b004010a6ea
 
     <TextView
         android:id="@+id/drinkInputDescription"
