@@ -10,6 +10,7 @@ import android.view.Menu;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
+import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.R;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -32,7 +33,7 @@ public class BarGraphActivity extends AppCompatActivity {
     protected Menu menu;
     private DBHelper database;
     BarChart barChart;
-    List<Breathalyzer> breathalyzer_values;
+    ArrayList<Drink> drinks;
     ArrayList<BarEntry> barGraphValues = new ArrayList<>();
 
     @Override
@@ -48,13 +49,15 @@ public class BarGraphActivity extends AppCompatActivity {
         super.onStart();
 
         database = new DBHelper(this);
-        breathalyzer_values = database.getAllResults();
+        drinks = database.ReturnDrinkTypes();
+
 
         insertBarChartValues();
         displayBarChart();
     }
 
     protected void initializeComponents(){
+
         toolbar = findViewById(R.id.BarGraphToolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
@@ -75,31 +78,31 @@ public class BarGraphActivity extends AppCompatActivity {
 
         //input data
         double[] dayOfWeekCounter = {0, 0, 0, 0, 0, 0, 0, 0};
-        for(int i = 0; i < breathalyzer_values.size(); i++){
-            String day = breathalyzer_values.get(i).getDayOfWeek();
+        for(int i = 0; i < drinks.size(); i++){
+            String day = drinks.get(i).getDayOfWeek();
             if(day != null)
             {
                 switch (day) {
                     case "Sunday":
-                        dayOfWeekCounter[0]++;
+                        dayOfWeekCounter[0] += drinks.get(i).getQuantity();
                         break;
                     case "Monday":
-                        dayOfWeekCounter[1]++;
+                        dayOfWeekCounter[1] += drinks.get(i).getQuantity();
                         break;
                     case "Tuesday":
-                        dayOfWeekCounter[2]++;
+                        dayOfWeekCounter[2] += drinks.get(i).getQuantity();
                         break;
                     case "Wednesday":
-                        dayOfWeekCounter[3]++;
+                        dayOfWeekCounter[3] += drinks.get(i).getQuantity();
                         break;
                     case "Thursday":
-                        dayOfWeekCounter[4]++;
+                        dayOfWeekCounter[4] += drinks.get(i).getQuantity();
                         break;
                     case "Friday":
-                        dayOfWeekCounter[5]++;
+                        dayOfWeekCounter[5] += drinks.get(i).getQuantity();
                         break;
                     case "Saturday":
-                        dayOfWeekCounter[6]++;
+                        dayOfWeekCounter[6] += drinks.get(i).getQuantity();
                         break;
                 }
             }

@@ -80,7 +80,7 @@ public class PieChartActivity extends AppCompatActivity {
 
         for(Drink drink: drinks){
             String temp = "";
-            temp += drink.getDrinkName() + " - " + drink.getQuantity();
+            temp += drink.getTimestamp() + ": " + drink.getDrinkName() + " - " + drink.getQuantity();
 
             drinksText.add(temp);
         }
