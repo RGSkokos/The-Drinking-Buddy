@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -58,7 +60,7 @@ public class LoadActivity extends AppCompatActivity {
     protected Toolbar toolbar;
     public Handler handler;
     private DBHelper myDB;
-
+    protected SharedPreferences cannotConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +70,12 @@ public class LoadActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
+        cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
+        SharedPreferences.Editor connectionEditor = cannotConnect.edit();
+        connectionEditor.putString("noConnection", "");
+        connectionEditor.apply();
         sensorResult.setText("");
-        loadingTimer();
+        //loadingTimer();
 
         Bundle extras = getIntent().getExtras();
         if(extras != null)
@@ -101,7 +107,12 @@ public class LoadActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1 && requestCode == 1) {
+            loadingTimer();
             initializeBluetoothProcess();
+        }
+
+        else {
+            goToHomeActivity();
         }
     }
 
@@ -111,8 +122,15 @@ public class LoadActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) { }
             @Override
             public void onFinish() {
-                gifImageView.setVisibility(View.INVISIBLE);        //gif should no longer be displayed
-                countDown.setText("READY");
+                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+                if(!cannotConnect.getString("noConnection", null).equals("")) {
+                    countDown.setText("");
+                }
+
+                else {
+                    countDown.setText("READY");
+                }
+
                 countDown.setVisibility(View.VISIBLE);
                 done.setEnabled(false);
                 done.setVisibility(View.INVISIBLE);
@@ -127,6 +145,7 @@ public class LoadActivity extends AppCompatActivity {
             turnOnPhoneBluetooth(); //checks if bluetooth is enabled on phone and if not turns on user bluetooth
         }
         else {
+            loadingTimer();
             initializeBluetoothProcess(); //if bluetooth is indeed enabled, then the bluetooth process must be enabled and established
             //sendMessage();
         }
@@ -197,6 +216,11 @@ public class LoadActivity extends AppCompatActivity {
             catch (Exception e) {
                 try {
                     bluetoothSocket.close();
+                    SharedPreferences cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor connectionEditor = cannotConnect.edit();
+                    connectionEditor.putString("noConnection", "Error! Cannot Connect to Breathalyzer");
+                    connectionEditor.apply();
+                    goToHomeActivity();
                 }
                 catch (Exception ex) {
                     ex.printStackTrace();
@@ -241,5 +265,10 @@ public class LoadActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setup();
+    }
+
+    protected void goToHomeActivity() {
+        Intent intent = new Intent(this, HomePage.class);
+        startActivity(intent);
     }
 }
