@@ -15,6 +15,9 @@ import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.R;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -129,12 +132,30 @@ public class BarGraphActivity extends AppCompatActivity {
         BarDataSet barDataSet = new BarDataSet(barGraphValues, "# of samples");
         String[] xAxisLabels = new String[]{"Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"};
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
+
+
+        barDataSet.setBarBorderColor(Color.WHITE);
+        barDataSet.setLabel("Day of Week");
+        barDataSet.setBarShadowColor(Color.BLACK);
+        barDataSet.setValueTextColor(Color.WHITE);
         BarData data = new BarData(barDataSet);
         barChart.setData(data);
+        barChart.setFitBars(true);
         barChart.animateY(2000);
         barChart.animateX(2000);
-        barChart.getDescription().setEnabled(false);
+        barChart.getDescription().setText("Number of drinks by day of week");
+        barChart.getDescription().setTextColor(Color.WHITE);
         barChart.invalidate();
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setTextColor(Color.WHITE);
+        YAxis leftAxis = barChart.getAxisLeft();
+        YAxis rightAxis = barChart.getAxisRight();
+        leftAxis.setTextColor(Color.WHITE);
+        rightAxis.setTextColor(Color.WHITE);
+
+        Legend legend = barChart.getLegend();
+        legend.setTextColor(Color.WHITE);
     }
 //endregion
 }

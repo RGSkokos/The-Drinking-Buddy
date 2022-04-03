@@ -15,6 +15,8 @@ import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -125,20 +127,34 @@ public class LineGraphActivity extends AppCompatActivity {
     {
         //Library methods make values easier to read
         lineChart.setTouchEnabled(true);
+        lineChart.setBorderColor(Color.WHITE);
+        lineChart.setElevation(60);
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setTextColor(Color.WHITE);
+
+        YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setTextColor(Color.WHITE);
+        YAxis rightAxis = lineChart.getAxisRight();
+        rightAxis.setTextColor(Color.WHITE);
+
+
         lineChart.setPinchZoom(true);
         lineChart.animateY(1000);
         lineChart.animateX(1000);
         lineChart.getDescription().setEnabled(false); //REFERENCE:https://stackoverflow.com/questions/27566916/how-to-remove-description-from-chart-in-mpandroidchart
-
         //Define dataset with entries
         LineDataSet overallConsumption = new LineDataSet(lineGraphValues, "Overall Consumption");
+        Legend legend = lineChart.getLegend();
+        legend.setTextColor(Color.WHITE);
         overallConsumption.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
         //Styling for overallConsumption
-        overallConsumption.setColor(Color.RED);
+        overallConsumption.setColor(Color.WHITE);
+
 
         //Add to LineData object
         LineData lineData = new LineData(overallConsumption);
+        lineData.setValueTextColor(Color.WHITE);
         lineChart.setData(lineData);
         lineChart.invalidate();
 
