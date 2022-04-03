@@ -14,6 +14,7 @@ import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.R;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -80,7 +81,7 @@ public class PieChartActivity extends AppCompatActivity {
 
         for(Drink drink: drinks){
             String temp = "";
-            temp += drink.getDrinkName() + " - " + drink.getQuantity();
+            temp += drink.getTimestamp() + ": " + drink.getDrinkName() + " - " + drink.getQuantity();
 
             drinksText.add(temp);
         }
@@ -138,6 +139,9 @@ public class PieChartActivity extends AppCompatActivity {
 
         pieDataSet.setColors(colors);
         pieDataSet.setValueTextColor(Color.WHITE);
+
+        Legend legend = pieChart.getLegend();
+        legend.setTextColor(Color.WHITE);
 
         PieData pieData = new PieData(pieDataSet);
 
