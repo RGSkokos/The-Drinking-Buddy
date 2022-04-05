@@ -184,7 +184,7 @@ public class HomePage extends AppCompatActivity {
         /*if(myDB.ReturnDrinkTypes().size() > 0) {
             drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1).getDrinkName();
         }*/
-        for (int i = 0; i < myDB.ReturnDrinkTypes().size() - 1; i++) {
+        for (int i = 0; i < myDB.ReturnDrinkTypes().size(); i++) {
             if(firebaseHelper.getUser() != null)
             {
                 if(myDB.ReturnDrinkTypes().get(i).getUID().equals(firebaseHelper.getCurrentUID()))
