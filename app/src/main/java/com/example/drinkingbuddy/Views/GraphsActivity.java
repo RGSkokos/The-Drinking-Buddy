@@ -16,10 +16,15 @@ import android.widget.Toast;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
+import com.example.drinkingbuddy.Models.Breathalyzer;
+import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // The code within each graph activity is heavily adapted from the reference above which makes use of
@@ -153,23 +158,49 @@ public class GraphsActivity extends AppCompatActivity {
     }
 
     protected void goToLineGraph() {
-        if(myDB.getAllResults().size() > 0)
+        if(checkIfMeasurementsExist())
             startActivity(new Intent(this, LineGraphActivity.class));
         else
             Toast.makeText(getApplicationContext(), "Must have at least one measurement to see trends", Toast.LENGTH_LONG).show();
     }
 
     protected void goToPieChart() {
-        if(myDB.ReturnDrinkTypes().size() > 0)
+        if(checkIfDrinkValuesExist())
             startActivity(new Intent(this, PieChartActivity.class));
         else
             Toast.makeText(getApplicationContext(), "Must have at least one drink input to see trends", Toast.LENGTH_LONG).show();
     }
 
     protected void goToBarGraph() {
-        if(myDB.ReturnDrinkTypes().size() > 0)
+        if(checkIfDrinkValuesExist())
             startActivity(new Intent(this, BarGraphActivity.class));
         else
             Toast.makeText(getApplicationContext(), "Must have at least one drink input to see trends", Toast.LENGTH_LONG).show();
+    }
+
+    protected boolean checkIfDrinkValuesExist()
+    {
+        ArrayList<Drink> drinks = myDB.ReturnDrinkTypes();
+        for (Drink drink :
+                drinks) {
+            if(drink.getUID().equals(firebaseHelper.getCurrentUID()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean checkIfMeasurementsExist()
+    {
+        List<Breathalyzer> measurements = myDB.getAllResults();
+        for (Breathalyzer measurement :
+                measurements) {
+            if(measurement.getUID().equals(firebaseHelper.getCurrentUID()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
