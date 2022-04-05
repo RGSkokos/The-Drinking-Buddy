@@ -59,6 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordRegisterEditText = findViewById(R.id.passwordRegisterEditText);
         passwordRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
         confirmPasswordEditText = findViewById(R.id.confirmPasswordRegEditText);
+        confirmPasswordEditText.setHintTextColor(getResources().getColor(R.color.white));
         passwordRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
         deviceNameEditText = findViewById(R.id.deviceNameEditText);
         deviceNameEditText.setHintTextColor(getResources().getColor(R.color.white));

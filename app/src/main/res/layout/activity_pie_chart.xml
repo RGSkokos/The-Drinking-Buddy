@@ -67,7 +67,7 @@
         android:id="@+id/dateListTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="52dp"
         android:fontFamily="@font/open_sans"
         android:text="Date"
         android:textColor="@color/white"
@@ -85,10 +85,10 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/drinkInputsListview"
         app:layout_constraintEnd_toStartOf="@+id/quantityListTitleTextView"
-        app:layout_constraintHorizontal_bias="0.623"
+        app:layout_constraintHorizontal_bias="0.557"
         app:layout_constraintStart_toEndOf="@+id/dateListTitleTextView"
         app:layout_constraintTop_toBottomOf="@+id/pieGraph"
-        app:layout_constraintVertical_bias="0.846" />
+        app:layout_constraintVertical_bias="0.842" />
 
     <TextView
         android:id="@+id/quantityListTitleTextView"

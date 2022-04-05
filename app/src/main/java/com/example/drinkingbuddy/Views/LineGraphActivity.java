@@ -102,7 +102,7 @@ public class LineGraphActivity extends AppCompatActivity {
                 tempVal = (((tempVal - 150) / 1050)); //second value in numerator needs to be based on calibration
                 tempVal = (tempVal < 0) ? 0 : tempVal; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                 String temp = "";
-                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + tempVal;
+                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + tempVal;
 
                 readingsText.add(temp);
             }

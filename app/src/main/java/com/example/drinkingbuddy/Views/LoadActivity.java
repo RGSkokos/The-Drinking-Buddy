@@ -233,7 +233,7 @@ public class LoadActivity extends AppCompatActivity {
                     myDB.insertNewResult(message, UID);
                     float temp = Float.parseFloat(message);
                     Log.d("SENSOR VALUE", Float.toString(temp));
-                    temp = (((temp - 350) / 4000)); //second value in numerator needs to be based on calibration
+                    temp = Math.abs(((temp - 4095) / 4095)); //second value in numerator needs to be based on calibration
                     temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                     messageResult = temp;
                     countDown.setText(String.valueOf(String.format("%.2f", messageResult) + ""));
