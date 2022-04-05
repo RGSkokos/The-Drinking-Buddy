@@ -20,17 +20,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/loadingGif"
-        android:layout_width="match_parent"
-        android:layout_height="312dp"
-        android:src="@drawable/loadingdrinks"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+<!--    <pl.droidsonroids.gif.GifImageView-->
+<!--        android:id="@+id/loadingGif"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="312dp"-->
+<!--        android:src="@drawable/loadingdrinks"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.498" />-->
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/loadingCircle"
@@ -98,17 +98,15 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
         app:srcCompat="@drawable/static_loading" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/resultCircle"-->
-<!--        android:layout_width="250dp"-->
-<!--        android:layout_height="250dp"-->
-<!--        android:layout_marginTop="122dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.496"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"-->
-<!--        app:srcCompat="@drawable/new_breath_circle"-->
-<!--        tools:layout_editor_absoluteX="107dp"-->
-<!--        tools:layout_editor_absoluteY="62dp" />-->
+    <ImageView
+        android:id="@+id/resultCircle"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="122dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        app:srcCompat="@drawable/new_breath_circle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

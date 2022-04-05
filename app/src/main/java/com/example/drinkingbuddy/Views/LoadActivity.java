@@ -22,28 +22,13 @@ import android.widget.Toast;
 import android.widget.ProgressBar;
 import java.util.UUID;
 
-import android.os.Handler;
-import java.util.UUID;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
-import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.UUID;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -52,10 +37,10 @@ public class LoadActivity extends AppCompatActivity {
     // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-    public GifImageView gifImageView;
+//    public GifImageView gifImageView;
     protected ProgressBar progressBarView;
-    protected ImageView static_circle;
-    protected GifImageView loading_circle;
+    protected ImageView staticCircle;
+    protected GifImageView loadingCircle;
     protected BluetoothAdapter bluetoothAdapter;
     protected BluetoothSocket bluetoothSocket;
     protected BluetoothDevice bluetoothDevice;
@@ -100,20 +85,26 @@ public class LoadActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setup();
+    }
+
+
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        gifImageView = (GifImageView) findViewById(R.id.loadingGif);
-        loading_circle = (GifImageView) findViewById(R.id.loadingCircle);
-        static_circle = (ImageView) findViewById(R.id.staticLoadingCircle);
+//        gifImageView = (GifImageView) findViewById(R.id.loadingGif);
+        loadingCircle = (GifImageView) findViewById(R.id.loadingCircle);
+        loadingCircle.setVisibility(View.INVISIBLE);
+        staticCircle = (ImageView) findViewById(R.id.staticLoadingCircle);
+        staticCircle.setVisibility(View.INVISIBLE);
         done = (TextView) findViewById(R.id.done);
         countDown = (TextView) findViewById(R.id.readingCount);
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
         done.setVisibility(View.INVISIBLE);
         sensorResult = (TextView) findViewById(R.id.sensorResult);
-        //progressBarView.setVisibility(View.INVISIBLE);
-        static_circle.setVisibility(View.INVISIBLE);
-        loading_circle.setVisibility(View.INVISIBLE);
         messageResult = 0;
     }
 
@@ -124,7 +115,6 @@ public class LoadActivity extends AppCompatActivity {
             loadingTimer();
             initializeBluetoothProcess();
         }
-
         else {
             goToHomeActivity();
         }
@@ -136,11 +126,10 @@ public class LoadActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) { }
             @Override
             public void onFinish() {
-                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+//                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
                 if(!cannotConnect.getString("noConnection", null).equals("")) {
                     countDown.setText("");
                 }
-
                 else {
                     countDown.setText("READY");
                 }
@@ -185,18 +174,18 @@ public class LoadActivity extends AppCompatActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        static_circle.setVisibility(View.VISIBLE);
-                        loading_circle.setVisibility(View.VISIBLE);
+                        staticCircle.setVisibility(View.VISIBLE);
+                        loadingCircle.setVisibility(View.VISIBLE);
                         countDown.setText(""+millisUntilFinished / 1000);
 
                     }
                     @Override
                     public void onFinish() {
-                        gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+//                        gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
                         countDown.setVisibility(View.INVISIBLE);
                         done.setVisibility(View.VISIBLE);
-                        static_circle.setVisibility(View.INVISIBLE);
-                        loading_circle.setVisibility(View.INVISIBLE);
+                        staticCircle.setVisibility(View.INVISIBLE);
+                        loadingCircle.setVisibility(View.INVISIBLE);
                         if (messageResult != 0) {
                             sensorResult.setText(String.valueOf(String.format("%.2f", messageResult) + "%"));
                             setResultColour();
@@ -290,12 +279,6 @@ public class LoadActivity extends AppCompatActivity {
 
     protected void setResultColour() {
         // TODO: implement coloured ring and result value
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setup();
     }
 
     protected void goToHomeActivity() {
