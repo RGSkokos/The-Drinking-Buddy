@@ -18,6 +18,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
@@ -61,7 +62,6 @@ public class PieChartActivity extends AppCompatActivity {
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.PieChartToolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -81,7 +81,7 @@ public class PieChartActivity extends AppCompatActivity {
 
         for(Drink drink: drinks){
             String temp = "";
-            temp += drink.getTimestamp() + ": " + drink.getDrinkName() + " - " + drink.getQuantity();
+            temp += drink.getTimestamp() + "\t\t\t\t" + drink.getDrinkName() + "\t\t\t\t" + drink.getQuantity();
 
             drinksText.add(temp);
         }
@@ -125,10 +125,10 @@ public class PieChartActivity extends AppCompatActivity {
         List<PieEntry> pieGraphValues = new ArrayList<>();
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.CYAN);
+        colors.add(ColorTemplate.rgb("#F16F6F"));
+        colors.add(ColorTemplate.rgb("#50D3A4"));
+        colors.add(ColorTemplate.rgb("#3E78CF"));
+        colors.add(ColorTemplate.rgb("#F6D47B"));
 
         //input data and fit data into pie chart entry
         for(String type: DrinkType.keySet()){

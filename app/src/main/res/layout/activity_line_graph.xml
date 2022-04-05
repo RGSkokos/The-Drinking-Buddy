@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3d3f45"
+    android:background="#242424"
     tools:context=".Views.LineGraphActivity">
 
     <com.github.mikephil.charting.charts.LineChart
@@ -29,9 +29,11 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="303dp"
         android:background="?attr/colorPrimary"
-        android:backgroundTint="#45464a"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:fontFamily="@font/open_sans"
+        android:backgroundTint="#4A4A4A"
+        app:titleTextColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/sensorReadingsListview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

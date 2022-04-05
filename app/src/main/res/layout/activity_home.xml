@@ -41,24 +41,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/SpecifyDrink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:src="@drawable/beer_bottle_foreground"
-        app:backgroundTint="#E0E1E8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upArrowGif"
-        app:maxImageSize="90dp"
-        tools:ignore="SpeakableTextPresentCheck" />
-
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/upArrowGif"
         android:layout_width="100dp"

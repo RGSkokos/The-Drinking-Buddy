@@ -12,5 +12,8 @@
     <color name="green_res">#8DF074</color>
     <color name="red_res">#F07474</color>
     <color name="orange_res">#F0B074</color>
-
+    <color name="red_pie">#F16F6F</color>
+    <color name="purple_pie">#6849A9</color>
+    <color name="turquoise_pie">#50D3A4</color>
+    <color name="yellow_pie">#F6D47B</color>
 </resources>

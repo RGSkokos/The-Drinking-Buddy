@@ -37,17 +37,11 @@ public class HomePage extends AppCompatActivity {
     //instance variables
     protected BluetoothAdapter bluetoothAdapter;
     protected Button newBreath;
-    protected FloatingActionButton specifyDrinkButton;
-    protected TextView response;
-    protected TextView TimeStampTextview;
-    protected TextView CurrentDrinkTextView;
     protected Toolbar toolbar;
     protected BottomNavigationView bottomNav;
     protected DBHelper myDB;
     protected List<Breathalyzer> breathalyzer_values;
-    protected DecimalFormat decimalFormat = new DecimalFormat("0.0000");
     private FirebaseHelper firebaseHelper;
-    protected SharedPreferences cannotConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +65,6 @@ public class HomePage extends AppCompatActivity {
         connectionEditor.apply();
 
         setSupportActionBar(toolbar);
-
-        specifyDrinkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToDrinkInputActivity();
-            }
-        });
 
         // Set Home selected
         bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
@@ -136,13 +123,9 @@ public class HomePage extends AppCompatActivity {
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
         newBreath = findViewById(R.id.newBreath);
-        //response = findViewById(R.id.response);
-       // CurrentDrinkTextView = findViewById(R.id.CurrentDrinktextView);
         newBreath.setOnClickListener(onClickBreathButton);
         toolbar = findViewById(R.id.toolbarHome);
         bottomNav = findViewById(R.id.bottomNavigation);
-        //TimeStampTextview = findViewById(R.id.TimeStampTextView);
-        specifyDrinkButton = findViewById(R.id.SpecifyDrink);
     }
 
 
@@ -180,22 +163,16 @@ public class HomePage extends AppCompatActivity {
         breathalyzer_values = myDB.getAllResults();
         String drink = "";
         double temp = 0;
-        String timeStamp = "";
         if(myDB.ReturnDrinkTypes().size() > 0) {
             drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1).getDrinkName();
         }
         if(breathalyzer_values.size() > 0)
         {
             temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
-            timeStamp = breathalyzer_values.get(breathalyzer_values.size() - 1).getTimeStamp();
-
             temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
             temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
         }
 
-        //response.setText("Your Blood Alcohol Level is: " + decimalFormat.format(temp) + "%");
-        //TimeStampTextview.setText("Measurement Taken: " + timeStamp);
-       // CurrentDrinkTextView.setText("Last Drink: " + drink);
         Log.d("Changing", "Changing Display " + drink);
     }
 
@@ -212,8 +189,7 @@ public class HomePage extends AppCompatActivity {
         startActivity(i);
     }
 
-    protected void openLoading(){        //open settings class on click
-
+    protected void openLoading(){
         Intent i = new Intent(this, LoadActivity.class);
         Profile profile = firebaseHelper.getProfile();
         i.putExtra("MAC", profile.getDeviceCode());
@@ -231,7 +207,5 @@ public class HomePage extends AppCompatActivity {
         intent.putExtra("profile", profile.getUsername() + " " + profile.getDeviceCode() + " " + profile.getDeviceName() + " " + profile.getPassword());
         startActivity(intent);
     }
-
-
 }
 

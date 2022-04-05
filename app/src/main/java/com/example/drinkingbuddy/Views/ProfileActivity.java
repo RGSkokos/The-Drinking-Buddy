@@ -117,7 +117,6 @@ public class ProfileActivity extends AppCompatActivity {
         deviceCodeDescription.setHintTextColor(getResources().getColor(R.color.white));
         toolbar = findViewById(R.id.profileToolbar);
         saveButton.setOnClickListener(saveOnClick);
-
     }
 
     protected void updateProfileValues()

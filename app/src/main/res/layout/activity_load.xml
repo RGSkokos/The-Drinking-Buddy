@@ -14,6 +14,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         android:backgroundTint="#4A4A4A"
+        android:fontFamily="@font/open_sans"
         app:titleTextColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,17 +98,17 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
         app:srcCompat="@drawable/static_loading" />
 
-    <ImageView
-        android:id="@+id/resultCircle"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="122dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
-        app:srcCompat="@drawable/new_breath_circle"
-        tools:layout_editor_absoluteX="107dp"
-        tools:layout_editor_absoluteY="62dp" />
+<!--    <ImageView-->
+<!--        android:id="@+id/resultCircle"-->
+<!--        android:layout_width="250dp"-->
+<!--        android:layout_height="250dp"-->
+<!--        android:layout_marginTop="122dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.496"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"-->
+<!--        app:srcCompat="@drawable/new_breath_circle"-->
+<!--        tools:layout_editor_absoluteX="107dp"-->
+<!--        tools:layout_editor_absoluteY="62dp" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
