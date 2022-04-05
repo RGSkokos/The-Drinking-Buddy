@@ -11,6 +11,7 @@ public class Config {
 
     public static final String DAY_OF_WEEK = "dayOfWeek";
     public static final String DAY_OF_WEEK_DRINK = "dayOfWeek";
+    public static final String USER_UID = "UserUID";
 
     public static final String TABLE_NAME_DRINK_TYPE = "drinkTypeTable";
     public static final String DRINK_ID = "drinkId";

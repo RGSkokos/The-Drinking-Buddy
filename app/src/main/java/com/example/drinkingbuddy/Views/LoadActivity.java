@@ -26,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
@@ -61,11 +62,13 @@ public class LoadActivity extends AppCompatActivity {
     public Handler handler;
     private DBHelper myDB;
     protected SharedPreferences cannotConnect;
+    protected FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDB = new DBHelper(this);
+        firebaseHelper = new FirebaseHelper(this);
         setContentView(R.layout.activity_load);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Log.d("MODULE_MAC", MODULE_MAC);
@@ -238,7 +241,8 @@ public class LoadActivity extends AppCompatActivity {
                 super.handleMessage(receivedMessage);
                 if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
                     String message = (String) receivedMessage.obj;
-                    myDB.insertNewResult(message);
+                    String UID = firebaseHelper.getCurrentUID();
+                    myDB.insertNewResult(message, UID);
                     float temp = Float.parseFloat(message);
                     temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
                     temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
