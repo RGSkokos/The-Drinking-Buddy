@@ -55,6 +55,7 @@ public class FirebaseHelper {
     }
 
     public FirebaseUser getUser() {
+        user = firebaseAuth.getCurrentUser();
         return user;
     }
 
