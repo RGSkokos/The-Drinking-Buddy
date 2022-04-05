@@ -26,8 +26,8 @@
 
     <Button
         android:id="@+id/sensorResultsButton"
-        android:layout_width="412dp"
-        android:layout_height="69dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:background="@drawable/outline_button"
         android:drawableStart="@drawable/line_graph_icon"

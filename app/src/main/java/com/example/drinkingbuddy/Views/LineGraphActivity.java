@@ -99,10 +99,10 @@ public class LineGraphActivity extends AppCompatActivity {
             {
                 float tempVal = Float.parseFloat(result.getResult());
 
-                tempVal = (((tempVal - 150) / 1050)); //second value in numerator needs to be based on calibration
+                tempVal = Math.abs(((tempVal - 4095) / 9095)); //second value in numerator needs to be based on calibration
                 tempVal = (tempVal < 0) ? 0 : tempVal; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                 String temp = "";
-                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + tempVal;
+                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + String.valueOf(String.format("%.2f", tempVal) + "");
 
                 readingsText.add(temp);
             }
@@ -133,7 +133,7 @@ public class LineGraphActivity extends AppCompatActivity {
                     }
 
                     float temp = Float.parseFloat(breathalyzerValues.get(i).getResult());
-                    temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
+                    temp = Math.abs(((temp - 4095) / 9095)); //second value in numerator needs to be based on calibration
                     temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
                     lineGraphValues.add(new Entry((i + 1), temp));

@@ -49,6 +49,7 @@ public class LoadActivity extends AppCompatActivity {
     protected ImageView resultCircle;
     protected Button newSampleButton;
     protected TextView resultTextView;
+    protected TextView drivingCondition;
     protected Toolbar toolbar;
 
     public static String MODULE_MAC = "EC:94:CB:4E:1E:36";
@@ -113,6 +114,8 @@ public class LoadActivity extends AppCompatActivity {
         newSampleButton.setVisibility(View.INVISIBLE);
         resultTextView = findViewById(R.id.resultTextView);
         resultTextView.setVisibility(View.INVISIBLE);
+        drivingCondition = findViewById(R.id.drivingConditionTextView);
+        drivingCondition.setVisibility(View.INVISIBLE);
         messageResult = -1;
     }
 
@@ -233,13 +236,14 @@ public class LoadActivity extends AppCompatActivity {
                     myDB.insertNewResult(message, UID);
                     float temp = Float.parseFloat(message);
                     Log.d("SENSOR VALUE", Float.toString(temp));
-                    temp = Math.abs(((temp - 4095) / 4095)); //second value in numerator needs to be based on calibration
+                    temp = Math.abs(((temp - 4095) / 9095)); //second value in numerator needs to be based on calibration
                     temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                     messageResult = temp;
                     countDown.setText(String.valueOf(String.format("%.2f", messageResult) + ""));
                     staticCircle.setVisibility(View.INVISIBLE);
                     loadingCircle.setVisibility(View.INVISIBLE);
                     resultCircle.setVisibility(View.VISIBLE);
+                    drivingCondition.setVisibility(View.VISIBLE);
                     resultTextView.setVisibility(View.VISIBLE);
                     newSampleButton.setVisibility(View.VISIBLE);
                     setResultColour();
@@ -280,12 +284,15 @@ public class LoadActivity extends AppCompatActivity {
         if (messageResult < 0.02) {
             resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_res)));
             countDown.setTextColor(getResources().getColor(R.color.green_res));
+            drivingCondition.setText("You should be safe to drive");
         } else if (messageResult < 0.07) {
             resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_res)));
             countDown.setTextColor(getResources().getColor(R.color.orange_res));
+            drivingCondition.setText("You're under the legal limit to drive");
         } else {
             resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.red_res)));
             countDown.setTextColor(getResources().getColor(R.color.red_res));
+            drivingCondition.setText("You're intoxicated, please don't drive and watch your drinking.");
         }
     }
 

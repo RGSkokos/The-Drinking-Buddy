@@ -41,7 +41,7 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
-        android:src="@drawable/loading_circle" />
+        android:src="@drawable/slower_speedy_load" />
 
     <TextView
         android:id="@+id/readingCount"
@@ -57,35 +57,6 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarLoad" />
-
-<!--    <TextView-->
-<!--        android:id="@+id/done"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="RESULT"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textColor="#3e78cf"-->
-<!--        android:textSize="60sp"-->
-<!--        android:fontFamily="@font/open_sans"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.26" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/sensorResult"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textColor="#3e78cf"-->
-<!--        android:textSize="20sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.498"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.74" />-->
 
     <ImageView
         android:id="@+id/staticLoadingCircle"
@@ -155,6 +126,20 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbarLoad" />
+
+    <TextView
+        android:id="@+id/drivingConditionTextView"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:fontFamily="@font/open_sans"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/newSampleButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loadingCircle" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -328,6 +328,13 @@ public class BarGraphActivity extends AppCompatActivity {
         dataSets.add(data2);
         BarData AllData = new BarData(dataSets);
 
+        Legend secondLegend = barChart.getLegend();
+        secondLegend.setTextColor(Color.WHITE);
+
+        Legend legend = typeOfDrinkBarChart.getLegend();
+        legend.setTextColor(Color.WHITE);
+        //overallConsumption.setAxisDependency(YAxis.AxisDependency.RIGHT);
+
 
         float groupSpace = 0.4f;
         float barSpace = 0f;
@@ -350,8 +357,7 @@ public class BarGraphActivity extends AppCompatActivity {
         leftAxis.setTextColor(Color.WHITE);
         rightAxis.setTextColor(Color.WHITE);
 
-        Legend legend = barChart.getLegend();
-        legend.setTextColor(Color.WHITE);
+
     }
 //endregion
 }
