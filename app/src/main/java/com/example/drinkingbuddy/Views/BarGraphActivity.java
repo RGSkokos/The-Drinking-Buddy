@@ -54,7 +54,7 @@ public class BarGraphActivity extends AppCompatActivity {
     protected BarDataSet data2;
     protected BarDataSet data3;
     protected TextView statsTextView;
-    protected TextView guidelinesTextView;
+//    protected TextView guidelinesTextView;
     protected FirebaseHelper firebaseHelper;
     protected boolean gender;
     private BarChart barChart;
@@ -98,7 +98,7 @@ public class BarGraphActivity extends AppCompatActivity {
 
 
         statsTextView = findViewById(R.id.statsTextView);
-        guidelinesTextView = findViewById(R.id.guidelinesTextView);
+//        guidelinesTextView = findViewById(R.id.guidelinesTextView);
     }
 
     @SuppressLint("RestrictedApi")
@@ -119,14 +119,14 @@ public class BarGraphActivity extends AppCompatActivity {
             case R.id.changeGender:
                 gender = !gender;
                 if(gender){
-                    guidelinesTextView.setText("Women Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 2 drinks per day\n- 10 drinks per week\n- 3 drinks on special occasions");
+//                    guidelinesTextView.setText("Women Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 2 drinks per day\n- 10 drinks per week\n- 3 drinks on special occasions");
                     dataSets.remove(data3);
                     dataSets.add(data2);
                     item.setTitle("Men Averages");
                 }
                 else{
                     item.setTitle("Women Averages");
-                    guidelinesTextView.setText("Men Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 3 drinks per day\n- 15 drinks per week\n- 4 drinks on special occasions");
+//                    guidelinesTextView.setText("Men Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 3 drinks per day\n- 15 drinks per week\n- 4 drinks on special occasions");
                     dataSets.remove(data2);
                     dataSets.add(data3);
                 }

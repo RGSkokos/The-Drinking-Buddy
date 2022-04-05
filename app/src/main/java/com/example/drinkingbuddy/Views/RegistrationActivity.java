@@ -21,11 +21,12 @@ import com.example.drinkingbuddy.R;
 
 public class RegistrationActivity extends AppCompatActivity {
 
+    protected EditText emailRegisterEditText;
     protected EditText usernameRegisterEditText;
     protected EditText passwordRegisterEditText;
+    protected EditText confirmPasswordEditText;
     protected EditText deviceNameEditText;
     protected EditText deviceCodeEditText;
-    protected EditText emailRegisterEditText;
     protected Button registerButton;
     protected Toolbar toolbar;
     private String username;
@@ -57,6 +58,8 @@ public class RegistrationActivity extends AppCompatActivity {
         usernameRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
         passwordRegisterEditText = findViewById(R.id.passwordRegisterEditText);
         passwordRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
+        confirmPasswordEditText = findViewById(R.id.confirmPasswordRegEditText);
+        passwordRegisterEditText.setHintTextColor(getResources().getColor(R.color.white));
         deviceNameEditText = findViewById(R.id.deviceNameEditText);
         deviceNameEditText.setHintTextColor(getResources().getColor(R.color.white));
         deviceCodeEditText = findViewById(R.id.deviceCodeEditText);
@@ -72,11 +75,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
             username = usernameRegisterEditText.getText().toString();
             password = passwordRegisterEditText.getText().toString();
+            String confirmPass = confirmPasswordEditText.getText().toString();
             deviceName = deviceNameEditText.getText().toString();
             deviceCode = deviceCodeEditText.getText().toString();
             email = emailRegisterEditText.getText().toString();
-
-
 
              //check if inputs are correct and, if so, finish registration
                 if (username.isEmpty() || password.isEmpty() || deviceName.isEmpty() || deviceCode.isEmpty() || email.isEmpty()) {
@@ -85,12 +87,15 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Invalid username", Toast.LENGTH_LONG).show();
                 } else if (username.length() < 3) {
                     Toast.makeText(getApplicationContext(), "Username too short", Toast.LENGTH_LONG).show();
-                } else if (password.length() < 5) {
+                } else if (password.length() < 6) {
                     Toast.makeText(getApplicationContext(), "Password too short", Toast.LENGTH_LONG).show();
+                } else if (confirmPass.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Must confirm password", Toast.LENGTH_LONG).show();
+                } else if (!confirmPass.equals(password)) {
+                    Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_LONG).show();
                 } else if (deviceCode.length() != 17 || deviceCode.charAt(2) != ':' || deviceCode.charAt(5) != ':' || deviceCode.charAt(8) != ':' || deviceCode.charAt(11) != ':' || deviceCode.charAt(14) != ':') {
                     Toast.makeText(getApplicationContext(), "Invalid device code", Toast.LENGTH_LONG).show();
-                } else if (!checkDeviceCode(deviceCode))
-                {
+                } else if (!checkDeviceCode(deviceCode)) {
                     Toast.makeText(getApplicationContext(), "Device not registered", Toast.LENGTH_LONG).show();
                 }
                 else { //If everything is okay

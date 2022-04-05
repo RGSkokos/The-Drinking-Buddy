@@ -179,7 +179,6 @@ public class HomePage extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             openLoading();
-            // TODO: check all instances of type_of_drink and remove after drink input page is complete
         }
     };
 

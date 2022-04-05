@@ -42,7 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:divider="@color/white"
-        android:background="@drawable/outline_button"
         android:dividerHeight="1dip"
         android:fontFamily="@font/open_sans"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -58,7 +57,7 @@
         android:fontFamily="@font/open_sans"
         android:text="Type of Drinks"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +71,7 @@
         android:fontFamily="@font/open_sans"
         android:text="Date"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/drinkListTitleTextView" />
 
@@ -83,7 +82,7 @@
         android:fontFamily="@font/open_sans"
         android:text="Drink Type"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/drinkInputsListview"
         app:layout_constraintEnd_toStartOf="@+id/quantityListTitleTextView"
         app:layout_constraintHorizontal_bias="0.623"
@@ -99,7 +98,7 @@
         android:fontFamily="@font/open_sans"
         android:text="Quantity"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/drinkListTitleTextView" />
 

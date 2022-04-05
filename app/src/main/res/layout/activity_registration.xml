@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Enter username (must be 3 characters or more)"
+        android:text="Username (must be 3 characters or more)"
         android:textColor="@color/white"
         android:fontFamily="@font/open_sans"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,15 +24,15 @@
         android:id="@+id/registerTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:text="REGISTER"
-        android:textSize="24sp"
-        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/open_sans"
+        android:text="REGISTER"
+        android:textColor="@color/white"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/registrationToolbar" />
 
     <EditText
         android:id="@+id/usernameRegisterEditText"
@@ -63,6 +63,21 @@
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordDescriptionTextView" />
+
+    <EditText
+        android:id="@+id/confirmPasswordRegEditText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/open_sans"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmPasswordTitleTextView" />
 
     <EditText
         android:id="@+id/deviceNameEditText"
@@ -112,10 +127,10 @@
         android:id="@+id/EmailDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Enter email (must be valid email)"
-        android:textColor="@color/white"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/open_sans"
+        android:text="Email (must be a valid email address)"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/EmailAddressTextView"
@@ -126,33 +141,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Enter password (must be 5 characters or more)"
-        android:textColor="@color/white"
         android:fontFamily="@font/open_sans"
+        android:text="Password (must be 6 characters or more)"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/passwordRegisterEditText"
         app:layout_constraintTop_toBottomOf="@+id/usernameRegisterEditText" />
 
     <TextView
+        android:id="@+id/confirmPasswordTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/open_sans"
+        android:text="Confirm password"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/confirmPasswordRegEditText"
+        app:layout_constraintTop_toBottomOf="@+id/passwordRegisterEditText" />
+
+    <TextView
         android:id="@+id/deviceNameDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Enter device name (any custom name)"
-        android:textColor="@color/white"
         android:fontFamily="@font/open_sans"
+        android:text="Device name (any custom name)"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/deviceNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/passwordRegisterEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/confirmPasswordRegEditText" />
 
     <TextView
         android:id="@+id/deviceCodeDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Enter device code (e.g EC:94:CB:4E:1E:36)"
+        android:text="Device code (e.g EC:94:CB:4E:1E:36)"
         android:textColor="@color/white"
         android:fontFamily="@font/open_sans"
         app:layout_constraintEnd_toEndOf="parent"

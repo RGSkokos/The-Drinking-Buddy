@@ -85,7 +85,7 @@ public class PieChartActivity extends AppCompatActivity {
         for(Drink drink: drinks){
             if(drink.getUID().equals(firebaseHelper.getCurrentUID())) {
                 String temp = "";
-                temp += drink.getTimestamp() + ": " + drink.getDrinkName() + " - " + drink.getQuantity();
+                temp += drink.getTimestamp() + "\t\t\t\t\t\t\t\t\t\t\t" + drink.getDrinkName() + "\t\t\t\t\t\t\t\t\t" + drink.getQuantity();
                 drinksText.add(temp);
             }
         }
