@@ -162,19 +162,18 @@ public class HomePage extends AppCompatActivity {
     public void displayResults () {
         breathalyzer_values = myDB.getAllResults();
         String drink = "";
-        double temp = 0;
-        if(myDB.ReturnDrinkTypes().size() > 0) {
-            drink = myDB.ReturnDrinkTypes().get(myDB.ReturnDrinkTypes().size() - 1).getDrinkName();
+        for (int i = 0; i < myDB.ReturnDrinkTypes().size(); i++) {
+            if(firebaseHelper.getUser() != null)
+            {
+                if(myDB.ReturnDrinkTypes().get(i).getUID().equals(firebaseHelper.getCurrentUID()))
+                {
+                    drink = myDB.ReturnDrinkTypes().get(i).getDrinkName();
+                }
+            }
         }
-        if(breathalyzer_values.size() > 0)
-        {
-            temp = Double.parseDouble(breathalyzer_values.get(breathalyzer_values.size()-1).getResult());
-            temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
-            temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
-        }
-
         Log.d("Changing", "Changing Display " + drink);
     }
+
 
     private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
         @Override

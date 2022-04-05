@@ -241,6 +241,7 @@ public class ProfileActivity extends AppCompatActivity {
         deviceNameDescription.setText(R.string.device_name_display_description);
         deviceCodeDescription.setText(R.string.device_code_display_description);
         saveButton.setVisibility(View.GONE);
+        updateProfileValues();
     }
 
     protected void setEditMode() {

@@ -6,11 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
 
@@ -21,6 +25,8 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
@@ -41,6 +47,7 @@ public class LineGraphActivity extends AppCompatActivity {
     protected ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
     protected String SpanOfData;
     protected ListView sensorReadingsListview;
+    protected FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,7 @@ public class LineGraphActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-
+        firebaseHelper = new FirebaseHelper(this);
         database = new DBHelper(this);
         breathalyzerValues = database.getAllResults();
 
@@ -82,17 +89,27 @@ public class LineGraphActivity extends AppCompatActivity {
 
     protected void loadListView(){
         //List<Breathalyzer> readings = database.getAllResults();
-
+        //78:E3:6D:0A:87:92
         ArrayList<String> readingsText = new ArrayList<>();
 
         for(Breathalyzer result: breathalyzerValues){
-            String temp = "";
-            temp += result.getTimeStamp() + ": " + result.getResult();
+            Log.d("current", result.getUID());
+            Log.d("current", firebaseHelper.getCurrentUID());
+            if(result.getUID().equals(firebaseHelper.getCurrentUID()))
+            {
+                float tempVal = Float.parseFloat(result.getResult());
 
-            readingsText.add(temp);
+                tempVal = (((tempVal - 150) / 1050)); //second value in numerator needs to be based on calibration
+                tempVal = (tempVal < 0) ? 0 : tempVal; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+                String temp = "";
+                temp += result.getTimeStamp() + ": " + tempVal;
+
+                readingsText.add(temp);
+            }
         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
         sensorReadingsListview.setAdapter(arrayAdapter);
+
     }
 
     //region Line Graph
@@ -107,18 +124,20 @@ public class LineGraphActivity extends AppCompatActivity {
         //set start and end time for easy reference of how far the data spans
         if(breathalyzerValues.size() > 0) {
             for (int i = 0; i < breathalyzerValues.size(); i++) {
-                if (i == (breathalyzerValues.size() - 1)) {
-                    EndTime = breathalyzerValues.get(i).getTimeStamp();
-                }
-                if (i == 0) {
-                    startTime = breathalyzerValues.get(i).getTimeStamp();
-                }
+                if(breathalyzerValues.get(i).getUID().equals(firebaseHelper.getCurrentUID())) {
+                    if (i == (breathalyzerValues.size() - 1)) {
+                        EndTime = breathalyzerValues.get(i).getTimeStamp();
+                    }
+                    if (i == 0) {
+                        startTime = breathalyzerValues.get(i).getTimeStamp();
+                    }
 
-                float temp = Float.parseFloat(breathalyzerValues.get(i).getResult());
-                temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
-                temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+                    float temp = Float.parseFloat(breathalyzerValues.get(i).getResult());
+                    temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
+                    temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
-                lineGraphValues.add(new Entry((i + 1), temp));
+                    lineGraphValues.add(new Entry((i + 1), temp));
+                }
             }
 
             SpanOfData = "from " + startTime + " to " + EndTime;
@@ -131,6 +150,7 @@ public class LineGraphActivity extends AppCompatActivity {
         lineChart.setTouchEnabled(true);
         lineChart.setBorderColor(Color.WHITE);
         lineChart.setElevation(60);
+
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setTextColor(Color.WHITE);
 

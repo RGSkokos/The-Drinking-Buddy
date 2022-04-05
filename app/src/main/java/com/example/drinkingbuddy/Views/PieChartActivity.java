@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
+import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.R;
@@ -37,6 +38,7 @@ public class PieChartActivity extends AppCompatActivity {
     PieChart pieChart;
     List<Breathalyzer> breathalyzer_values;
     Map<String, Integer> DrinkType = new HashMap<>();
+    protected FirebaseHelper firebaseHelper;
     protected ListView drinkInputsListview;
 
     @Override
@@ -52,6 +54,7 @@ public class PieChartActivity extends AppCompatActivity {
         super.onStart();
 
         database = new DBHelper(this);
+        firebaseHelper = new FirebaseHelper(this);
         breathalyzer_values = database.getAllResults();
 
         insertPieChartValues();
@@ -80,10 +83,11 @@ public class PieChartActivity extends AppCompatActivity {
         ArrayList<String> drinksText = new ArrayList<>();
 
         for(Drink drink: drinks){
-            String temp = "";
-            temp += drink.getTimestamp() + "\t\t\t\t" + drink.getDrinkName() + "\t\t\t\t" + drink.getQuantity();
-
-            drinksText.add(temp);
+            if(drink.getUID().equals(firebaseHelper.getCurrentUID())) {
+                String temp = "";
+                temp += drink.getTimestamp() + ": " + drink.getDrinkName() + " - " + drink.getQuantity();
+                drinksText.add(temp);
+            }
         }
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, drinksText);
         drinkInputsListview.setAdapter(arrayAdapter);
@@ -98,19 +102,21 @@ public class PieChartActivity extends AppCompatActivity {
         int[] drinkNumber = {0, 0 , 0, 0};
 
         for (Drink drink: drinks) {
-            switch (drink.getDrinkName()) {
-                case "liquor":
-                    drinkNumber[0] += drink.getQuantity();
-                    break;
-                case "wine":
-                    drinkNumber[1] += drink.getQuantity();
-                    break;
-                case "beer":
-                    drinkNumber[2] += drink.getQuantity();
-                    break;
-                default:
-                    drinkNumber[3] += drink.getQuantity();
-                    break;
+            if(drink.getUID().equals(firebaseHelper.getCurrentUID())) {
+                switch (drink.getDrinkName()) {
+                    case "liquor":
+                        drinkNumber[0] += drink.getQuantity();
+                        break;
+                    case "wine":
+                        drinkNumber[1] += drink.getQuantity();
+                        break;
+                    case "beer":
+                        drinkNumber[2] += drink.getQuantity();
+                        break;
+                    default:
+                        drinkNumber[3] += drink.getQuantity();
+                        break;
+                }
             }
         }
 
