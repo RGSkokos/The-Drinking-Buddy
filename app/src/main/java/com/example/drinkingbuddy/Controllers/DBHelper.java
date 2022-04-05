@@ -46,7 +46,8 @@ public class DBHelper extends SQLiteOpenHelper {
        CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME_SENSOR
                 + " (" + Config.SENSOR_RESULT + " TEXT NOT NULL,"
                 + Config.TIME_STAMP_SENSOR + " TEXT NOT NULL,"
-                + Config.DAY_OF_WEEK + " TEXT NOT NULL)";
+                + Config.DAY_OF_WEEK + " TEXT NOT NULL,"
+                + Config.USER_UID + " TEXT NOT NULL)";
 
 
        CREATE_TABLE_TYPE_OF_DRINK = "CREATE TABLE " + Config.TABLE_NAME_DRINK_TYPE
@@ -54,6 +55,7 @@ public class DBHelper extends SQLiteOpenHelper {
                + Config.TIME_STAMP_DRINK + " TEXT NOT NULL,"
                + Config.TYPE_OF_DRINK + " TEXT NOT NULL,"
                + Config.DRINK_QUANTITY + " INTEGER NOT NULL,"
+               + Config.USER_UID + " TEXT NOT NULL,"
                + Config.DAY_OF_WEEK_DRINK + " TEXT NOT NULL)";
 
         Log.d(TAG, "db created");
@@ -84,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Method to insert a new entry for result from breathalyzer
-    public void insertNewResult(String result)
+    public void insertNewResult(String result, String UID)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -92,6 +94,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(Config.SENSOR_RESULT, result);
         contentValues.put(Config.TIME_STAMP_SENSOR, TimeStamp());
         contentValues.put(Config.DAY_OF_WEEK, DayOfWeek());
+        contentValues.put(Config.USER_UID, UID);
 
         try{
             db.insertOrThrow(Config.TABLE_NAME_SENSOR, null, contentValues);
@@ -117,7 +120,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     String bloodAlcohol = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.SENSOR_RESULT));
                     String timeStamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TIME_STAMP_SENSOR));
                     String dayOfWeek = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.DAY_OF_WEEK));
-                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp), dayOfWeek));
+                    String UID = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.USER_UID));
+                    breathalyzer_values.add(new Breathalyzer(bloodAlcohol, String.valueOf(timeStamp), dayOfWeek, UID));
 
                 } while(userTableCursor.moveToNext());
             }
@@ -127,7 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return breathalyzer_values;
     }
 
-    public void saveDrinkType(String typeOfDrink, int quantity) {
+    public void saveDrinkType(String typeOfDrink, int quantity, String UID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -135,6 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(Config.TYPE_OF_DRINK, typeOfDrink);
         contentValues.put(Config.DRINK_QUANTITY, quantity);
         contentValues.put(Config.DAY_OF_WEEK_DRINK, DayOfWeek());
+        contentValues.put(Config.USER_UID, UID);
 
         try {
             db.insertOrThrow(Config.TABLE_NAME_DRINK_TYPE, null, contentValues);
@@ -161,7 +166,8 @@ public class DBHelper extends SQLiteOpenHelper {
                     Integer quantity = userTableCursor.getInt(userTableCursor.getColumnIndexOrThrow(Config.DRINK_QUANTITY));
                     String timestamp = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.TIME_STAMP_DRINK));
                     String dayOfWeek = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.DAY_OF_WEEK_DRINK));
-                    drink_types.add(new Drink(drink_type, quantity, timestamp, dayOfWeek));
+                    String UID = userTableCursor.getString(userTableCursor.getColumnIndexOrThrow(Config.USER_UID));
+                    drink_types.add(new Drink(drink_type, quantity, timestamp, dayOfWeek, UID));
 
                 } while(userTableCursor.moveToNext());
             }

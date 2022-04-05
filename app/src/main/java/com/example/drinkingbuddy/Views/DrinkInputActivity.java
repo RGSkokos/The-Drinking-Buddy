@@ -288,22 +288,22 @@ public class DrinkInputActivity extends AppCompatActivity {
 
             if(!"".equals(beerTemp) && Integer.parseInt(beerTemp) != 0){
                 beer = Integer.parseInt(beerTemp);
-                dbHelper.saveDrinkType("beer", beer);
+                dbHelper.saveDrinkType("beer", beer, firebaseHelper.getCurrentUID());
                 storedInDB = true;
             }
             if(!"".equals(wineTemp) && Integer.parseInt(wineTemp) != 0){
                 wine = Integer.parseInt(wineTemp);
-                dbHelper.saveDrinkType("wine", wine);
+                dbHelper.saveDrinkType("wine", wine, firebaseHelper.getCurrentUID());
                 storedInDB = true;
             }
             if(!"".equals(liquorTemp) && Integer.parseInt(liquorTemp) != 0){
                 liquor = Integer.parseInt(liquorTemp);
-                dbHelper.saveDrinkType("liquor", liquor);
+                dbHelper.saveDrinkType("liquor", liquor, firebaseHelper.getCurrentUID());
                 storedInDB = true;
             }
             if(!"".equals(ciderTemp) && Integer.parseInt(ciderTemp) != 0){
                 cider = Integer.parseInt(ciderTemp);
-                dbHelper.saveDrinkType("cider", cider);
+                dbHelper.saveDrinkType("cider", cider, firebaseHelper.getCurrentUID());
                 storedInDB = true;
             }
             if (storedInDB) {
