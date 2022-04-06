@@ -178,6 +178,7 @@ public class HomePage extends AppCompatActivity {
     private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
+
             openLoading();
         }
     };

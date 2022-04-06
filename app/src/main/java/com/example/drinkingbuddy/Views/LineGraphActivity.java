@@ -92,7 +92,8 @@ public class LineGraphActivity extends AppCompatActivity {
         //78:E3:6D:0A:87:92
         ArrayList<String> readingsText = new ArrayList<>();
 
-        for(Breathalyzer result: breathalyzerValues){
+        for (int i = breathalyzerValues.size() - 1; i >= 0 ; i--) {
+            Breathalyzer result = breathalyzerValues.get(i);
             Log.d("current", result.getUID());
             Log.d("current", firebaseHelper.getCurrentUID());
             if(result.getUID().equals(firebaseHelper.getCurrentUID()))
@@ -107,9 +108,9 @@ public class LineGraphActivity extends AppCompatActivity {
                 readingsText.add(temp);
             }
         }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
         sensorReadingsListview.setAdapter(arrayAdapter);
-
     }
 
     //region Line Graph

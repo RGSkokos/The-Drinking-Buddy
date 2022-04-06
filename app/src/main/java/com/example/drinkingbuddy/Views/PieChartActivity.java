@@ -82,14 +82,15 @@ public class PieChartActivity extends AppCompatActivity {
         ArrayList<Drink> drinks = database.ReturnDrinkTypes();
         ArrayList<String> drinksText = new ArrayList<>();
 
-        for(Drink drink: drinks){
-            if(drink.getUID().equals(firebaseHelper.getCurrentUID())) {
+        for (int i = drinks.size() - 1; i >= 0 ; i--) {
+            if(drinks.get(i).getUID().equals(firebaseHelper.getCurrentUID())) {
                 String temp = "";
 
-                temp += drink.getTimestamp().substring(drink.getTimestamp().indexOf(' ')) + "\t\t\t\t\t\t\t" + drink.getDrinkName() + "\t\t\t\t\t\t\t\t\t" + drink.getQuantity();
+                temp += drinks.get(i).getTimestamp().substring(drinks.get(i).getTimestamp().indexOf(' ')) + "\t\t\t\t\t\t\t" + drinks.get(i).getDrinkName() + "\t\t\t\t\t\t\t\t\t" + drinks.get(i).getQuantity();
                 drinksText.add(temp);
             }
         }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, drinksText);
         drinkInputsListview.setAdapter(arrayAdapter);
     }

@@ -317,9 +317,9 @@ public class BarGraphActivity extends AppCompatActivity {
         barDataSet.setValueTextColor(Color.WHITE);
         data = new BarDataSet(UserGraphValues, "User Values");
         data.setValueTextColor(Color.WHITE);
-        data2 = new BarDataSet(WomenGraphValues, "Average Values");
+        data2 = new BarDataSet(WomenGraphValues, "Women National Average");
         data2.setValueTextColor(Color.WHITE);
-        data3 = new BarDataSet(MenGraphValues, "Average Values");
+        data3 = new BarDataSet(MenGraphValues, "Men National Average");
         data3.setValueTextColor(Color.WHITE);
         data2.setColor(Color.RED);
         data3.setColor(Color.RED);
