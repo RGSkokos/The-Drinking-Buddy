@@ -256,33 +256,26 @@ public class LoadActivity extends AppCompatActivity {
     }
 
     public void connectToBreathalyzer() {
-        try {
-            bluetoothDevice = bluetoothAdapter.getRemoteDevice(MODULE_MAC);
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                try {
-                    bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(MY_UUID);
-                    bluetoothSocket.connect();
-                }
-                catch (Exception e) {
-                    try {
-                        bluetoothSocket.close();
-                        SharedPreferences cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor connectionEditor = cannotConnect.edit();
-                        connectionEditor.putString("noConnection", "Cannot Connect to Breathalyzer");
-                        connectionEditor.apply();
-                        goToHomeActivity();
-                    }
-                    catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                    e.printStackTrace();
-                } finally {
-                    bluetoothSocket.close();
-                }
+        bluetoothDevice = bluetoothAdapter.getRemoteDevice(MODULE_MAC);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            try {
+                bluetoothSocket = bluetoothDevice.createRfcommSocketToServiceRecord(MY_UUID);
+                bluetoothSocket.connect();
             }
-        } catch (Exception e) {
-            goToHomeActivity();
-            e.printStackTrace();
+            catch (Exception e) {
+                try {
+                    bluetoothSocket.close();
+                    SharedPreferences cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor connectionEditor = cannotConnect.edit();
+                    connectionEditor.putString("noConnection", "Error! Cannot Connect to Breathalyzer");
+                    connectionEditor.apply();
+                    goToHomeActivity();
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                e.printStackTrace();
+            }
         }
     }
 
