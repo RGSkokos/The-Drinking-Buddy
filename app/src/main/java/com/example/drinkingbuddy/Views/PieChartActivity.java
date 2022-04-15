@@ -24,7 +24,6 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
 // The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
-// Only the line graph was implemented thus far, the library files can be found within models
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,40 +44,34 @@ public class PieChartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pie_chart);
-
         initializeComponents();
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-
-        database = new DBHelper(this);
-        firebaseHelper = new FirebaseHelper(this);
-        breathalyzer_values = database.getAllResults();
-
         insertPieChartValues();
         displayPieChart();
-
         loadListView();
     }
 
     protected void initializeComponents(){
+        database = new DBHelper(this);
+        firebaseHelper = new FirebaseHelper(this);
+        pieChart = findViewById(R.id.pieGraph);
+        drinkInputsListview = findViewById(R.id.drinkInputsListview);
+        breathalyzer_values = database.getAllResults();
+
         toolbar = findViewById(R.id.PieChartToolbar);
         // Set up the toolbar
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        pieChart = findViewById(R.id.pieGraph);
-        drinkInputsListview = findViewById(R.id.drinkInputsListview);
     }
 
     protected void loadListView(){
-        //List<Breathalyzer> readings = database.getAllResults();
         ArrayList<Drink> drinks = database.ReturnDrinkTypes();
         ArrayList<String> drinksText = new ArrayList<>();
 
@@ -91,16 +84,14 @@ public class PieChartActivity extends AppCompatActivity {
             }
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, drinksText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.row, drinksText);
         drinkInputsListview.setAdapter(arrayAdapter);
     }
 
     //region Pie Chart
     private void insertPieChartValues()
-    {
-        DBHelper db = new DBHelper(this);
-        ArrayList<Drink> drinks = db.ReturnDrinkTypes();
-
+    {//populates values for pie chart entries
+        ArrayList<Drink> drinks = database.ReturnDrinkTypes();
         int[] drinkNumber = {0, 0 , 0, 0};
 
         for (Drink drink: drinks) {
@@ -140,7 +131,10 @@ public class PieChartActivity extends AppCompatActivity {
 
         //input data and fit data into pie chart entry
         for(String type: DrinkType.keySet()){
-            pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
+            if(DrinkType.get(type) != null)
+            {
+                pieGraphValues.add(new PieEntry(DrinkType.get(type), type));
+            }
         }
 
         PieDataSet pieDataSet = new PieDataSet(pieGraphValues, "");

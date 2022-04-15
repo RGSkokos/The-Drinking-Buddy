@@ -1,10 +1,8 @@
 package com.example.drinkingbuddy.Views;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,27 +11,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
-import com.example.drinkingbuddy.Models.Config;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -63,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
+        //profile listener set up on previous pages to ensure data is grabbed
+        //values sent to profile activity using bundles (see references in documentation)
         Bundle extras = getIntent().getExtras();
         if(extras != null)
         {
@@ -161,8 +148,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (!error) {
                 //find and edit old user values
-
-
                 if(usernameEntered.length() != 0)
                 {
                     firebaseHelper.updateProfileDB("username", usernameEntered);
@@ -185,7 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
                 setDisplayMode();
                 updateProfileValues();
                 menuItemTitleChange(false);
-                flag = !flag;
+                flag = !flag; // Toggle display and edit mode
             }
         }
     };
@@ -270,9 +255,10 @@ public class ProfileActivity extends AppCompatActivity {
             item.setTitle("Edit Profile");
     }
 
+    //If device code updated, reference list of registered devices (just like registration)
     public boolean checkDeviceCode(String addressEntered)
     {
-        String[] addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:DB:45:43:F2", "78:E3:6D:0A:87:92"};
+        String[] addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:BD:45:43:F2", "78:E3:6D:0A:87:92"};
         for (String address :
                 addresses) {
             if (address.equals(addressEntered))

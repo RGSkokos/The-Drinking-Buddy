@@ -11,10 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
@@ -25,15 +23,11 @@ import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationBarView;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class HomePage extends AppCompatActivity {
 
-    private static String MODULE_MAC;
     //instance variables
     protected BluetoothAdapter bluetoothAdapter;
     protected Button newBreath;
@@ -43,6 +37,7 @@ public class HomePage extends AppCompatActivity {
     protected List<Breathalyzer> breathalyzer_values;
     private FirebaseHelper firebaseHelper;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +54,9 @@ public class HomePage extends AppCompatActivity {
             }
         }
 
-        catch(Exception e) { }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
         SharedPreferences.Editor connectionEditor = cannotConnect.edit();
         connectionEditor.putString("noConnection", "");
         connectionEditor.apply();
@@ -70,25 +67,21 @@ public class HomePage extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.homeBottomMenuItem);
 
         // Perform item selected listener
-        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch(item.getItemId())
-                {
-                    case R.id.homeBottomMenuItem:
-                        return true;
-                    case R.id.graphsBottomMenuItem:
-                        startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                    case R.id.drinksBottomMenuItem:
-                        startActivity(new Intent(getApplicationContext(), DrinkInputActivity.class));
-                        overridePendingTransition(0,0);
-                        return true;
-                }
-                return false;
+        bottomNav.setOnItemSelectedListener(item -> {
+            switch(item.getItemId())
+            {
+                case R.id.homeBottomMenuItem:
+                    return true;
+                case R.id.graphsBottomMenuItem:
+                    startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
+                case R.id.drinksBottomMenuItem:
+                    startActivity(new Intent(getApplicationContext(), DrinkInputActivity.class));
+                    overridePendingTransition(0,0);
+                    return true;
             }
+            return false;
         });
     }
 
@@ -96,14 +89,7 @@ public class HomePage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         displayResults(); //will display nothing if never entered data or most recent value of breathalyzer
-        Bundle extras = getIntent().getExtras();
-        boolean loggedin = false;
-        if(extras != null)
-        {
-            loggedin = extras.getBoolean("Success");
-
-        }
-        if(firebaseHelper.ifUserLoggedIn() || loggedin){
+        if(firebaseHelper.ifUserLoggedIn()){
             firebaseHelper.getCurrentUID();
             firebaseHelper.addProfileListener();
         }
@@ -111,9 +97,6 @@ public class HomePage extends AppCompatActivity {
         {
             goToLogin();
         }
-
-        // Checks if a user is logged in by checking current firebase user
-
     }
 
     // Don't allow back button to lead to login page (or anywhere)
@@ -127,7 +110,6 @@ public class HomePage extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarHome);
         bottomNav = findViewById(R.id.bottomNavigation);
     }
-
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")
@@ -174,19 +156,7 @@ public class HomePage extends AppCompatActivity {
         Log.d("Changing", "Changing Display " + drink);
     }
 
-
-    private final View.OnClickListener onClickBreathButton= new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-            openLoading();
-        }
-    };
-
-    protected void goToDrinkInputActivity(){
-        Intent i = new Intent(this, DrinkInputActivity.class);
-        startActivity(i);
-    }
+    private final View.OnClickListener onClickBreathButton= view -> openLoading();
 
     protected void openLoading(){
         Intent i = new Intent(this, LoadActivity.class);

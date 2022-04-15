@@ -1,10 +1,5 @@
 package com.example.drinkingbuddy.Views;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +9,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
@@ -127,25 +125,22 @@ public class DrinkInputActivity extends AppCompatActivity {
         }
     }
 
-    private final NavigationBarView.OnItemSelectedListener navBarOnClick = new NavigationBarView.OnItemSelectedListener() {
-        @SuppressLint("NonConstantResourceId")
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch(item.getItemId())
-            {
-                case R.id.drinksBottomMenuItem:
-                    return true;
-                case R.id.homeBottomMenuItem:
-                    startActivity(new Intent(getApplicationContext(), HomePage.class));
-                    overridePendingTransition(0,0);
-                    return true;
-                case R.id.graphsBottomMenuItem:
-                    startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;
-            }
-            return false;
+    @SuppressLint("NonConstantResourceId")
+    private final NavigationBarView.OnItemSelectedListener navBarOnClick = item -> {
+        switch(item.getItemId())
+        {
+            case R.id.drinksBottomMenuItem:
+                return true;
+            case R.id.homeBottomMenuItem:
+                startActivity(new Intent(getApplicationContext(), HomePage.class));
+                overridePendingTransition(0,0);
+                return true;
+            case R.id.graphsBottomMenuItem:
+                startActivity(new Intent(getApplicationContext(), GraphsActivity.class));
+                overridePendingTransition(0,0);
+                return true;
         }
+        return false;
     };
 
     private final View.OnClickListener incrementBeerCount = new View.OnClickListener() {
@@ -208,7 +203,7 @@ public class DrinkInputActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             String beerTemp = beerNumber.getText().toString();
-            int beer = 0;
+            int beer;
             if(!"".equals(beerTemp)){
                 beer = Integer.parseInt(beerTemp);
                 if(beer >= 1){
@@ -224,7 +219,7 @@ public class DrinkInputActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             String wineTemp = wineNumber.getText().toString();
-            int wine = 0;
+            int wine;
             if(!"".equals(wineTemp)){
                 wine = Integer.parseInt(wineTemp);
                 if(wine >= 1){
@@ -240,7 +235,7 @@ public class DrinkInputActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             String liquorTemp = liquorNumber.getText().toString();
-            int liquor = 0;
+            int liquor;
             if(!"".equals(liquorTemp)){
                 liquor = Integer.parseInt(liquorTemp);
                 if(liquor >= 1){
@@ -256,7 +251,7 @@ public class DrinkInputActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             String ciderTemp = ciderNumber.getText().toString();
-            int cider = 0;
+            int cider;
             if(!"".equals(ciderTemp)){
                 cider = Integer.parseInt(ciderTemp);
                 if(cider >= 1){
@@ -273,10 +268,10 @@ public class DrinkInputActivity extends AppCompatActivity {
         public void onClick(View view) {
             saveDrinkButton.getBackground().setAlpha(128);
 
-            int beer = 0;
-            int wine = 0;
-            int liquor = 0;
-            int cider = 0;
+            int beer;
+            int wine;
+            int liquor;
+            int cider;
             boolean storedInDB = false;
 
             String beerTemp = beerNumber.getText().toString();

@@ -1,18 +1,15 @@
 package com.example.drinkingbuddy.Views;
 
 
-import androidx.annotation.LongDef;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Profile;
@@ -35,7 +32,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private String deviceCode;
     private String email;
     private FirebaseHelper firebaseHelper;
-    private String[] addresses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +67,9 @@ public class RegistrationActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.registrationToolbar);
     }
 
+
     protected void setupButtonListeners() {
         registerButton.setOnClickListener(view -> {
-
             username = usernameRegisterEditText.getText().toString();
             password = passwordRegisterEditText.getText().toString();
             String confirmPass = confirmPasswordEditText.getText().toString();
@@ -114,9 +110,11 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //List of strings holds all "registered" devices
+    //devices are identified by MAC address
     public boolean checkDeviceCode(String addressEntered)
     {
-        addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:DB:45:43:F2", "78:E3:6D:0A:87:92"};
+        String[] addresses = new String[]{"EC:94:CB:4C:72:02", "EC:94:CB:4E:1E:36", "7C:9E:BD:45:43:F2", "78:E3:6D:0A:87:92"};
         for (String address :
                 addresses) {
             if (address.equals(addressEntered))

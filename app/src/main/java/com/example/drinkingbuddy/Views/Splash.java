@@ -14,16 +14,13 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.splash);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //This method will be executed once the timer is over
-                // Start your app main activity
-                Intent i = new Intent(Splash.this, HomePage.class);
-                startActivity(i);
-                // close this activity
-                finish();
-            }
-        }, 2000); }
+        new Handler().postDelayed(() -> {
+            //This method will be executed once the timer is over
+            // Start your app main activity
+            Intent i = new Intent(Splash.this, HomePage.class);
+            startActivity(i);
+            // close this activity
+            finish();
+        }, 3000); }
 }
 

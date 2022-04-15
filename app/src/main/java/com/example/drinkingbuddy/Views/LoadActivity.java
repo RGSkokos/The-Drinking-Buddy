@@ -21,17 +21,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ProgressBar;
-import java.util.UUID;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
 import com.example.drinkingbuddy.R;
+
+import java.util.UUID;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -77,7 +78,6 @@ public class LoadActivity extends AppCompatActivity {
         SharedPreferences.Editor connectionEditor = cannotConnect.edit();
         connectionEditor.putString("noConnection", "");
         connectionEditor.apply();
-//        sensorResult.setText("");
 
         Bundle extras = getIntent().getExtras();
         if(extras != null)
@@ -119,12 +119,7 @@ public class LoadActivity extends AppCompatActivity {
         messageResult = -1;
     }
 
-    private final View.OnClickListener onClickNewSample = new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            goToHomeActivity();
-        }
-    };
+    private final View.OnClickListener onClickNewSample = view -> goToHomeActivity();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -138,13 +133,12 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-    protected void loadingTimer() {      //this will run the gif for 5 seconds to mimic a "loading screen"
+    protected void loadingTimer() { //this will run the gif for 5 seconds to mimic a "loading screen"
         new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) { }
             @Override
             public void onFinish() {
-//                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
                 if(!cannotConnect.getString("noConnection", null).equals("")) {
                     countDown.setText("");
                 }
@@ -162,7 +156,6 @@ public class LoadActivity extends AppCompatActivity {
         else {
             loadingTimer();
             initializeBluetoothProcess(); //if bluetooth is indeed enabled, then the bluetooth process must be enabled and established
-//            sendMessage();
         }
     }
 
@@ -177,56 +170,48 @@ public class LoadActivity extends AppCompatActivity {
     // When a Button is Pressed, Sampling is Taken and Result Fetched Automatically
     protected void sendMessage() {
         Log.d("Problem","SEND MESSAGE 1111");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
-                loadInstruction.setVisibility(View.INVISIBLE);
-                countDown.setVisibility(View.VISIBLE);
-                resultCircle.setVisibility(View.INVISIBLE);
-                staticCircle.setVisibility(View.VISIBLE);
-                loadingCircle.setVisibility(View.VISIBLE);
-                new CountDownTimer(6000, 1000) {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        countDown.setText("" + (millisUntilFinished / 1000));
-                    }
-                    @Override
-                    public void onFinish() {
+        new Handler().postDelayed(() -> {
+            gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+            loadInstruction.setVisibility(View.INVISIBLE);
+            countDown.setVisibility(View.VISIBLE);
+            resultCircle.setVisibility(View.INVISIBLE);
+            staticCircle.setVisibility(View.VISIBLE);
+            loadingCircle.setVisibility(View.VISIBLE);
+            new CountDownTimer(6000, 1000) {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    countDown.setText("" + (millisUntilFinished / 1000));
+                }
+                @Override
+                public void onFinish() {
 
-                    }
-                }.start();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String sendMessage = "1"; // "1" = Start Sampling
-                            newThread.write(sendMessage.getBytes());
-                            Log.d("Problem","THREAD IS SLEEPING...Z...Z...");
-                            Thread.sleep(6000);
-                        }
-                        catch (Exception e) {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Something Went Wrong!", Toast.LENGTH_LONG);
-                            toast.show();
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String sendMessage1 = "0"; // "0" = Stop Sampling and Get Final Data
-                                newThread.write(sendMessage1.getBytes());
-                                Log.d("Problem","SEND MESSAGE 0000");
-                            }
-                        });
-                    }
-                }).start();
-            }
+                }
+            }.start();
+            new Thread(() -> {
+                try {
+                    String sendMessage = "1"; // "1" = Start Sampling
+                    newThread.write(sendMessage.getBytes());
+                    Log.d("Problem","THREAD IS SLEEPING...Z...Z...");
+                    Thread.sleep(6000);
+                }
+                catch (Exception e) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Something Went Wrong!", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                runOnUiThread(() -> {
+                    String sendMessage1 = "0"; // "0" = Stop Sampling and Get Final Data
+                    newThread.write(sendMessage1.getBytes());
+                    Log.d("Problem","SEND MESSAGE 0000");
+                });
+            }).start();
         },3000);
     }
 
-    public void initializeBluetoothProcess() {      //this is where the countdown will happen
+    public void initializeBluetoothProcess() { //this is where the countdown will happen
         connectToBreathalyzer();
         handler = new Handler(Looper.getMainLooper()) {
+            @SuppressLint({"SetTextI18n", "DefaultLocale"})
             @Override
             public void handleMessage(Message receivedMessage) {
                 super.handleMessage(receivedMessage);
@@ -237,9 +222,8 @@ public class LoadActivity extends AppCompatActivity {
                     float temp = Float.parseFloat(message);
                     Log.d("SENSOR VALUE", Float.toString(temp));
                     temp = Math.abs(((temp - 4095) / 9095)); //second value in numerator needs to be based on calibration
-                    temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                     messageResult = temp;
-                    countDown.setText(String.valueOf(String.format("%.2f", messageResult) + ""));
+                    countDown.setText(String.format("%.2f", messageResult) + "");
                     staticCircle.setVisibility(View.INVISIBLE);
                     loadingCircle.setVisibility(View.INVISIBLE);
                     resultCircle.setVisibility(View.VISIBLE);
@@ -279,7 +263,7 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-
+    @SuppressLint("SetTextI18n")
     protected void setResultColour() {
         if (messageResult < 0.02) {
             resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_res)));
