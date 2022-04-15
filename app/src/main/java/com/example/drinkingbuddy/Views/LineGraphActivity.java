@@ -1,23 +1,21 @@
 package com.example.drinkingbuddy.Views;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.R;
-
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -25,16 +23,13 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
 // The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
-// Only the line graph was implemented thus far, the library files can be found within models
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LineGraphActivity extends AppCompatActivity {
 
@@ -42,7 +37,6 @@ public class LineGraphActivity extends AppCompatActivity {
     protected LineChart lineChart;
     protected Toolbar toolbar;
     protected Menu menu;
-    private DBHelper database;
     protected List<Breathalyzer> breathalyzerValues;
     protected ArrayList<Entry> lineGraphValues = new ArrayList<>(); //holds points in line graph
     protected String SpanOfData;
@@ -63,7 +57,7 @@ public class LineGraphActivity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         firebaseHelper = new FirebaseHelper(this);
-        database = new DBHelper(this);
+        DBHelper database = new DBHelper(this);
         breathalyzerValues = database.getAllResults();
 
         insertLineChartValues();
@@ -87,9 +81,8 @@ public class LineGraphActivity extends AppCompatActivity {
         sensorReadingsListview = findViewById(R.id.sensorReadingsListview);
     }
 
+    @SuppressLint("DefaultLocale")
     protected void loadListView(){
-        //List<Breathalyzer> readings = database.getAllResults();
-        //78:E3:6D:0A:87:92
         ArrayList<String> readingsText = new ArrayList<>();
 
         for (int i = breathalyzerValues.size() - 1; i >= 0 ; i--) {
@@ -103,13 +96,13 @@ public class LineGraphActivity extends AppCompatActivity {
                 tempVal = Math.abs(((tempVal - 4095) / 9095)); //second value in numerator needs to be based on calibration
                 tempVal = (tempVal < 0) ? 0 : tempVal; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                 String temp = "";
-                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + String.valueOf(String.format("%.2f", tempVal) + "");
+                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + String.format("%.2f", tempVal) + "";
 
                 readingsText.add(temp);
             }
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.row, readingsText);
         sensorReadingsListview.setAdapter(arrayAdapter);
     }
 

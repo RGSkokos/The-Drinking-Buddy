@@ -1,23 +1,21 @@
 package com.example.drinkingbuddy.Views;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.Drink;
 import com.example.drinkingbuddy.R;
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -25,26 +23,20 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-
-//REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
-// This code is heavily adapted from the reference above which makes use of MPAndroidChart library
-// The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
-// Only the line graph was implemented thus far, the library files can be found within models
 
 import java.util.ArrayList;
 
+// REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
+// This code is heavily adapted from the reference above which makes use of MPAndroidChart library
+// The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
 // statistical data taken from https://www.canada.ca/en/health-canada/services/substance-use/alcohol/low-risk-alcohol-drinking-guidelines.html
 
 public class BarGraphActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
     protected Menu menu;
-    private DBHelper database;
     protected ArrayList<Drink> drinks;
     protected ArrayList<BarEntry> UserGraphValues = new ArrayList<>();
     protected ArrayList<BarEntry> WomenGraphValues = new ArrayList<>();
@@ -54,7 +46,7 @@ public class BarGraphActivity extends AppCompatActivity {
     protected BarDataSet data2;
     protected BarDataSet data3;
     protected TextView statsTextView;
-//    protected TextView guidelinesTextView;
+
     protected FirebaseHelper firebaseHelper;
     protected boolean gender;
     private BarChart barChart;
@@ -74,8 +66,9 @@ public class BarGraphActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+
         firebaseHelper = new FirebaseHelper(this);
-        database = new DBHelper(this);
+        DBHelper database = new DBHelper(this);
         drinks = database.ReturnDrinkTypes();
 
         insertTypeOfDrinkBarChartValues();
@@ -98,7 +91,6 @@ public class BarGraphActivity extends AppCompatActivity {
 
 
         statsTextView = findViewById(R.id.statsTextView);
-//        guidelinesTextView = findViewById(R.id.guidelinesTextView);
     }
 
     @SuppressLint("RestrictedApi")
@@ -113,42 +105,39 @@ public class BarGraphActivity extends AppCompatActivity {
         return true;
     }
 
+    //on switch of values to display, simply hide the one set and make the other visible
     @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()) {
-            case R.id.changeGender:
-                gender = !gender;
-                if(gender){
+        if (item.getItemId() == R.id.changeGender) {
+            gender = !gender;
+            if (gender) {
 //                    guidelinesTextView.setText("Women Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 2 drinks per day\n- 10 drinks per week\n- 3 drinks on special occasions");
-                    dataSets.remove(data3);
-                    dataSets.add(data2);
-                    item.setTitle("Men Averages");
-                }
-                else{
-                    item.setTitle("Women Averages");
+                dataSets.remove(data3);
+                dataSets.add(data2);
+                item.setTitle("Men Averages");
+            } else {
+                item.setTitle("Women Averages");
 //                    guidelinesTextView.setText("Men Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 3 drinks per day\n- 15 drinks per week\n- 4 drinks on special occasions");
-                    dataSets.remove(data2);
-                    dataSets.add(data3);
-                }
-                BarData AllData = new BarData(dataSets);
-                float groupSpace = 0.4f;
-                float barSpace = 0f;
-                float barWidth = 0.3f;
-                // (barSpace + barWidth) * 2 + groupSpace = 1
-                AllData.setBarWidth(barWidth);
-                barChart.setData(AllData);
-                barChart.groupBars(-0.5f, groupSpace, barSpace);
-                barChart.setFitBars(true);
-                barChart.invalidate();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                dataSets.remove(data2);
+                dataSets.add(data3);
+            }
+            BarData AllData = new BarData(dataSets);
+            float groupSpace = 0.4f;
+            float barSpace = 0f;
+            float barWidth = 0.3f;
+            AllData.setBarWidth(barWidth);
+            barChart.setData(AllData);
+            barChart.groupBars(-0.5f, groupSpace, barSpace);
+            barChart.setFitBars(true);
+            barChart.invalidate();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //region Pie Chart
     private void insertTypeOfDrinkBarChartValues()
-    {
+    { //insertion of values in second bar chart (types of drinks)
         DBHelper db = new DBHelper(this);
         ArrayList<Drink> drinks = db.ReturnDrinkTypes();
 
@@ -186,10 +175,6 @@ public class BarGraphActivity extends AppCompatActivity {
 
         TypeOfDrinkGraphValues = currentEntries;
 
-       /* DrinkType.put("Liquor",drinkNumber[0]);
-        DrinkType.put("Beer",drinkNumber[2]);
-        DrinkType.put("Wine",drinkNumber[1]);
-        DrinkType.put("Cider", drinkNumber[3]); */
     }
 
     //region Bar Chart
@@ -197,7 +182,7 @@ public class BarGraphActivity extends AppCompatActivity {
 
         ArrayList<Double> valueList = new ArrayList<>();
 
-        //input data
+        //input data for days of the week from user
         double[] dayOfWeekCounter = {0, 0, 0, 0, 0, 0, 0, 0};
         for(int i = 0; i < drinks.size(); i++){
             if(drinks.get(i).getUID().equals(firebaseHelper.getCurrentUID())) {
@@ -230,8 +215,9 @@ public class BarGraphActivity extends AppCompatActivity {
             }
         }
 
+        //Arraylist to populate entries in national average values
         ArrayList<BarEntry> currentEntries = new ArrayList<>();
-
+        //populate entries for women national averages
             BarEntry barEntryAverage = new BarEntry(0, 1);
             currentEntries.add(barEntryAverage);
             barEntryAverage = new BarEntry(1, 1);
@@ -246,10 +232,10 @@ public class BarGraphActivity extends AppCompatActivity {
             currentEntries.add(barEntryAverage);
             barEntryAverage = new BarEntry(6, 1);
             currentEntries.add(barEntryAverage);
-
             WomenGraphValues = currentEntries;
-            currentEntries = new ArrayList<>();
 
+            //populate values for men national averages
+            currentEntries = new ArrayList<>();
             barEntryAverage = new BarEntry(0, 1);
             currentEntries.add(barEntryAverage);
             barEntryAverage = new BarEntry(1, 1);
@@ -264,10 +250,9 @@ public class BarGraphActivity extends AppCompatActivity {
             currentEntries.add(barEntryAverage);
             barEntryAverage = new BarEntry(6, 2);
             currentEntries.add(barEntryAverage);
-
             MenGraphValues = currentEntries;
 
-
+        //input all values for user entries
         for (int i = 0; i < 7; i++)
         {
             valueList.add(dayOfWeekCounter[i]);
@@ -282,10 +267,11 @@ public class BarGraphActivity extends AppCompatActivity {
     }
 
     private void displayBarCharts(){
+        //the following code was manually inputted through reference of the library functions that were available
+        //references for all these functions can be found on the MP Android Chart webpage and the references listed in documentation
+        //3 sets of data are attached to one bar graph and a single set on the second bar graph
 
         BarDataSet barDataSet = new BarDataSet(UserGraphValues, "# of samples");
-        //BarDataSet WomenBarDataSet = new BarDataSet(WomenGraphValues, "Avg. Weekly Drink Consumption for Women");
-        //BarDataSet MenBarDataSet = new BarDataSet(Me)
         String[] xAxisLabels = new String[]{"Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"};
         XAxis xAxisWeekly = barChart.getXAxis();
         xAxisWeekly.setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
@@ -299,7 +285,6 @@ public class BarGraphActivity extends AppCompatActivity {
         xAxisTypeOfDrink.setGranularityEnabled(true);
         typeOfDrinkBarChart.getXAxis().setTextColor(Color.WHITE);
         typeOfDrinkBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
-        //typeOfDrinkBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
         BarDataSet typeOfDrinkDataSet = new BarDataSet(TypeOfDrinkGraphValues, "Type of Drink");
         typeOfDrinkDataSet.setValueTextColor(Color.WHITE);
         BarData typeofDrinkData = new BarData(typeOfDrinkDataSet);
@@ -323,7 +308,7 @@ public class BarGraphActivity extends AppCompatActivity {
         data3.setValueTextColor(Color.WHITE);
         data2.setColor(Color.RED);
         data3.setColor(Color.RED);
-        dataSets = new ArrayList<IBarDataSet>();
+        dataSets = new ArrayList<>();
         dataSets.add(data);
         dataSets.add(data2);
         BarData AllData = new BarData(dataSets);
@@ -333,13 +318,11 @@ public class BarGraphActivity extends AppCompatActivity {
 
         Legend legend = typeOfDrinkBarChart.getLegend();
         legend.setTextColor(Color.WHITE);
-        //overallConsumption.setAxisDependency(YAxis.AxisDependency.RIGHT);
 
 
         float groupSpace = 0.4f;
         float barSpace = 0f;
         float barWidth = 0.3f;
-        // (barSpace + barWidth) * 2 + groupSpace = 1
         AllData.setBarWidth(barWidth);
         barChart.setData(AllData);
         barChart.groupBars(-0.5f, groupSpace, barSpace);

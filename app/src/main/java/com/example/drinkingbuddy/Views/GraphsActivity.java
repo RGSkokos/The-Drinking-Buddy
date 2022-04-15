@@ -30,7 +30,7 @@ import java.util.List;
 // The code within each graph activity is heavily adapted from the reference above which makes use of
 // MPAndroidChart library
 // The library was pulled from the following github: https://github.com/PhilJay/MPAndroidChart
-// Only the line graph was implemented thus far, the library files can be found within models
+
 public class GraphsActivity extends AppCompatActivity {
 
     protected Button sensorResults;

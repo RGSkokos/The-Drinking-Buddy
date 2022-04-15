@@ -7,21 +7,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.drinkingbuddy.Models.Breathalyzer;
 import com.example.drinkingbuddy.Models.Config;
 import com.example.drinkingbuddy.Models.Drink;
-import com.example.drinkingbuddy.Models.Profile;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -40,7 +36,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
     }
 
-    //simply creates database to hold breathalyzer entries
+    //Databases for breathalyzer entries and drink type inputs
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {// might need id autoincrement (?)
        CREATE_TABLE_RESULTS = "CREATE TABLE " + Config.TABLE_NAME_SENSOR
@@ -109,6 +105,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    //Returns list of breathalyzer objects
     public List<Breathalyzer> getAllResults() {
         List<Breathalyzer> breathalyzer_values = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();
@@ -131,6 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return breathalyzer_values;
     }
 
+    //save Drink objects
     public void saveDrinkType(String typeOfDrink, int quantity, String UID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -154,7 +152,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-
+    //Retrieve Drink Objects
     public ArrayList<Drink> ReturnDrinkTypes(){
         ArrayList<Drink> drink_types = new ArrayList<>();
         SQLiteDatabase userDatabase = this.getReadableDatabase();

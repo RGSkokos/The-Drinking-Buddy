@@ -1,18 +1,15 @@
 package com.example.drinkingbuddy.Views;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.drinkingbuddy.Controllers.DBHelper;
+import androidx.appcompat.app.AppCompatActivity;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.R;
 
@@ -28,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     protected TextView loginTitleTextView;
     protected TextView forgotPasswordTextView;
     protected TextView registerTextView;
-    private DBHelper db;
     private FirebaseHelper firebaseHelper;
     public GifImageView gifImageView;
 
@@ -36,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        db = new DBHelper(this);
         initializeComponents();
         setupButtonListeners();
         emailLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
@@ -64,41 +59,30 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     protected void setupButtonListeners() {
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String emailEntered = emailLoginTextEdit.getText().toString();
-                String passwordEntered = passwordLoginTextEdit.getText().toString();
-                if(emailEntered.isEmpty() || passwordEntered.isEmpty())
-                {
-                    Toast.makeText(getApplicationContext(), "Please enter an email and password", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    firebaseHelper.authorizeUser(emailEntered, passwordEntered);
-                    loadingTimer();
-                }
+        loginButton.setOnClickListener(view -> {
+            String emailEntered = emailLoginTextEdit.getText().toString();
+            String passwordEntered = passwordLoginTextEdit.getText().toString();
+            if(emailEntered.isEmpty() || passwordEntered.isEmpty())
+            {
+                Toast.makeText(getApplicationContext(), "Please enter an email and password", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                firebaseHelper.authorizeUser(emailEntered, passwordEntered);
+                loadingTimer();
+            }
 
-            }
         });
-        registrationRedirect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToRegistration();
-            }
-        });
+        registrationRedirect.setOnClickListener(view -> goToRegistration());
         //REFERENCE: https://riptutorial.com/android/example/13300/send-firebase-password-reset-email
-        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String emailEntered = emailLoginTextEdit.getText().toString();
-                if(!emailEntered.isEmpty()) {
-                   firebaseHelper.sendResetEmail(emailEntered);
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Please enter your email in the space above", Toast.LENGTH_LONG).show();
-                }
+        resetPasswordButton.setOnClickListener(view -> {
+            String emailEntered = emailLoginTextEdit.getText().toString();
+            if(!emailEntered.isEmpty()) {
+               firebaseHelper.sendResetEmail(emailEntered);
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Please enter your email in the space above", Toast.LENGTH_LONG).show();
             }
         });
     }

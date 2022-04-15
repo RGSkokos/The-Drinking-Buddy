@@ -7,10 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.drinkingbuddy.Models.Profile;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,12 +17,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-//Code for firebase throughout the project was developed using these references
-//REFERENCE: https://blog.mindorks.com/firebase-realtime-database-android-tutorial
-//REFERENCE: https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial
-//REFERENCE: https://www.learnhowtoprogram.com/android/data-persistence/firebase-reading-data-and-event-listeners
-//REFERENCE: https://firebase.google.com/docs/auth/android/start
+import java.util.Objects;
 
+//Code for firebase throughout the project was developed using these references
+//REFERENCE: https://blog.mindorks.com/firebase-realtime-database-android-tutorial [1]
+//REFERENCE: https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial [2]
+//REFERENCE: https://www.learnhowtoprogram.com/android/data-persistence/firebase-reading-data-and-event-listeners [3]
+//REFERENCE: https://firebase.google.com/docs/auth/android/start [4]
+//REFERENCE: https://writeach.com/posts/-MAOS1OT_oHIJBKqXVQZ/Firebase-Authentication---9---Change-password [5]
 public class FirebaseHelper {
 
     private static final String TAG = "Firebase";
@@ -36,7 +35,6 @@ public class FirebaseHelper {
     private FirebaseDatabase firebaseDatabase;
     private boolean loggedIn;
     private Profile profile;
-
 
     public FirebaseHelper(Context context) {
         this.context = context;
@@ -71,32 +69,31 @@ public class FirebaseHelper {
     public String getCurrentUID()
     {
         user = firebaseAuth.getCurrentUser();
+        assert user != null;
         return user.getUid();
     }
 
-    //REFERENCE: https://writeach.com/posts/-MAOS1OT_oHIJBKqXVQZ/Firebase-Authentication---9---Change-password
+  //REFERENCE: [4]
     public void updateAuthentication(String newPass, String oldPass)
     {
         String email = user.getEmail();
+        assert email != null;
         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPass);
 
         user.reauthenticate(credential)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful())
-                        {
-                            user.updatePassword(newPass);
-                            Toast.makeText(context, "Password change successful", Toast.LENGTH_LONG).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful())
+                    {
+                        user.updatePassword(newPass);
+                        Toast.makeText(context, "Password change successful", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(context, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
-
+    //REFERENCE: [4]
     public boolean authorizeUser(String emailEntered, String passwordEntered)
     {
         firebaseAuth.signInWithEmailAndPassword(emailEntered, passwordEntered)
@@ -104,11 +101,12 @@ public class FirebaseHelper {
                     if (task.isSuccessful())
                     {
                         user = firebaseAuth.getCurrentUser();
+                        assert user != null;
                         firebaseAuth.updateCurrentUser(user);
                         loggedIn = true;
                     } else
                     {
-                        Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
 
                         loggedIn = false;
                         //Simply tell the user the inputted username and password is wrong
@@ -117,20 +115,14 @@ public class FirebaseHelper {
         return loggedIn;
     }
 
+    //Static check on user status
     public boolean ifUserLoggedIn()
     {
-        //Log.d(TAG, user.getEmail());
         user = firebaseAuth.getCurrentUser();
-        if(user == null)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return user != null;
     }
 
+    //REFERENCE: [2]
     public void addProfileListener() {
         String UID = getCurrentUID();
         databaseReference.child(UID).addValueEventListener(new ValueEventListener() {
@@ -153,62 +145,56 @@ public class FirebaseHelper {
         });
     }
 
-
+    //REFERENCE: [2]
     public void sendResetEmail(String emailEntered)
     {
         firebaseAuth.sendPasswordResetEmail(emailEntered)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(context, "Password reset email sent", Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(context, "reset password failed, please enter a valid email connected to an account", Toast.LENGTH_LONG).show();
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(context, "Password reset email sent", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(context, "reset password failed, please enter a valid email connected to an account", Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-
+    //REFERENCE: [2]
     public void CreateUser(String email, String password, Profile NewProfile)
     {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(context, "Registration successful", Toast.LENGTH_LONG).show();
-                            addToDatabase(NewProfile);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(context, "Registration successful", Toast.LENGTH_LONG).show();
+                        addToDatabase(NewProfile);
 
-                            FirebaseAuth.getInstance().signOut();
-                        } else {
-                            Log.d("Firebase", task.getException().getMessage());
-                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                        FirebaseAuth.getInstance().signOut();
+                    } else {
+                        Log.d("Firebase", Objects.requireNonNull(task.getException()).getMessage());
+                        Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
+    //REFERENCE: [1}
     private void addToDatabase(Profile NewProfile)
     {
         FirebaseUser user = firebaseAuth.getCurrentUser();
+        assert user != null;
         String UID = user.getUid();
         databaseReference.child(UID).setValue(NewProfile)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful())
-                        {
-                            Log.d("Firebase", "Profile added to db");
-                        }
-                        else
-                        {
-                            Log.d("Firebase", task.getException().getMessage());
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        Log.d("Firebase", "Profile added to db");
+                    }
+                    else
+                    {
+                        Log.d("Firebase", Objects.requireNonNull(task.getException()).getMessage());
                     }
                 });
     }
 
+    //REFERENCE: [1]
     public void updateProfileDB(String child, String value)
     {
         databaseReference.child(user.getUid()).child(child).setValue(value);
