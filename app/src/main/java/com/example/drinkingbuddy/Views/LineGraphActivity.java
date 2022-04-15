@@ -150,7 +150,7 @@ public class LineGraphActivity extends AppCompatActivity {
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setTextColor(Color.WHITE);
         YAxis rightAxis = lineChart.getAxisRight();
-        rightAxis.setTextColor(Color.WHITE);
+        rightAxis.setEnabled(false);
 
 
         lineChart.setPinchZoom(true);
