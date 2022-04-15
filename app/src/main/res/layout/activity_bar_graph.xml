@@ -101,17 +101,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BarGraphToolbar" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/guidelinesTextView"-->
-<!--        android:layout_width="360dp"-->
-<!--        android:layout_height="121dp"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:fontFamily="@font/open_sans"-->
-<!--        android:text="Women Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 2 drinks per day\n- 10 drinks per week\n- 3 drinks on special occasions\n"-->
-<!--        android:textColor="@color/white"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        tools:layout_editor_absoluteY="364dp" />-->
-
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
