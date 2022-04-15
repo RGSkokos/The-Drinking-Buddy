@@ -163,7 +163,6 @@ public class BarGraphActivity extends AppCompatActivity {
         }
 
         ArrayList<BarEntry> currentEntries = new ArrayList<>();
-
         BarEntry barEntryAverage = new BarEntry(0, drinkNumber[0]);
         currentEntries.add(barEntryAverage);
         barEntryAverage = new BarEntry(1, drinkNumber[1]);
@@ -172,7 +171,6 @@ public class BarGraphActivity extends AppCompatActivity {
         currentEntries.add(barEntryAverage);
         barEntryAverage = new BarEntry(3, drinkNumber[3]);
         currentEntries.add(barEntryAverage);
-
         TypeOfDrinkGraphValues = currentEntries;
 
     }
@@ -278,6 +276,7 @@ public class BarGraphActivity extends AppCompatActivity {
         xAxisWeekly.setGranularity(1f);
         xAxisWeekly.setGranularityEnabled(true);
 
+
         xAxisLabels = new String[]{"Liquor", "Wine", "Beer", "Cider"};
         XAxis xAxisTypeOfDrink = typeOfDrinkBarChart.getXAxis();
         xAxisTypeOfDrink.setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
@@ -285,41 +284,39 @@ public class BarGraphActivity extends AppCompatActivity {
         xAxisTypeOfDrink.setGranularityEnabled(true);
         typeOfDrinkBarChart.getXAxis().setTextColor(Color.WHITE);
         typeOfDrinkBarChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
+        typeOfDrinkBarChart.setFitBars(true);
+        typeOfDrinkBarChart.getAxisLeft().setTextColor(Color.WHITE);
+        typeOfDrinkBarChart.getAxisRight().setTextColor(Color.WHITE);
         BarDataSet typeOfDrinkDataSet = new BarDataSet(TypeOfDrinkGraphValues, "Type of Drink");
         typeOfDrinkDataSet.setValueTextColor(Color.WHITE);
         BarData typeofDrinkData = new BarData(typeOfDrinkDataSet);
         typeOfDrinkDataSet.setColor(Color.WHITE);
-        typeOfDrinkBarChart.setData(typeofDrinkData);
-        typeOfDrinkBarChart.setFitBars(true);
-        typeOfDrinkBarChart.getAxisLeft().setTextColor(Color.WHITE);
-        typeOfDrinkBarChart.getAxisRight().setTextColor(Color.WHITE);
         typeofDrinkData.setBarWidth(0.5f);
+        typeOfDrinkBarChart.setData(typeofDrinkData);
         typeOfDrinkBarChart.getDescription().setEnabled(false);
         typeOfDrinkBarChart.invalidate();
 
         barDataSet.setBarBorderColor(Color.WHITE);
         barDataSet.setLabel("Day of Week");
         barDataSet.setValueTextColor(Color.WHITE);
+        //User entered values
         data = new BarDataSet(UserGraphValues, "User Values");
         data.setValueTextColor(Color.WHITE);
+        //Women Averages
         data2 = new BarDataSet(WomenGraphValues, "Women National Average");
         data2.setValueTextColor(Color.WHITE);
+        data2.setColor(Color.RED);
+        //Men Averages
         data3 = new BarDataSet(MenGraphValues, "Men National Average");
         data3.setValueTextColor(Color.WHITE);
-        data2.setColor(Color.RED);
         data3.setColor(Color.RED);
+        //Set up initial data to be shown
         dataSets = new ArrayList<>();
         dataSets.add(data);
         dataSets.add(data2);
         BarData AllData = new BarData(dataSets);
 
-        Legend secondLegend = barChart.getLegend();
-        secondLegend.setTextColor(Color.WHITE);
-
-        Legend legend = typeOfDrinkBarChart.getLegend();
-        legend.setTextColor(Color.WHITE);
-
-
+        //Formatting based on source:https://www.codeplayon.com/2021/02/how-to-create-a-bar-chart-with-group-bar-with-mpandroidchart/
         float groupSpace = 0.4f;
         float barSpace = 0f;
         float barWidth = 0.3f;
@@ -333,12 +330,19 @@ public class BarGraphActivity extends AppCompatActivity {
         barChart.getDescription().setTextColor(Color.WHITE);
         barChart.invalidate();
 
+        //format bar chart to be visible with black background
         XAxis xAxis = barChart.getXAxis();
         xAxis.setTextColor(Color.WHITE);
         YAxis leftAxis = barChart.getAxisLeft();
         YAxis rightAxis = barChart.getAxisRight();
         leftAxis.setTextColor(Color.WHITE);
         rightAxis.setTextColor(Color.WHITE);
+
+        //set color of legends
+        Legend secondLegend = barChart.getLegend();
+        secondLegend.setTextColor(Color.WHITE);
+        Legend legend = typeOfDrinkBarChart.getLegend();
+        legend.setTextColor(Color.WHITE);
 
 
     }
