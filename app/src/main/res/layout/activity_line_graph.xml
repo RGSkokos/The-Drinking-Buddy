@@ -4,21 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3d3f45"
+    android:background="#242424"
     tools:context=".Views.LineGraphActivity">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineGraph"
         android:layout_width="345dp"
-        android:layout_height="163dp"
+        android:layout_height="250dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LineGraphToolbar"
-        app:layout_constraintVertical_bias="0.115" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/LineGraphToolbar"
@@ -27,66 +25,102 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="303dp"
         android:background="?attr/colorPrimary"
-        android:backgroundTint="#45464a"
+        android:backgroundTint="#4A4A4A"
+        android:fontFamily="@font/open_sans"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/sensorReadingsListview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="#FFFFFF" />
 
     <ListView
         android:id="@+id/sensorReadingsListview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:divider="@color/white"
+        android:dividerHeight="1dip"
+        android:fontFamily="@font/open_sans"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LineGraphToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/lineGraph"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/LineChartTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="10dp"
-        android:text="Sample Number plotted against Sample output"
-        android:textAllCaps="true"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/open_sans"
+        android:text="Sensor Measurements"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/LineGraphToolbar" />
 
     <TextView
         android:id="@+id/LineGraphYAxisLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="192dp"
-        android:layout_marginEnd="344dp"
         android:rotation="270"
         android:text="Sample Output"
         android:textColor="#FFFFFF"
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/lineGraph"
+        app:layout_constraintEnd_toStartOf="@+id/lineGraph"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lineGraph"
+        app:layout_constraintVertical_bias="0.523" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="170dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="170dp"
+        android:layout_marginTop="12dp"
         android:text="Sample Number"
         android:textColor="#FFFFFF"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/LineChartTitle" />
+
+    <TextView
+        android:id="@+id/dateTitleLineGraph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans"
+        android:text="Date"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/sensorReadingsListview"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lineGraph"
+        app:layout_constraintVertical_bias="0.854" />
+
+    <TextView
+        android:id="@+id/sensorTitleLineGraph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans"
+        android:text="Sensor Result"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/sensorReadingsListview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/lineGraph"
+        app:layout_constraintVertical_bias="0.854" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="205dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

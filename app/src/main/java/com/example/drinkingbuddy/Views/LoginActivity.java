@@ -39,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
         db = new DBHelper(this);
         initializeComponents();
         setupButtonListeners();
+        emailLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
+        passwordLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
     }
 
     @Override
@@ -54,7 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordTextView = findViewById(R.id.ForgotPasswordTextView);
         loginButton = findViewById(R.id.loginButton);
         emailLoginTextEdit = findViewById(R.id.emailLoginEditText);
+        emailLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
         passwordLoginTextEdit = findViewById(R.id.passwordLoginEditText);
+        passwordLoginTextEdit.setHintTextColor(getResources().getColor(R.color.white));
         registrationRedirect = findViewById(R.id.registrationRedirectButton);
         registerTextView = findViewById(R.id.registrationOptionTextView);
     }

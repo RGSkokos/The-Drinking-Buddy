@@ -3,12 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#3d3f45"
+    android:background="#242424"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:backgroundTint="#4A4A4A"
+        android:fontFamily="@font/open_sans"
+        app:titleTextColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/loading_gif"
-        android:layout_width="414dp"
+        android:id="@+id/loadingGif"
+        android:layout_width="match_parent"
         android:layout_height="312dp"
         android:src="@drawable/loadingdrinks"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,64 +32,114 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498" />
 
-
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/loadingCircle"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="122dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        android:src="@drawable/slower_speedy_load" />
 
     <TextView
-        android:id="@+id/ReadingCount"
-        android:layout_width="317dp"
-        android:layout_height="190dp"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        android:textColor="#00C2FF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.611" />
-
-    <TextView
-        android:id="@+id/done"
-        android:layout_width="317dp"
-        android:layout_height="190dp"
-        android:text="DONE!"
-        android:textAlignment="center"
-        android:textColor="#00C2FF"
-        android:textSize="96sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.192" />
-
-    <TextView
-        android:id="@+id/sensorResult"
-        android:layout_width="313dp"
-        android:layout_height="341dp"
-        android:textAlignment="center"
-        android:textColor="#00C2FF"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.479"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.89" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarLoad"
-        android:layout_width="match_parent"
+        android:id="@+id/readingCount"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        android:backgroundTint="#45464a"
-        app:titleTextColor="#FFFFFF"
+        android:layout_marginTop="216dp"
+        android:fontFamily="@font/open_sans"
+        android:text="5"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="50sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad" />
+
+    <ImageView
+        android:id="@+id/staticLoadingCircle"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="122dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        app:srcCompat="@drawable/static_loading" />
+
+    <ImageView
+        android:id="@+id/resultCircle"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="122dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        app:srcCompat="@drawable/new_breath_circle" />
+
+    <TextView
+        android:id="@+id/loadInstruction"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans"
+        android:gravity="center"
+        android:text="Blow into breathalyzer on countdown"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        app:layout_constraintVertical_bias="0.196" />
+
+    <Button
+        android:id="@+id/newSampleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/save_button"
+        android:fontFamily="@font/open_sans"
+        android:padding="10dp"
+        android:text="Take new sample"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad"
+        app:layout_constraintVertical_bias="0.813" />
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/open_sans"
+        android:text="Sensor Measurement"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLoad" />
+
+    <TextView
+        android:id="@+id/drivingConditionTextView"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:fontFamily="@font/open_sans"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/newSampleButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loadingCircle" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

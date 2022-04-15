@@ -25,9 +25,7 @@ public class ConnectedThread extends Thread{
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
             outputStream.flush();
-        }
-
-        catch(Exception e) {
+        } catch(Exception e) {
             Log.d("Problem","Something is Wrong 1 " + e.getMessage());
         }
     }

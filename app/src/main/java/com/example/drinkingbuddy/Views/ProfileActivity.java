@@ -97,15 +97,24 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.addProfileListener();
         username = findViewById(R.id.usernameProfileEditText);
+        username.setHintTextColor(getResources().getColor(R.color.white));
         password = findViewById(R.id.passwordProfileEditText);
+        password.setHintTextColor(getResources().getColor(R.color.white));
         confirmPassword = findViewById(R.id.confirmPasswordEditText);
+        confirmPassword.setHintTextColor(getResources().getColor(R.color.white));
         deviceName = findViewById(R.id.deviceNameProfileEditText);
+        deviceName.setHintTextColor(getResources().getColor(R.color.white));
         deviceCode = findViewById(R.id.deviceCodeProfileEditText);
+        deviceCode.setHintTextColor(getResources().getColor(R.color.white));
         saveButton = findViewById(R.id.saveProfileButton);
         usernameDescription = findViewById(R.id.changeUsernameTextView);
+        usernameDescription.setHintTextColor(getResources().getColor(R.color.white));
         passwordDescription = findViewById(R.id.changePasswordTextView);
+        passwordDescription.setHintTextColor(getResources().getColor(R.color.white));
         deviceNameDescription = findViewById(R.id.changeDeviceNameTextView);
+        deviceNameDescription.setHintTextColor(getResources().getColor(R.color.white));
         deviceCodeDescription = findViewById(R.id.changeDeviceCodeTextView);
+        deviceCodeDescription.setHintTextColor(getResources().getColor(R.color.white));
         toolbar = findViewById(R.id.profileToolbar);
         saveButton.setOnClickListener(saveOnClick);
     }

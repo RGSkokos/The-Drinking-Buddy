@@ -3,7 +3,9 @@
     android:id="@android:id/text1"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:textSize="15sp"
-    android:gravity="left"
-    android:textColor="#FFFFFF"
-    />
+    android:background="@null"
+    android:fontFamily="@font/open_sans"
+    android:gravity="center"
+    android:paddingStart="10dp"
+    android:paddingEnd="40dp"
+    android:textColor="#FFFFFF" />

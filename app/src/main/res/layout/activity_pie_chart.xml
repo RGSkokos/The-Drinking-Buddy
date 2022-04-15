@@ -4,22 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3d3f45"
+    android:background="#242424"
     tools:context=".Views.PieChartActivity">
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieGraph"
-        android:layout_width="336dp"
-        android:layout_height="192dp"
+        android:layout_width="341dp"
+        android:layout_height="250dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PieChartToolbar"
-        app:layout_constraintVertical_bias="0.115" />
+        app:layout_constraintTop_toBottomOf="@+id/pieChartTitle" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/PieChartToolbar"
@@ -28,41 +26,80 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="337dp"
         android:background="?attr/colorPrimary"
-        android:backgroundTint="#45464a"
+        android:backgroundTint="#4A4A4A"
+        android:fontFamily="@font/open_sans"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintBottom_toTopOf="@+id/drinkInputsListview"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="#FFFFFF" />
 
     <ListView
         android:id="@+id/drinkInputsListview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="285dp"
+        android:divider="@color/white"
+        android:dividerHeight="1dip"
+        android:fontFamily="@font/open_sans"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/pieChartTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/open_sans"
+        android:text="Type of Drinks"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PieChartToolbar" />
 
     <TextView
-        android:id="@+id/PieChartTitleTextView"
+        android:id="@+id/dateListTitleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="174dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="179dp"
-        android:text="Type of Drinks"
-        android:textAllCaps="true"
+        android:layout_marginStart="52dp"
+        android:fontFamily="@font/open_sans"
+        android:text="Date"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PieChartToolbar" />
+        app:layout_constraintTop_toTopOf="@+id/drinkListTitleTextView" />
+
+    <TextView
+        android:id="@+id/drinkListTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans"
+        android:text="Drink Type"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/drinkInputsListview"
+        app:layout_constraintEnd_toStartOf="@+id/quantityListTitleTextView"
+        app:layout_constraintHorizontal_bias="0.557"
+        app:layout_constraintStart_toEndOf="@+id/dateListTitleTextView"
+        app:layout_constraintTop_toBottomOf="@+id/pieGraph"
+        app:layout_constraintVertical_bias="0.842" />
+
+    <TextView
+        android:id="@+id/quantityListTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:fontFamily="@font/open_sans"
+        android:text="Quantity"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/drinkListTitleTextView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

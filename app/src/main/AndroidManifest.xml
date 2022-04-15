@@ -18,12 +18,11 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name=".Controllers.BluetoothHelper"
         android:allowBackup="true"
-        android:icon="@mipmap/drinking_buddy_icon"
+        android:icon="@mipmap/ic_launcher_logo"
         android:label="@string/app_name"
         android:parentActivityName="HomePage"
-        android:roundIcon="@mipmap/drinking_buddy_icon"
+        android:roundIcon="@mipmap/ic_launcher_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
@@ -54,7 +53,10 @@
         <activity
             android:name=".Views.RegistrationActivity"
             android:exported="false"
-            android:label="Register" />
+            android:label="Register"
+            android:parentActivityName=".Views.LoginActivity" />
+
+
         <activity
             android:name=".Views.LoginActivity"
             android:exported="false"
@@ -94,6 +96,10 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

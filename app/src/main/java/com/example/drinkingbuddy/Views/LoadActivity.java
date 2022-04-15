@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -16,95 +17,114 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ProgressBar;
+import java.util.UUID;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-
 import com.example.drinkingbuddy.Controllers.DBHelper;
 import com.example.drinkingbuddy.Controllers.FirebaseHelper;
 import com.example.drinkingbuddy.Models.ConnectedThread;
-import com.example.drinkingbuddy.Models.Profile;
 import com.example.drinkingbuddy.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.UUID;
 
 import pl.droidsonroids.gif.GifImageView;
 
 public class LoadActivity extends AppCompatActivity {
-    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";    // put your own mac address found with bluetooth serial app
-    // This one is for the official esp32 public final static String MODULE_MAC = "EC:94:CB:4E:1E:36"; //
-
-    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-    public GifImageView gifImageView;
 
     protected BluetoothAdapter bluetoothAdapter;
     protected BluetoothSocket bluetoothSocket;
     protected BluetoothDevice bluetoothDevice;
     protected ConnectedThread newThread = null;
+    protected GifImageView gifImageView;
     protected TextView countDown;
-    protected TextView done;
-    protected TextView sensorResult;
+    protected TextView loadInstruction;
+    protected ImageView staticCircle;
+    protected GifImageView loadingCircle;
+    protected ImageView resultCircle;
+    protected Button newSampleButton;
+    protected TextView resultTextView;
+    protected TextView drivingCondition;
     protected Toolbar toolbar;
+
+    public static String MODULE_MAC = "EC:94:CB:4E:1E:36";
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public Handler handler;
     private DBHelper myDB;
+    private float messageResult;
     protected SharedPreferences cannotConnect;
     protected FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_load);
+
         myDB = new DBHelper(this);
         firebaseHelper = new FirebaseHelper(this);
-        setContentView(R.layout.activity_load);
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
         Log.d("MODULE_MAC", MODULE_MAC);
         initializeComponents();
+
         cannotConnect = getSharedPreferences("noConnection", Context.MODE_PRIVATE);
         SharedPreferences.Editor connectionEditor = cannotConnect.edit();
         connectionEditor.putString("noConnection", "");
         connectionEditor.apply();
-        sensorResult.setText("");
-        //loadingTimer();
+//        sensorResult.setText("");
 
         Bundle extras = getIntent().getExtras();
         if(extras != null)
-        {
             MODULE_MAC = extras.getString("MAC");
-        }
-        // Set up the toolbar
+
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
+        if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setup();
     }
 
     // Link Variables to Components in .XML file
     protected void initializeComponents() {
-        gifImageView = findViewById(R.id.loading_gif);
-        done = (TextView) findViewById(R.id.done);
-        countDown = (TextView) findViewById(R.id.ReadingCount);
+        loadingCircle = findViewById(R.id.loadingCircle);
+        loadingCircle.setVisibility(View.INVISIBLE);
+        staticCircle = findViewById(R.id.staticLoadingCircle);
+        staticCircle.setVisibility(View.INVISIBLE);
+        resultCircle = findViewById(R.id.resultCircle);
+        resultCircle.setVisibility(View.INVISIBLE);
+        gifImageView = findViewById(R.id.loadingGif);
+        loadInstruction = findViewById(R.id.loadInstruction);
+        countDown = findViewById(R.id.readingCount);
         toolbar = findViewById(R.id.toolbarLoad);
         countDown.setVisibility(View.INVISIBLE);
-        done.setVisibility(View.INVISIBLE);
-        sensorResult = (TextView) findViewById(R.id.sensorResult);
+        newSampleButton = findViewById(R.id.newSampleButton);
+        newSampleButton.setOnClickListener(onClickNewSample);
+        newSampleButton.setVisibility(View.INVISIBLE);
+        resultTextView = findViewById(R.id.resultTextView);
+        resultTextView.setVisibility(View.INVISIBLE);
+        drivingCondition = findViewById(R.id.drivingConditionTextView);
+        drivingCondition.setVisibility(View.INVISIBLE);
+        messageResult = -1;
     }
+
+    private final View.OnClickListener onClickNewSample = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            goToHomeActivity();
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -113,7 +133,6 @@ public class LoadActivity extends AppCompatActivity {
             loadingTimer();
             initializeBluetoothProcess();
         }
-
         else {
             goToHomeActivity();
         }
@@ -125,18 +144,11 @@ public class LoadActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) { }
             @Override
             public void onFinish() {
-                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+//                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
                 if(!cannotConnect.getString("noConnection", null).equals("")) {
                     countDown.setText("");
                 }
 
-                else {
-                    countDown.setText("READY");
-                }
-
-                countDown.setVisibility(View.VISIBLE);
-                done.setEnabled(false);
-                done.setVisibility(View.INVISIBLE);
                 sendMessage();
             }
         }.start();
@@ -150,7 +162,7 @@ public class LoadActivity extends AppCompatActivity {
         else {
             loadingTimer();
             initializeBluetoothProcess(); //if bluetooth is indeed enabled, then the bluetooth process must be enabled and established
-            //sendMessage();
+//            sendMessage();
         }
     }
 
@@ -162,24 +174,27 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-
     // When a Button is Pressed, Sampling is Taken and Result Fetched Automatically
     protected void sendMessage() {
         Log.d("Problem","SEND MESSAGE 1111");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                new CountDownTimer(5000, 1000) {
+                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
+                loadInstruction.setVisibility(View.INVISIBLE);
+                countDown.setVisibility(View.VISIBLE);
+                resultCircle.setVisibility(View.INVISIBLE);
+                staticCircle.setVisibility(View.VISIBLE);
+                loadingCircle.setVisibility(View.VISIBLE);
+                new CountDownTimer(6000, 1000) {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        countDown.setText(""+millisUntilFinished / 1000);
+                        countDown.setText("" + (millisUntilFinished / 1000));
                     }
                     @Override
                     public void onFinish() {
-                        gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
-                        countDown.setVisibility(View.INVISIBLE);
-                        done.setVisibility(View.VISIBLE);
+
                     }
                 }.start();
                 new Thread(new Runnable() {
@@ -189,7 +204,7 @@ public class LoadActivity extends AppCompatActivity {
                             String sendMessage = "1"; // "1" = Start Sampling
                             newThread.write(sendMessage.getBytes());
                             Log.d("Problem","THREAD IS SLEEPING...Z...Z...");
-                            Thread.sleep(5000);
+                            Thread.sleep(6000);
                         }
                         catch (Exception e) {
                             Toast toast = Toast.makeText(getApplicationContext(), "Something Went Wrong!", Toast.LENGTH_LONG);
@@ -207,6 +222,37 @@ public class LoadActivity extends AppCompatActivity {
                 }).start();
             }
         },3000);
+    }
+
+    public void initializeBluetoothProcess() {      //this is where the countdown will happen
+        connectToBreathalyzer();
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message receivedMessage) {
+                super.handleMessage(receivedMessage);
+                if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
+                    String message = (String) receivedMessage.obj;
+                    String UID = firebaseHelper.getCurrentUID();
+                    myDB.insertNewResult(message, UID);
+                    float temp = Float.parseFloat(message);
+                    Log.d("SENSOR VALUE", Float.toString(temp));
+                    temp = Math.abs(((temp - 4095) / 9095)); //second value in numerator needs to be based on calibration
+                    temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
+                    messageResult = temp;
+                    countDown.setText(String.valueOf(String.format("%.2f", messageResult) + ""));
+                    staticCircle.setVisibility(View.INVISIBLE);
+                    loadingCircle.setVisibility(View.INVISIBLE);
+                    resultCircle.setVisibility(View.VISIBLE);
+                    drivingCondition.setVisibility(View.VISIBLE);
+                    resultTextView.setVisibility(View.VISIBLE);
+                    newSampleButton.setVisibility(View.VISIBLE);
+                    setResultColour();
+                }
+            }
+        };
+
+        newThread = new ConnectedThread(bluetoothSocket, handler);
+        newThread.start();
     }
 
     public void connectToBreathalyzer() {
@@ -233,42 +279,21 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-    public void initializeBluetoothProcess() {      //this is where the countdown will happen
-        connectToBreathalyzer();
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message receivedMessage) {
-                super.handleMessage(receivedMessage);
-                if(receivedMessage.what == ConnectedThread.RESPONSE_MESSAGE){
-                    String message = (String) receivedMessage.obj;
-                    String UID = firebaseHelper.getCurrentUID();
-                    myDB.insertNewResult(message, UID);
-                    float temp = Float.parseFloat(message);
-                    temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
-                    temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
-                    sensorResult.setText(String.valueOf("Sensor has Measured: " + String.format("%.3f", temp) + "% of Blood Alcohol Level"));
-                    //double temp = Double.parseDouble(message);
-                    //temp = (((temp-1500)/5000));
-                    //response.setText("Your Blood Alcohol Level is: " + String.valueOf(decimalFormat.format(temp)));
-                    //displayResults();
-                }
-            }
-        };
 
-        newThread = new ConnectedThread(bluetoothSocket, handler);
-        newThread.start();
-    }
-
-    @SuppressLint("SetTextI18n")
-    public void setTypeOfDrink(String type) {
-        //type_of_drink = type;
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setup();
+    protected void setResultColour() {
+        if (messageResult < 0.02) {
+            resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_res)));
+            countDown.setTextColor(getResources().getColor(R.color.green_res));
+            drivingCondition.setText("You should be safe to drive");
+        } else if (messageResult < 0.07) {
+            resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange_res)));
+            countDown.setTextColor(getResources().getColor(R.color.orange_res));
+            drivingCondition.setText("You're under the legal limit to drive");
+        } else {
+            resultCircle.setImageTintList(ColorStateList.valueOf(getResources().getColor(R.color.red_res)));
+            countDown.setTextColor(getResources().getColor(R.color.red_res));
+            drivingCondition.setText("You're intoxicated, please don't drive and watch your drinking.");
+        }
     }
 
     protected void goToHomeActivity() {

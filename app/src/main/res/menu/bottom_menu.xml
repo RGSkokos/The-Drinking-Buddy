@@ -5,13 +5,16 @@
     <item
         android:id="@+id/graphsBottomMenuItem"
         android:title="Graphs"
-        android:icon="@drawable/ic_graph"/>
+        android:icon="@drawable/ic_graph"
+        android:fontFamily="@font/open_sans" />
     <item
         android:id="@+id/homeBottomMenuItem"
         android:title="Home"
+        android:fontFamily="@font/open_sans"
         android:icon="@drawable/ic_breath"/>
     <item
         android:id="@+id/drinksBottomMenuItem"
         android:title="Drinks"
+        android:fontFamily="@font/open_sans"
         android:icon="@drawable/ic_beer_long"/>
 </menu>

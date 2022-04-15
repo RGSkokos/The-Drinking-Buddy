@@ -19,6 +19,7 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 //REFERENCE: https://medium.com/@leelaprasad4648/creating-linechart-using-mpandroidchart-33632324886d
 // This code is heavily adapted from the reference above which makes use of MPAndroidChart library
@@ -64,7 +65,6 @@ public class PieChartActivity extends AppCompatActivity {
 
     protected void initializeComponents(){
         toolbar = findViewById(R.id.PieChartToolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
         // Set up the toolbar
         setSupportActionBar(toolbar);
 
@@ -82,14 +82,15 @@ public class PieChartActivity extends AppCompatActivity {
         ArrayList<Drink> drinks = database.ReturnDrinkTypes();
         ArrayList<String> drinksText = new ArrayList<>();
 
-        for(Drink drink: drinks){
-            if(drink.getUID().equals(firebaseHelper.getCurrentUID())) {
+        for (int i = drinks.size() - 1; i >= 0 ; i--) {
+            if(drinks.get(i).getUID().equals(firebaseHelper.getCurrentUID())) {
                 String temp = "";
-                temp += drink.getTimestamp() + ": " + drink.getDrinkName() + " - " + drink.getQuantity();
 
+                temp += drinks.get(i).getTimestamp().substring(drinks.get(i).getTimestamp().indexOf(' ')) + "\t\t\t\t\t\t\t" + drinks.get(i).getDrinkName() + "\t\t\t\t\t\t\t\t\t" + drinks.get(i).getQuantity();
                 drinksText.add(temp);
             }
         }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, drinksText);
         drinkInputsListview.setAdapter(arrayAdapter);
     }
@@ -132,10 +133,10 @@ public class PieChartActivity extends AppCompatActivity {
         List<PieEntry> pieGraphValues = new ArrayList<>();
         //initializing colors for the entries
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.CYAN);
+        colors.add(ColorTemplate.rgb("#F16F6F"));
+        colors.add(ColorTemplate.rgb("#50D3A4"));
+        colors.add(ColorTemplate.rgb("#3E78CF"));
+        colors.add(ColorTemplate.rgb("#F6D47B"));
 
         //input data and fit data into pie chart entry
         for(String type: DrinkType.keySet()){

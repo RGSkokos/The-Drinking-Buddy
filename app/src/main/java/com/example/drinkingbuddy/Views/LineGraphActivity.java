@@ -92,24 +92,25 @@ public class LineGraphActivity extends AppCompatActivity {
         //78:E3:6D:0A:87:92
         ArrayList<String> readingsText = new ArrayList<>();
 
-        for(Breathalyzer result: breathalyzerValues){
+        for (int i = breathalyzerValues.size() - 1; i >= 0 ; i--) {
+            Breathalyzer result = breathalyzerValues.get(i);
             Log.d("current", result.getUID());
             Log.d("current", firebaseHelper.getCurrentUID());
             if(result.getUID().equals(firebaseHelper.getCurrentUID()))
             {
                 float tempVal = Float.parseFloat(result.getResult());
 
-                tempVal = (((tempVal - 150) / 1050)); //second value in numerator needs to be based on calibration
+                tempVal = Math.abs(((tempVal - 4095) / 9095)); //second value in numerator needs to be based on calibration
                 tempVal = (tempVal < 0) ? 0 : tempVal; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                 String temp = "";
-                temp += result.getTimeStamp() + ": " + tempVal;
+                temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + String.valueOf(String.format("%.2f", tempVal) + "");
 
                 readingsText.add(temp);
             }
         }
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.row, readingsText);
         sensorReadingsListview.setAdapter(arrayAdapter);
-
     }
 
     //region Line Graph
@@ -133,7 +134,7 @@ public class LineGraphActivity extends AppCompatActivity {
                     }
 
                     float temp = Float.parseFloat(breathalyzerValues.get(i).getResult());
-                    temp = (((temp - 150) / 1050)); //second value in numerator needs to be based on calibration
+                    temp = Math.abs(((temp - 4095) / 9095)); //second value in numerator needs to be based on calibration
                     temp = (temp < 0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
 
                     lineGraphValues.add(new Entry((i + 1), temp));
