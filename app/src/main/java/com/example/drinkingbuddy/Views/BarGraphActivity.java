@@ -122,6 +122,7 @@ public class BarGraphActivity extends AppCompatActivity {
                 dataSets.add(data3);
             }
             BarData AllData = new BarData(dataSets);
+            //Formatting based on source:https://www.codeplayon.com/2021/02/how-to-create-a-bar-chart-with-group-bar-with-mpandroidchart/
             float groupSpace = 0.4f;
             float barSpace = 0f;
             float barWidth = 0.3f;
@@ -277,6 +278,7 @@ public class BarGraphActivity extends AppCompatActivity {
         xAxisWeekly.setGranularityEnabled(true);
 
 
+        //Type of drink bar chart formatting
         xAxisLabels = new String[]{"Liquor", "Wine", "Beer", "Cider"};
         XAxis xAxisTypeOfDrink = typeOfDrinkBarChart.getXAxis();
         xAxisTypeOfDrink.setValueFormatter(new IndexAxisValueFormatter(xAxisLabels));
