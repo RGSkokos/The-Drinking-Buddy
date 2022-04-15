@@ -178,8 +178,7 @@ public class GraphsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Must have at least one drink input to see trends", Toast.LENGTH_LONG).show();
     }
 
-    protected boolean checkIfDrinkValuesExist()
-    {
+    protected boolean checkIfDrinkValuesExist() {
         ArrayList<Drink> drinks = myDB.ReturnDrinkTypes();
         for (Drink drink :
                 drinks) {
@@ -191,8 +190,7 @@ public class GraphsActivity extends AppCompatActivity {
         return false;
     }
 
-    protected boolean checkIfMeasurementsExist()
-    {
+    protected boolean checkIfMeasurementsExist() {
         List<Breathalyzer> measurements = myDB.getAllResults();
         for (Breathalyzer measurement :
                 measurements) {

@@ -97,9 +97,6 @@ public class HomePage extends AppCompatActivity {
         {
             goToLogin();
         }
-
-        // Checks if a user is logged in by checking current firebase user
-
     }
 
     // Don't allow back button to lead to login page (or anywhere)
@@ -113,7 +110,6 @@ public class HomePage extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarHome);
         bottomNav = findViewById(R.id.bottomNavigation);
     }
-
 
     // Sets up the menu option bar to show profile and logout options
     @SuppressLint("RestrictedApi")
@@ -159,7 +155,6 @@ public class HomePage extends AppCompatActivity {
         }
         Log.d("Changing", "Changing Display " + drink);
     }
-
 
     private final View.OnClickListener onClickBreathButton= view -> openLoading();
 

@@ -78,7 +78,6 @@ public class LoadActivity extends AppCompatActivity {
         SharedPreferences.Editor connectionEditor = cannotConnect.edit();
         connectionEditor.putString("noConnection", "");
         connectionEditor.apply();
-//        sensorResult.setText("");
 
         Bundle extras = getIntent().getExtras();
         if(extras != null)
@@ -134,13 +133,12 @@ public class LoadActivity extends AppCompatActivity {
         }
     }
 
-    protected void loadingTimer() {      //this will run the gif for 5 seconds to mimic a "loading screen"
+    protected void loadingTimer() { //this will run the gif for 5 seconds to mimic a "loading screen"
         new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) { }
             @Override
             public void onFinish() {
-//                gifImageView.setVisibility(View.INVISIBLE); //gif should no longer be displayed
                 if(!cannotConnect.getString("noConnection", null).equals("")) {
                     countDown.setText("");
                 }
@@ -158,7 +156,6 @@ public class LoadActivity extends AppCompatActivity {
         else {
             loadingTimer();
             initializeBluetoothProcess(); //if bluetooth is indeed enabled, then the bluetooth process must be enabled and established
-//            sendMessage();
         }
     }
 
@@ -211,7 +208,7 @@ public class LoadActivity extends AppCompatActivity {
         },3000);
     }
 
-    public void initializeBluetoothProcess() {      //this is where the countdown will happen
+    public void initializeBluetoothProcess() { //this is where the countdown will happen
         connectToBreathalyzer();
         handler = new Handler(Looper.getMainLooper()) {
             @SuppressLint({"SetTextI18n", "DefaultLocale"})
@@ -225,7 +222,6 @@ public class LoadActivity extends AppCompatActivity {
                     float temp = Float.parseFloat(message);
                     Log.d("SENSOR VALUE", Float.toString(temp));
                     temp = Math.abs(((temp - 4095) / 9095)); //second value in numerator needs to be based on calibration
-                    temp = (temp<0) ? 0 : temp; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                     messageResult = temp;
                     countDown.setText(String.format("%.2f", messageResult) + "");
                     staticCircle.setVisibility(View.INVISIBLE);
@@ -266,7 +262,6 @@ public class LoadActivity extends AppCompatActivity {
             }
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     protected void setResultColour() {

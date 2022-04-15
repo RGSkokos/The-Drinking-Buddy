@@ -148,8 +148,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (!error) {
                 //find and edit old user values
-
-
                 if(usernameEntered.length() != 0)
                 {
                     firebaseHelper.updateProfileDB("username", usernameEntered);
@@ -172,7 +170,7 @@ public class ProfileActivity extends AppCompatActivity {
                 setDisplayMode();
                 updateProfileValues();
                 menuItemTitleChange(false);
-                flag = !flag;
+                flag = !flag; // Toggle display and edit mode
             }
         }
     };

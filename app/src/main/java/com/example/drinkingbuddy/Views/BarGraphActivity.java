@@ -45,7 +45,6 @@ public class BarGraphActivity extends AppCompatActivity {
     protected BarDataSet data;
     protected BarDataSet data2;
     protected BarDataSet data3;
-    protected TextView statsTextView;
 
     protected FirebaseHelper firebaseHelper;
     protected boolean gender;
@@ -88,9 +87,6 @@ public class BarGraphActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-
-        statsTextView = findViewById(R.id.statsTextView);
     }
 
     @SuppressLint("RestrictedApi")
@@ -111,13 +107,11 @@ public class BarGraphActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.changeGender) {
             gender = !gender;
             if (gender) {
-//                    guidelinesTextView.setText("Women Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 2 drinks per day\n- 10 drinks per week\n- 3 drinks on special occasions");
                 dataSets.remove(data3);
                 dataSets.add(data2);
                 item.setTitle("Men Averages");
             } else {
                 item.setTitle("Women Averages");
-//                    guidelinesTextView.setText("Men Averages in Canada:\nBased on guidelines provided by the government,\nlimit alcohol to no more than:\n- 3 drinks per day\n- 15 drinks per week\n- 4 drinks on special occasions");
                 dataSets.remove(data2);
                 dataSets.add(data3);
             }
@@ -137,8 +131,7 @@ public class BarGraphActivity extends AppCompatActivity {
     }
 
     //region Pie Chart
-    private void insertTypeOfDrinkBarChartValues()
-    { //insertion of values in second bar chart (types of drinks)
+    private void insertTypeOfDrinkBarChartValues() { //insertion of values in second bar chart (types of drinks)
         DBHelper db = new DBHelper(this);
         ArrayList<Drink> drinks = db.ReturnDrinkTypes();
 
@@ -173,12 +166,10 @@ public class BarGraphActivity extends AppCompatActivity {
         barEntryAverage = new BarEntry(3, drinkNumber[3]);
         currentEntries.add(barEntryAverage);
         TypeOfDrinkGraphValues = currentEntries;
-
     }
 
     //region Bar Chart
     private void insertBarChartValues() {
-
         ArrayList<Double> valueList = new ArrayList<>();
 
         //input data for days of the week from user
@@ -252,11 +243,9 @@ public class BarGraphActivity extends AppCompatActivity {
             MenGraphValues = currentEntries;
 
         //input all values for user entries
-        for (int i = 0; i < 7; i++)
-        {
+        for (int i = 0; i < 7; i++) {
             valueList.add(dayOfWeekCounter[i]);
         }
-
 
         //fit the data into a bar
         for (int i = 0; i < valueList.size(); i++) {
@@ -345,8 +334,6 @@ public class BarGraphActivity extends AppCompatActivity {
         secondLegend.setTextColor(Color.WHITE);
         Legend legend = typeOfDrinkBarChart.getLegend();
         legend.setTextColor(Color.WHITE);
-
-
     }
 //endregion
 }

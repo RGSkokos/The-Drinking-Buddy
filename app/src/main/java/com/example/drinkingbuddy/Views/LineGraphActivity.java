@@ -94,7 +94,6 @@ public class LineGraphActivity extends AppCompatActivity {
                 float tempVal = Float.parseFloat(result.getResult());
 
                 tempVal = Math.abs(((tempVal - 4095) / 9095)); //second value in numerator needs to be based on calibration
-                tempVal = (tempVal < 0) ? 0 : tempVal; //this is to avoid negative values and are now considered absolute zero for constraint purposes
                 String temp = "";
                 temp += result.getTimeStamp() + "\t\t\t\t\t\t\t\t\t\t\t\t\t" + String.format("%.2f", tempVal) + "";
 
@@ -166,7 +165,6 @@ public class LineGraphActivity extends AppCompatActivity {
 
         //Styling for overallConsumption
         overallConsumption.setColor(Color.WHITE);
-
 
         //Add to LineData object
         LineData lineData = new LineData(overallConsumption);
