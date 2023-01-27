@@ -1,9 +1,9 @@
 # Team Members
-* Simeon Atanasov | 40123100
-* Mihai Olaru | 40111734
-* Argiro Skokos | 40126415
-* Lina Ismail | 40132107
-* Abhinav Batra | 40086809
+* Simeon Atanasov 
+* Mihai Olaru 
+* Argiro Skokos 
+* Lina Ismail 
+* Abhinav Batra
 
 # Objective
 The objective of this project is to build hardware and link it to an android application while using the Agile project methodologies. 
